@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/base_padding"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:isScrollContainer="true"
+    >
+
+    <LinearLayout 
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_marginBottom="@dimen/marginv"
+       >
+   					  
+      <Button android:id="@+id/button_store"
+        android:layout_gravity="start"
+        style="@style/button_default"
+        android:text="@string/button_store"
+        />
+
+      <TextView android:id="@+id/tv_stored_tail" 
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+      	android:ems="25"
+        android:layout_height="wrap_content" 
+        android:singleLine="true"
+      />
+      <TextView android:id="@+id/tv_stored_head" 
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+      	android:ems="25"
+        android:layout_height="wrap_content" 
+        android:singleLine="true"
+      />
+    </LinearLayout>
+
+    <LinearLayout 
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_marginBottom="@dimen/marginvbig"
+       >
+   					  
+      <Button android:id="@+id/button_read"
+        android:layout_gravity="start"
+        style="@style/button_default"
+        android:text="@string/button_read"
+        />
+
+      <TextView android:id="@+id/tv_read_tail" 
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+      	android:ems="25"
+        android:layout_height="wrap_content" 
+        android:singleLine="true"
+	android:text="@string/four_zero"
+      />
+      <TextView android:id="@+id/tv_read_head" 
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+      	android:ems="25"
+        android:layout_height="wrap_content" 
+        android:singleLine="true"
+	android:text="@string/four_zero"
+      />
+    </LinearLayout>
+
+    <LinearLayout 
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_marginBottom="@dimen/marginvbig"
+       >
+   					  
+      <Button android:id="@+id/button_dump"
+        android:layout_gravity="start"
+        style="@style/button_default"
+        android:text="@string/button_dump"
+        />
+
+      <EditText android:id="@+id/et_dumpfrom" 
+        style="@style/edit_number"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+	android:hint="@string/zero"
+        android:importantForAutofill="no"
+      />
+      <EditText android:id="@+id/et_dumpto" 
+        style="@style/edit_number"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+	android:hint="@string/a3_max"
+        android:importantForAutofill="no"
+      />
+    </LinearLayout>
+
+    <LinearLayout 
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_marginBottom="@dimen/marginvbig"
+       >
+   					  
+      <EditText android:id="@+id/et_dumpfile" 
+        style="@style/edit_text_light"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="match_parent" 
+        android:hint="@string/save_as"
+        android:importantForAutofill="no"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout 
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_marginBottom="@dimen/marginvbig"
+       >
+   					  
+      <Button android:id="@+id/button_reset"
+        style="@style/button_default"
+        android:layout_gravity="start"
+        android:text="@string/button_reset"
+        android:textColor="@color/textdelete"
+        />
+
+      <EditText android:id="@+id/et_from" 
+        style="@style/edit_number_light"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+        android:hint="@string/hint_from"
+        android:importantForAutofill="no"
+      />
+      <EditText android:id="@+id/et_to" 
+        style="@style/edit_number_light"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="100dp"
+        android:hint="@string/hint_to"
+        android:importantForAutofill="no"
+      />
+    </LinearLayout>
+
+  <ListView android:id="@+id/list_memory"
+    style="@style/list_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  />  
+
+</LinearLayout>
+<!-- /ScrollView -->

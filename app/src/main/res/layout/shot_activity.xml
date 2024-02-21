@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+  android:layout_width="fill_parent" 
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  >
+  <!-- FIXME-28 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="PrivateResource" / -->
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#111"
+    >
+
+    <LinearLayout android:id="@+id/right"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      >
+      <Button android:id="@+id/handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/iz_empty"
+        android:contentDescription="@string/desc_menu"
+      />
+    </LinearLayout>
+
+    <com.topodroid.ui.MyHorizontalListView android:id="@+id/listview"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_toStartOf="@id/right"
+    />
+       
+  </RelativeLayout>
+
+  <FrameLayout 
+    style="@style/base_padding"
+    android:layout_width="fill_parent" 
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <HorizontalScrollView 
+      android:layout_width="fill_parent"
+      android:layout_height="match_parent"
+      >
+      <ListView android:id="@+id/list"
+        style="@style/list_data"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:divider="#ff666666"
+      /> 
+      <!--
+        android:dividerHeight="6dp"
+      / --> 
+    </HorizontalScrollView>
+    <ListView android:id="@+id/menu"
+      style="@style/menu_default"
+    />
+  </FrameLayout>
+
+</LinearLayout>

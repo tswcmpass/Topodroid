@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:padding="@dimen/paddingmedium"
+>
+
+  <TextView android:id="@+id/text_perms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:autoLink="all"
+        android:padding="@dimen/paddingmedium"
+  />
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:layout_marginTop="@dimen/marginvbig" 
+    android:gravity="start"
+    >
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/btn_ok"
+        style="@style/button_default"
+        android:text="@string/button_close"
+        android:layout_marginEnd="@dimen/marginh" 
+      />
+    </LinearLayout>
+  </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

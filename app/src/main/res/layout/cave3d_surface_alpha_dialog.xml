@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="6dip"
+    android:paddingEnd="6dip"
+    android:paddingBottom="3dip">
+
+    <!-- DEM file -->
+    <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:orientation="horizontal"
+      >
+      <Button android:id="@+id/dem_load"
+        android:layout_width="0dp" 
+        android:layout_weight="20" 
+        android:layout_height="wrap_content" 
+        android:gravity="start"
+        android:text="@string/dem_load"
+        />
+      <TextView android:id="@+id/dem_file"
+        android:layout_width="0dp" 
+        android:layout_weight="80" 
+        android:layout_height="wrap_content" 
+        android:gravity="start"
+        />
+    </LinearLayout>
+
+    <!-- texture file -->
+    <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="10dp"
+      android:layout_marginTop="25dp"
+      android:orientation="horizontal"
+      >
+      <Button android:id="@+id/texture_load"
+        android:layout_width="0dp" 
+        android:layout_weight="20" 
+        android:layout_height="wrap_content" 
+        android:gravity="start"
+        android:text="@string/texture_load"
+        />
+      <TextView android:id="@+id/texture_file"
+        android:layout_width="0dp" 
+        android:layout_weight="80" 
+        android:layout_height="wrap_content" 
+        android:gravity="start"
+        />
+    </LinearLayout>
+   					  
+
+    <SeekBar android:id="@+id/alpha"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="10dp"
+      android:layout_marginTop="25dp"
+      android:padding="10dp"
+      android:max="255"
+      android:background="#666666"
+    />
+
+    <CheckBox android:id="@+id/projection"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:text="@string/surface_projection"
+      />
+
+    <CheckBox android:id="@+id/texture"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:text="@string/surface_texture"
+      />
+
+    <!-- WITH-GPS -->
+    <CheckBox android:id="@+id/gps"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:text="@string/surface_gps"
+      />
+
+    <LinearLayout android:id="@+id/layout7"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:orientation="horizontal"
+      >
+      <EditText android:id="@+id/east"
+        android:layout_width="0dp" 
+        android:layout_weight="50" 
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:hint="@string/surface_east"
+        android:inputType="numberSigned|numberDecimal"
+        android:importantForAutofill="no"
+        />
+      <EditText android:id="@+id/north"
+        android:layout_width="0dp" 
+        android:layout_weight="50" 
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:hint="@string/surface_north"
+        android:inputType="numberSigned|numberDecimal"
+        android:importantForAutofill="no"
+        />
+    </LinearLayout>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/marginvbig"
+    android:gravity="start"
+    > 
+    <!-- android:layout_below="@id/layout7" -->
+    <Button android:id="@+id/button_help"
+      style="@style/button_empty"
+      android:text="@string/button_help"
+    />
+    <LinearLayout
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      >
+      <Button android:id="@+id/button_cancel"
+        style="@style/button_default"
+        android:layout_width="0dp" 
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/button_cancel"
+        />
+      <Button android:id="@+id/button_ok"
+        style="@style/button_default"
+        android:layout_width="0dp" 
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/button_ok"
+        />
+     </LinearLayout>
+   </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

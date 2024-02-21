@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:orientation="horizontal"
+  >
+  <CheckBox 
+    android:id="@+id/item_radio"
+    android:layout_width="60sp"
+    android:layout_height="@dimen/sizeplus"
+    />
+  <Button 
+    android:id="@+id/item_button"
+    android:layout_width="60sp"
+    android:layout_height="@dimen/sizeplus"
+    />
+  <TextView 
+    android:id="@+id/item_text"
+    android:layout_width="60sp"
+    android:layout_height="@dimen/sizeplus"
+    android:textSize="@dimen/textsize"
+    android:typeface="monospace"
+    android:layout_marginStart="@dimen/marginh"
+    />
+</LinearLayout>

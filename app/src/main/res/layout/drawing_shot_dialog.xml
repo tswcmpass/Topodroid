@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  >
+<RelativeLayout
+  style="@style/base_padding"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  >
+   					  
+  <TextView
+    android:id="@+id/shot_label"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:textSize="@dimen/textsizebig"
+  />
+
+  <LinearLayout 
+    android:id="@+id/layout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/shot_label"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/paddingh"
+    android:paddingEnd="@dimen/paddingh"
+    android:paddingBottom="@dimen/paddingv"
+    >
+
+    <EditText android:id="@+id/shot_from"
+      style="@style/edit_text"
+      android:layout_marginTop="@dimen/margintiny"
+      android:layout_width="0dp"
+      android:layout_weight="50"
+      android:text="@string/dash"
+      android:nextFocusDown="@+id/shot_to"
+      android:hint="@string/hint_from"
+      android:importantForAutofill="no"
+    />
+      <!--  tools:ignore="Autofill" -->
+    <EditText android:id="@+id/shot_to"
+      style="@style/edit_text"
+      android:layout_marginTop="@dimen/margintiny"
+      android:layout_width="0dp"
+      android:layout_weight="50"
+      android:text="@string/dash"
+      android:nextFocusDown="@+id/shot_comment"
+      android:hint="@string/hint_to"
+      android:importantForAutofill="no"
+      />
+    <TextView android:id="@+id/shot_type"
+      style="@style/edit_text"
+      android:layout_marginTop="@dimen/margintiny"
+      android:layout_width="0dp"
+      android:layout_weight="30"
+      android:text="@string/dash"
+      />
+  </LinearLayout>
+
+  <EditText android:id="@+id/shot_comment"
+    style="@style/edit_text_light"
+    android:layout_marginTop="@dimen/margintiny"
+    android:layout_width="match_parent"
+    android:layout_below="@id/layout1"
+    android:hint="@string/hint_comment"
+    android:importantForAutofill="no"
+    />
+
+  <LinearLayout android:id="@+id/layout2"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_below="@id/shot_comment"
+    android:orientation="horizontal" 
+    >
+    <CheckBox android:id="@+id/left"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="@string/extend_left" />
+    <CheckBox android:id="@+id/vert"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="@string/extend_vert" />
+    <CheckBox android:id="@+id/right"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="@string/extend_right" />
+    <!-- RadioButton android:id="@+id/ignore"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/extend_ignore" / -->
+  </LinearLayout>
+
+  <SeekBar android:id="@+id/stretchbar"
+    style="@style/lvrseekbar"
+    android:layout_width="match_parent"
+    android:layout_height="20sp" 
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_below="@id/layout2"
+    android:max="300"
+    android:background="#666666"
+    />
+    <!-- android:progressDrawable="@xml/progress2" -->
+      				  
+  <LinearLayout android:id="@+id/layout3"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_below="@id/stretchbar"
+    android:orientation="horizontal" 
+    >
+    <!-- RadioButton android:id="@+id/survey"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/regular" / -->
+    <!-- CheckBox android:id="@+id/duplicate"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/duplicate" />
+    <CheckBox android:id="@+id/surface"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/surface" / -->
+    <!-- CheckBox android:id="@+id/backshot"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/backshot" / -->
+  </LinearLayout>
+
+  <!-- TODO comment -->
+  <LinearLayout android:id="@+id/layout3b"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_below="@id/layout3"
+    android:orientation="horizontal" 
+    >
+    <TextView android:id="@+id/shot_hide"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:layout_marginEnd="@dimen/marginh"
+      android:textSize="@dimen/textsize"
+      android:text="@string/hide_from"
+    />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_below="@id/layout3b"
+    android:orientation="horizontal" 
+    android:gravity="start" 
+    >
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout tools:ignore="ButtonOrder"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <LinearLayout 
+        android:layout_margin="0dp"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:background="@xml/button_b"
+        android:layout_marginEnd="@dimen/marginh"
+        >
+        <Button android:id="@+id/btn_color"
+          style="@style/button_default"
+          android:text="@string/button_color"
+        />
+      </LinearLayout>
+      <Button android:id="@+id/btn_cancel"
+        style="@style/button_default"
+        android:text="@string/button_cancel"
+        android:layout_marginEnd="@dimen/marginh"
+      />
+      <Button android:id="@+id/btn_ok"
+        style="@style/button_default"
+        android:text="@string/button_save"
+        android:layout_marginEnd="@dimen/marginh"
+      />
+      <!-- AUTOWALLS Button android:id="@+id/walls"
+        style="@style/button_default"
+        android:text="@string/make_walls"
+      / -->
+    </LinearLayout>
+  </LinearLayout>
+
+
+  <android.inputmethodservice.KeyboardView android:id="@+id/keyboardview"
+    style="@style/keyboard"
+  />
+
+</RelativeLayout>
+</ScrollView>

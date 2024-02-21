@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout 
+    style="@style/base_padding"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+   					  
+
+    <TextView android:id="@+id/coeff_bg"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_agx"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_agy"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_agz"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+
+    <TextView android:id="@+id/coeff_bm"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_amx"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_amy"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_amz"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+
+    <TextView android:id="@+id/coeff_nl"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+
+    <ImageView android:id="@+id/histogram"
+        android:layout_marginTop="@dimen/marginv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/marginsmall"
+        android:contentDescription="@string/error_distribution"
+        />
+
+    <TextView android:id="@+id/coeff_delta"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_delta2"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_max_error"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_iter"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+    <TextView android:id="@+id/coeff_dip"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        />
+
+    <LinearLayout android:id="@+id/help"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginvbig"
+      android:orientation="horizontal" 
+      android:gravity="start"
+      >
+      <Button android:id="@+id/button_help"
+          style="@style/button_empty"
+          android:text="@string/button_help"
+      />
+      <LinearLayout 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        >
+        <Button android:id="@+id/button_coeff_back"
+          android:layout_gravity="start"
+          style="@style/button_default"
+          android:text="@string/button_close"
+        />
+        <Button android:id="@+id/button_coeff_write"
+          style="@style/button_default"
+          android:text="@string/button_write"
+          android:textColor="@color/textdelete"
+        />
+      </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

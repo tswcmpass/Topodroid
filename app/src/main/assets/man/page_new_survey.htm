@@ -1,0 +1,71 @@
+<html><body>
+
+<h4>NEW SURVEY</h4>
+
+This dialog is opened from the <i>Add</i> button in the <u>main window</u>.<br><p>
+
+Information for the new survey:
+<ul>
+<li><i>name</i></li>
+<li><i>date</i></li>
+<li><i>team</i></li>
+<li><i>initial station</i></li>
+<li>magnetic <i>declination</i></li>
+<li>survey <i>description</i></li>
+<li>at-station <i>x-sections</i>, shared or private</li>
+<li>diving <i>data-mode</i> [T]</li>
+</ul>
+<br><p>
+
+The <i>name</i> is mandatory. 
+The survey names are used to list surveys in the
+<u>main window</u> and TopoDroid distinguishes surveys by their name (although each survey has a unique numerical id in the database).<br>
+The name must be unique in the database. Names that differ only by the characters case are not different because
+the filesystem is case insensitive. TopoDroid raises a warning if the new survey name coincide with the name of an existing survey
+except for the characters case.<br><p>
+
+<b>WARNING</b>.
+The name of the survey cannot contain spaces, nor the characters '/' (slash, which is the pathname separator), ':' (colon),
+'*' (star), and '\' (backslash).
+Backslashes are dropped.
+Spaces are replaced with '_' (underscore), slashes and colons with dashes '-', and stars with '+' (plus).<br><p>
+
+
+The <i>date</i> is written with format "yyyy.mm.dd". For example January 6, 2015 is "2015.01.06". It is preset to the current date.<br><p>
+
+The <i>team</i> is mandatory and cannot be left empty.<br><p>
+
+The <i>description</i> is empty. It can safely be left so, although it is a good practice to take the time to write a description of the survey.<br><p>
+
+The <i>magnetic declination</i> is "unset" by default. If you know it you can enter it here, otherwise you can look it up in the web after you have found the coordinates of a fixed point (say, the cave entrance) with the GPS [A].
+The declination must be entered in decimal degrees.
+The accepted range of values is [-360&deg;, 360&deg;].
+Any value outside this interval is considered as "unset".<br><p>
+
+At-station <i>x-sections</i> can be either shared among the survey sketches, or private to each sketch.
+This choice must be made when the survey is created and cannot be modified later because
+it affects the existing sketches.<br><p>
+
+<b>Buttons</b><br>
+<i>Save</i>: the new survey name is added to the database.<br>
+<i>Open</i>: saves and starts the <i>Shot list</i> activity immediately.<br><p>
+
+<b>Diving data-mode</b><br>
+The diving data-mode is an experimental feature.
+Data can be entered only manually, and in the following format:
+<ul>
+<li>FROM station</li>
+<li>TO station</li>
+<li>depth at the FROM station</li>
+<li>azimuth of the direction FROM-TO</li>
+<li>distance between the FROM and the TO station</li>
+<li>LRUD at the FROM station (optional)</li>
+</ul>
+<br><p>
+
+Backshot data are not supported in "diving" data-mode.
+<br><p>
+
+
+
+</body></html>

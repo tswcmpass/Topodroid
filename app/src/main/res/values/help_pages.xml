@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- string name="PhotoActivity" translatable="false">page_photo_list.htm</string -->
+  <string name="PhotoListDialog" translatable="false">page_photo_list.htm</string>
+  <string name="PtCmapActivity" translatable="false">page_pt_cmap.htm</string>
+  <string name="SensorActivity" translatable="false">page_sensors.htm</string>
+  <string name="SensorListActivity" translatable="false">page_sensors_list.htm</string>
+  <string name="SketchWindow" translatable="false">page_sketch.htm</string>
+
+  <string name="FixedActivity" translatable="false">page_fixed_list.htm</string>
+
+  <string name="MainWindow" translatable="false">manual02.htm</string>
+  <string name="DeviceActivity" translatable="false">manual03.htm</string>
+  <string name="CalibActivity" translatable="false">manual04.htm</string>
+  <string name="GMActivity" translatable="false">manual05.htm</string>
+  <string name="SurveyWindow" translatable="false">manual08.htm</string>
+  <string name="ShotWindow" translatable="false">manual06.htm</string>
+  <string name="DrawingWindow" translatable="false">manual09.htm</string>
+  <string name="OverviewWindow" translatable="false">manual12.htm</string>
+  <string name="TopoGL" translatable="false">manual15.htm</string>
+  <string name="PlotReloadWindow" translatable="false">page_backup.htm</string>
+  <string name="CWDActivity" translatable="false">page_cwd.htm</string>
+  <!-- string name="CBDdialog" translatable="false">page_cwd.htm</string -->
+
+  <string name="AzimuthDialog" translatable="false">page_azimuth.htm</string>
+  <string name="AudioDialog" translatable="false">page_audio.htm</string>
+  <string name="AudioListDialog" translatable="false">page_audio_list.htm</string>
+  <!-- string name="BleScanDialog" translatable="false">page_ble_scan.htm</string -->
+  <string name="CalibCheckDialog" translatable="false">page_calib_check.htm</string>
+  <string name="CalibCoeffDialog" translatable="false">page_calib_coeffs.htm</string>
+  <string name="CalibCoverageDialog" translatable="false">page_calib_distrib.htm</string>
+  <string name="CalibGMDialog" translatable="false">page_gm.htm</string>
+  <string name="CalibImportDialog" translatable="false">page_calib_import.htm</string>
+  <string name="CalibListDialog" translatable="false">page_calib_dialog.htm</string>
+  <string name="CalibValidateListDialog" translatable="false">page_validation.htm</string>
+  <string name="CalibValidateResultDialog" translatable="false">page_validation.htm</string>
+  <string name="ExportDialogCalib" translatable="false">page_calib_import.htm</string>
+  <string name="GMSearchDialog" translatable="false">page_gm_search.htm</string>
+  <!-- string name="ConnectDialog" translatable="false">page_connect.htm</string -->
+  <string name="CurrentStationDialog" translatable="false">page_saved_station.htm</string>
+  <string name="SearchDialog" translatable="false">page_search.htm</string>
+  <string name="DeviceA3InfoDialog" translatable="false">page_a3_info.htm</string>
+  <string name="DeviceA3MemoryDialog" translatable="false">page_memory.htm</string>
+  <string name="DeviceNameDialog" translatable="false">page_device_name.htm</string>
+  <string name="DeviceSelectDialog" translatable="false">page_device_select.htm</string>
+  <string name="DeviceX310InfoDialog" translatable="false">page_x310_info.htm</string>
+  <string name="DeviceX310MemoryDialog" translatable="false">page_memory.htm</string>
+  <string name="DeviceXBLEInfoDialog" translatable="false">page_xble_info.htm</string>
+  <string name="DeviceXBLEMemoryDialog" translatable="false">page_memory.htm</string>
+  <string name="DeviceAddDialog" translatable="false">page_device_add.htm</string>
+  <string name="BricInfoDialog" translatable="false">page_bric_info.htm</string>
+  <string name="BricMemoryDialog" translatable="false">page_bric_memory.htm</string>
+  <string name="DanglingShotsDialog" translatable="false">page_dangling.htm</string>
+  <string name="DrawingStatDialog" translatable="false">page_stat2.htm</string>
+  <string name="DialogAnnotations" translatable="false">page_survey_notes.htm</string>
+  <string name="DrawingAreaDialog" translatable="false">page_area_dialog.htm</string>
+  <string name="DrawingLabelDialog" translatable="false">page_label_dialog.htm</string>
+  <string name="DrawingPhotoDialog" translatable="false">page_photo_dialog.htm</string>
+  <string name="DrawingPhotoEditDialog" translatable="false">page_photo_edit_dialog.htm</string>
+  <string name="DrawingLineDialog" translatable="false">page_line_dialog.htm</string>
+  <string name="DrawingLineSectionDialog" translatable="false">manual11.htm</string>
+  <string name="DrawingModeDialog" translatable="false">page_drawing_refs.htm</string>
+  <string name="DrawingPointDialog" translatable="false">page_drawing_point.htm</string>
+  <string name="DrawingPointSectionDialog" translatable="false">page_section_point.htm</string>
+  <string name="DrawingProfileFlipDialog" translatable="false">page_shift.htm</string>
+  <string name="DrawingShotDialog" translatable="false">page_drawing_shot.htm</string>
+  <string name="DrawingStationDialog" translatable="false">page_sketch_station.htm</string>
+  <string name="OverviewModeDialog" translatable="false">page_overview_refs.htm</string>
+  <string name="ExportDialog" translatable="false">manual13.htm</string>
+  <string name="ExportSettings" translatable="false">page_settings.htm</string>
+  <string name="AutoCalibDialog" translatable="false">page_todo.htm</string>
+  <string name="FirmwareDialog" translatable="false">page_firmware.htm</string>
+  <string name="FirmwareFileDialog" translatable="false">page_firmware.htm</string>
+  <string name="FixedDialog" translatable="false">page_fixed.htm</string>
+  <string name="FixedAddDialog" translatable="false">page_fixed_add.htm</string>
+  <string name="FixedGpsDialog" translatable="false">page_fixed_gps.htm</string>
+  <string name="FixedImportDialog" translatable="false">page_fixed_import.htm</string>
+  <string name="GMGroupsDialog" translatable="false">page_groups.htm</string>
+  <string name="GraphPaperScaleActivity" translatable="false">page_graph_paper_scale.htm</string>
+  <string name="HelpDialog" translatable="false">page_help.htm</string>
+  <!-- string name="ImportDialog" translatable="false">page_import.htm</string -->
+  <string name="ImportDialogShot" translatable="false">page_import.htm</string>
+  <string name="ItemPickerDialog" translatable="false">page_tools_list.htm</string>
+  <string name="MultishotDialog" translatable="false">page_todo.htm</string>
+  <string name="PacketDialog" translatable="false">page_packets.htm</string>
+  <string name="ShotPhotoDialog" translatable="false">page_photo_dialog.htm</string>
+  <string name="PhotoViewDialog" translatable="false">page_photo_view.htm</string>
+  <string name="PhotoEditDialog" translatable="false">page_photo_edit.htm</string>
+  <string name="ShotEditMoreDialog" translatable="false">page_shot_edit2.htm</string>
+  <string name="ReductionErrorsDialog" translatable="false">page_reduction_errors.htm</string>
+  <string name="PlotListDialog" translatable="false">page_plot_list.htm</string>
+  <!-- string name="PlotMergeDialog" translatable="false">page_plot_merge.htm</string -->
+  <string name="PlotNewDialog" translatable="false">page_new_plot.htm</string>
+  <!-- string name="PlotRecoverDialog" translatable="false">page_backup.htm</string -->
+  <string name="PlotRenameDialog" translatable="false">page_plot_rename.htm</string>
+  <string name="PlotScrapsDialog" translatable="false">page_plot_scraps.htm</string>
+  <string name="PlotZoomFitDialog" translatable="false">page_plot_zoomfit.htm</string>
+  <string name="ProjectionDialog" translatable="false">page_projection.htm</string>
+  <string name="ScrapOutlineDialog" translatable="false">page_scrap_outline.htm</string>
+  <string name="SensorEditDialog" translatable="false">page_sensors_edit.htm</string>
+  <string name="ShotDeleteDialog" translatable="false">page_shot_edit2.htm</string>
+  <string name="ShotEditDialog" translatable="false">page_shot_edit1.htm</string>
+  <string name="ShotDisplayDialog" translatable="false">page_displaymode.htm</string>
+  <string name="ShotNewDialog" translatable="false">page_man_data.htm</string>
+  <!-- FIXME_SKETCH_3D string name="Sketch3dNewDialog" translatable="false">page_todo.htm</string -->
+  <!-- FIXME_SKETCH_3D string name="SketchModeDialog" translatable="false">page_todo.htm</string -->
+  <!-- FIXME_SKETCH_3D string name="SketchNewShotDialog" translatable="false">page_todo.htm</string -->
+  <string name="SurveyCalibrationDialog" translatable="false">page_survey_calib.htm</string>
+  <string name="SurveyNewDialog" translatable="false">page_new_survey.htm</string>
+  <string name="SurveyRenameDialog" translatable="false">page_survey_rename.htm</string>
+  <string name="SurveySplitOrMoveDialog" translatable="false">page_survey_split_move.htm</string>
+  <string name="SurveyStatDialog" translatable="false">page_stat1.htm</string>
+  <string name="SymbolEnableDialog" translatable="false">page_tools.htm</string>
+  <string name="SymbolReload" translatable="false">page_symbol_reload.htm</string>
+  <!-- string name="TopoDroidAlertDialog"></string -->
+  <string name="TopoDroidPerms" translatable="false">page_perms.htm</string>
+  <string name="UndeleteDialog" translatable="false">page_undelete.htm</string>
+
+  <string name="SetupTextSizeDialog" translatable="false">page_setup.htm</string>
+  <string name="SetupButtonSizeDialog" translatable="false">page_setup.htm</string>
+  <string name="SetupDoneDialog" translatable="false">page_setup.htm</string>
+  <string name="SetupDrawingUnitDialog" translatable="false">page_setup.htm</string>
+
+  <string name="TdManager" translatable="false">manual14.htm</string>
+  <string name="TdmConfigActivity" translatable="false">page_tdm_config.htm</string>
+  <string name="TdmConfigDialog" translatable="false">page_tdm_config_dialog.htm</string>
+  <string name="TdmViewActivity" translatable="false">page_tdm_view.htm</string>
+  <string name="TdmEquateNewDialog" translatable="false">page_tdm_equate_new.htm</string>
+  <string name="TdmEquatesDialog" translatable="false">page_tdm_equates.htm</string>
+  <string name="TdmSourcesDialog" translatable="false">page_tdm_sources.htm</string>
+  <string name="TdmInfoDialog" translatable="false">page_tdm_info.htm</string>
+  <!-- string name="TdmViewEquatesDialog" translatable="false">page_view_equates.htm</string -->
+  <string name="ExportDialogTdm" translatable="false">page_tdm_export.htm</string>
+
+  <string name="DialogIco" translatable="false">page_3d_ico.htm</string>
+  <string name="DialogRose" translatable="false">page_3d_rose.htm</string>
+  <string name="DialogView" translatable="false">page_3d_view.htm</string>
+  <string name="DialogInfo" translatable="false">page_3d_info.htm</string>
+  <string name="ExportDialogModel" translatable="false">page_3d_export.htm</string>
+  <string name="DialogLegs" translatable="false">page_3d_legs.htm</string>
+  <string name="DialogProjection" translatable="false">page_3d_proj.htm</string>
+  <string name="DialogFractal" translatable="false">page_3d_fractal.htm</string>
+  <string name="DialogMeasure" translatable="false">page_3d_measure.htm</string>
+  <!-- UNUSED NO_C3D string name="DialogSketches" translatable="false">page_3d_sketches.htm</string -->
+  <!-- UNUSED NO_C3D string name="DialogSketch" translatable="false">page_3d_sketch.htm</string -->
+  <string name="DialogStation" translatable="false">page_3d_station.htm</string>
+  <string name="DialogSurface" translatable="false">page_3d_surface.htm</string>
+  <string name="DialogSurvey" translatable="false">page_3d_survey.htm</string>
+  <string name="DialogSurveys" translatable="false">page_3d_surveys.htm</string>
+  <string name="DialogWalls" translatable="false">page_3d_walls.htm</string>
+  <string name="SketchModeDialog" translatable="false">page_sketch_mode.htm</string>
+
+  <!-- string name="PageTodo" translatable="false">page_todo.htm</string -->
+  <!-- UNUSED string name="DialogR" translatable="false">page_dialog_r.htm</string -->
+</resources>

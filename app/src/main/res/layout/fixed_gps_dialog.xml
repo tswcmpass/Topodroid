@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="0dp"
+    >
+ 
+    <EditText android:id="@+id/station"
+      style="@style/edit_text_light"
+      android:layout_marginTop="@dimen/margintiny"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" 
+      android:hint="@string/station"
+      android:singleLine="true"
+      android:imeActionId="6"
+      android:imeActionLabel="OK"
+      android:imeOptions="actionDone"
+      android:importantForAutofill="no"
+      />
+ 
+    <EditText android:id="@+id/comment"
+      style="@style/edit_text_light"
+      android:layout_below="@id/station"
+      android:layout_marginTop="@dimen/marginv"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" 
+      android:hint="@string/comment"
+      android:singleLine="true"
+      android:imeActionId="6"
+      android:imeActionLabel="OK"
+      android:imeOptions="actionDone"
+      android:importantForAutofill="no"
+      />
+
+    <LinearLayout android:id="@+id/help"
+      android:layout_below="@id/comment"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" 
+      android:orientation="horizontal"
+      android:layout_marginTop="@dimen/marginvbig"
+      android:gravity="start"
+      >
+      <Button android:id="@+id/button_help"
+          style="@style/button_empty"
+          android:text="@string/button_help"
+      />
+      <LinearLayout 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        >
+        <!-- Button android:id="@+id/button_cancel"
+          style="@style/button_default"
+          android:text="@string/button_cancel"
+          / -->
+        <LinearLayout 
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:gravity="start"
+          >
+          <Button android:id="@+id/button_loc"
+            android:layout_gravity="start"
+            style="@style/button_default"
+            android:text="@string/button_gps_start"
+            />
+          <Button android:id="@+id/button_view"
+            android:layout_gravity="start"
+            android:text="@string/button_view"
+            style="@style/button_default"
+            />
+        </LinearLayout>
+
+        <LinearLayout 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:gravity="end"
+          >
+          <Button android:id="@+id/button_add"
+            android:layout_gravity="end"
+            style="@style/button_default"
+            android:text="@string/button_save"
+            />
+        </LinearLayout>
+      </LinearLayout>
+    </LinearLayout>
+
+    <TextView android:id="@+id/longitude"
+        android:layout_below="@id/help"
+        android:layout_marginTop="@dimen/marginv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="@string/longitude"
+        />
+   					  
+    <TextView android:id="@+id/latitude"
+        android:layout_below="@id/longitude"
+        android:layout_marginTop="@dimen/marginsmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="@string/latitude"
+        />
+   					  
+    <!-- TextView android:id="@+id/h_ellipsoid"
+        android:layout_below="@id/latitude"
+        android:layout_marginTop="@dimen/marginsmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="@string/h_ellipsoid"
+        / -->
+
+    <TextView android:id="@+id/h_geoid"
+        android:layout_below="@id/latitude"
+        android:layout_marginTop="@dimen/marginsmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="@string/h_geoid"
+        />
+
+    <TextView android:id="@+id/error"
+        android:layout_below="@id/h_geoid"
+        android:layout_marginTop="@dimen/marginsmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="@string/error_m"
+        />
+
+    <!-- TextView android:id="@+id/accuracy"
+        android:layout_below="@id/error"
+        android:layout_marginTop="@dimen/marginsmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="@string/accuracy_m"
+        / -->
+
+    <!-- ListView android:id="@+id/list"
+      style="@style/list_top"
+      android:layout_below="@id/error"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      / -->  
+
+
+  <android.inputmethodservice.KeyboardView android:id="@+id/keyboardview"
+    style="@style/keyboard"
+  />
+
+
+</RelativeLayout>
+<!-- /ScrollView -->

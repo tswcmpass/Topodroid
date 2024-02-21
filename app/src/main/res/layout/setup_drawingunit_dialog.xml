@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  >
+  <TextView android:id="@+id/description"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_marginBottom="@dimen/marginv"
+    android:text="@string/setup_drawingunit"
+    />
+  <LinearLayout android:id="@+id/layout2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginTop="@dimen/marginv"
+      android:layout_marginBottom="@dimen/marginv"
+      >
+      <com.topodroid.ui.ItemButton android:id="@+id/sample"
+        android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	/>
+  </LinearLayout>
+
+  <LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_marginBottom="@dimen/marginv"
+    >
+    <Button android:id="@+id/btn_minus"
+      android:layout_width="0dp"
+      android:layout_weight="20"
+      android:layout_marginEnd="@dimen/marginh"
+      style="@style/button_default"
+      android:text="@string/dash"
+    />
+    <EditText android:id="@+id/text_points"
+      android:layout_width="0dp"
+      android:layout_weight="40"
+      android:layout_marginEnd="@dimen/marginh"
+      style="@style/edit_decimal"
+      android:imeOptions="actionDone"
+      android:inputType="none"
+      android:hint="@string/hint_units"
+      android:importantForAutofill="no"
+    />
+    <Button android:id="@+id/btn_plus"
+      android:layout_width="0dp"
+      android:layout_weight="20"
+      android:layout_marginEnd="@dimen/marginh"
+      style="@style/button_default"
+      android:text="@string/plus"
+    />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/marginv"
+    android:layout_marginBottom="@dimen/marginv"
+    android:gravity="start"
+    >
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/btn_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginh"
+        style="@style/button_default"
+        android:text="@string/button_next"
+      />
+      <Button android:id="@+id/btn_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginh"
+        style="@style/button_default"
+        android:text="@string/button_skip"
+      />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
+</ScrollView>

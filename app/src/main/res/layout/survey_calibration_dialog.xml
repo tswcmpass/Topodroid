@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+  style="@style/base_padding"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  >
+
+
+    <LinearLayout
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:paddingBottom="@dimen/marginv">
+      <TextView android:id="@+id/tv_length" 
+         android:layout_width="200dp"
+         android:layout_height="wrap_content" 
+         android:ems="25"
+         android:text="@string/calibration_length"
+      />
+      <EditText android:id="@+id/et_length"
+        style="@style/edit_signeddecimal_light"
+        android:layout_width="200dp"
+        android:hint="@string/hint_length"
+        android:importantForAutofill="no"
+      />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:paddingBottom="@dimen/marginv">
+      <TextView android:id="@+id/tv_azimuth" 
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" 
+        android:ems="25"
+        android:text="@string/calibration_azimuth"
+      />
+      <EditText android:id="@+id/et_azimuth"
+        style="@style/edit_signeddecimal_light"
+        android:layout_width="200dp"
+        android:hint="@string/hint_azimuth"
+        android:importantForAutofill="no"
+      />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:paddingBottom="@dimen/marginv">
+      <TextView android:id="@+id/tv_clino" 
+         android:layout_width="200dp"
+         android:layout_height="wrap_content" 
+         android:ems="25"
+         android:text="@string/calibration_clino"
+      />
+      <EditText android:id="@+id/et_clino"
+        style="@style/edit_signeddecimal_light"
+        android:layout_width="200dp"
+        android:hint="@string/hint_clino"
+        android:importantForAutofill="no"
+      />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:paddingBottom="@dimen/marginv">
+      <CheckBox android:id="@+id/cb_lrud"
+         android:layout_width="200dp"
+         android:layout_height="wrap_content" 
+         android:ems="25"
+         android:text="@string/lrud"
+      />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/help"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginvbig"
+      android:gravity="start"
+      >
+      <Button android:id="@+id/button_help"
+          style="@style/button_empty"
+          android:text="@string/button_help"
+      />
+      <LinearLayout 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        >
+        <Button android:id="@+id/btn_cancel"
+          style="@style/button_default"
+          android:text="@string/button_cancel"
+          android:layout_marginEnd="@dimen/marginh"
+        />
+        <Button android:id="@+id/btn_save"
+          style="@style/button_default"
+          android:text="@string/button_save"
+        />
+      </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>
+

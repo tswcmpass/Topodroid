@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+  android:layout_width="match_parent" 
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  >
+
+  <LinearLayout 
+    android:id="@+id/layout1"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginvbig"
+    android:orientation="horizontal"
+    >
+    <EditText android:id="@+id/gm_bearing"
+      style="@style/edit_decimal"
+      android:layout_width="0dp"
+      android:layout_weight="30"
+      android:textSize="@dimen/textsizebig"
+      android:layout_marginEnd="@dimen/marginh"
+      android:hint="@string/hint_azimuth"
+      android:importantForAutofill="no"
+    />
+    <EditText android:id="@+id/gm_clino"
+      style="@style/edit_signeddecimal"
+      android:layout_width="0dp"
+      android:layout_weight="30"
+      android:textSize="@dimen/textsizebig"
+      android:layout_marginEnd="@dimen/marginh"
+      android:hint="@string/hint_clino"
+      android:importantForAutofill="no"
+    />
+    <EditText android:id="@+id/gm_roll"
+      style="@style/edit_decimal"
+      android:layout_width="0dp"
+      android:layout_weight="30"
+      android:textSize="@dimen/textsizebig"
+      android:hint="@string/hint_roll"
+      android:importantForAutofill="no"
+    />
+  </LinearLayout>
+
+  <TextView android:id="@+id/gm_error"
+    android:layout_below="@id/layout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:textSize="@dimen/textsizebig"
+    android:layout_marginTop="@dimen/margintiny"
+  />
+   					  
+  <EditText android:id="@+id/gm_name" 
+    style="@style/edit_number"
+    android:layout_below="@id/gm_error"
+    android:maxLines="1" 
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/margintiny"
+    android:hint="@string/hint_name"
+    android:importantForAutofill="no"
+  />
+   		
+  <LinearLayout android:id="@+id/layout2"
+    android:layout_below="@id/gm_name"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:layout_marginTop="@dimen/marginhuge" 
+    >
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_below="@id/layout2"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:layout_marginTop="@dimen/marginvbig" 
+    android:gravity="start"
+    >
+    <Button android:id="@+id/button_help"
+      style="@style/button_empty"
+      android:text="@string/button_help"
+    />
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/gm_cancel"
+        style="@style/button_default"
+        android:text="@string/button_cancel"
+        android:layout_marginEnd="@dimen/marginh" 
+      />
+      <Button android:id="@+id/gm_ok"
+        style="@style/button_default"
+        android:text="@string/button_save"
+      />
+    </LinearLayout>
+  </LinearLayout>
+
+  <android.inputmethodservice.KeyboardView android:id="@+id/keyboardview"
+    style="@style/keyboard"
+  />
+
+</RelativeLayout>
+<!-- /ScrollView -->

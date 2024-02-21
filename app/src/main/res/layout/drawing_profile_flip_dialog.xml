@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  >
+ 
+  <CheckBox android:id="@+id/shots"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:checked="true"
+    android:text="@string/flip_shots"
+  />
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:layout_marginTop="@dimen/marginv"
+    android:gravity="start"
+    >
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/button_ok"
+        android:layout_height="match_parent"
+        style="@style/button_default"
+        android:text="@string/button_ok"
+        android:layout_gravity="end"
+      />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
+<!-- /ScrollView -->

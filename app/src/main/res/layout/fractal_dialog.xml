@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="6dip"
+    android:paddingEnd="6dip"
+    android:paddingBottom="3dip">
+   					  
+    <!-- TextView android:id="@+id/fractal_computer"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content" 
+      android:gravity="start"
+      / -->
+
+    <ImageView android:id="@+id/fractal_dims"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/fractal_dimension"
+        />
+   					  
+    <TextView android:id="@+id/fractal_count_text"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content" 
+      android:layout_marginTop="10dp"
+      android:gravity="start"
+      />
+
+    <LinearLayout
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginTop="10dp"
+      android:paddingStart="6dip"
+      android:paddingEnd="6dip"
+      android:paddingBottom="3dip">
+   					  
+      <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+	android:gravity="end"
+	android:text="@string/cell_size"
+	android:layout_marginEnd="5dp"
+        />
+      <EditText android:id="@+id/fractal_cell"
+        android:layout_width="50dp" 
+        android:layout_height="wrap_content" 
+	android:text="@string/two"
+	android:layout_marginEnd="10dp"
+        android:inputType="numberDecimal"
+        android:hint="@string/hint_cellsize"
+        android:importantForAutofill="no"
+        />
+      <CheckBox android:id="@+id/fractal_splays"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:text="@string/with_splays"
+	/>
+    </LinearLayout>
+
+    <RadioGroup android:id="@+id/fractal_count_group"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginTop="10dp"
+      android:paddingStart="6dip"
+      android:paddingEnd="6dip"
+      android:paddingBottom="3dip">
+   					  
+      <RadioButton android:id="@+id/fractal_cnt_total"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/fractal_cnt_total"
+      />
+      <RadioButton android:id="@+id/fractal_cnt_six"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/fractal_cnt_six"
+      />
+      <RadioButton android:id="@+id/fractal_cnt_twentysix"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/fractal_cnt_twentysix"
+      />
+    </RadioGroup>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/marginvbig"
+    android:gravity="start"
+    > 
+    <!-- android:layout_below="@id/fractal_count_group" -->
+    <Button android:id="@+id/button_help"
+      style="@style/button_empty"
+      android:text="@string/button_help"
+    />
+    <LinearLayout
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      >
+      <Button android:id="@+id/button_cancel"
+          style="@style/button_default"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="10dp"
+          android:layout_marginEnd="10dp"
+          android:text="@string/button_back"
+      />
+      <Button android:id="@+id/fractal_ok"
+        style="@style/button_default"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/button_compute"
+        />
+    </LinearLayout>
+  </LinearLayout>
+
+
+</LinearLayout>
+</ScrollView>

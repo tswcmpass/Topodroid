@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+  android:id="@+id/content_view"
+  style="@style/base_padding"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  >
+   					  
+  <TextView android:id="@+id/line_options"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+  />
+
+  <!-- CheckBox android:id="@+id/line_reversed"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:text="@string/reversed"
+  / -->
+
+  <ImageView android:id="@+id/line_image"
+    android:layout_width="match_parent"
+    android:layout_height="80sp" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:scaleType="fitCenter"
+    android:contentDescription="@string/photo"
+  />
+
+  <TextView android:id="@+id/line_azimuth"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginv"
+  />
+  <TextView android:id="@+id/line_date"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginv"
+  />
+  
+  <EditText android:id="@+id/line_nick"
+    style="@style/edit_text"
+    android:layout_width="match_parent" 
+    android:layout_marginTop="@dimen/marginv"
+    android:hint="@string/section_name"
+    android:importantForAutofill="no"
+  />
+
+  <LinearLayout android:id="@+id/button_list"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:layout_marginTop="@dimen/marginv"
+    >
+<!--
+    <Button android:id="@+id/button_foto"
+      style="@style/button_default"
+      android:layout_marginEnd="@dimen/marginh"
+      android:text="@string/button_photo"
+    />
+    <Button android:id="@+id/button_draw"
+      style="@style/button_default"
+      android:layout_marginEnd="@dimen/marginh"
+      android:text="@string/button_plot"
+    />
+    <Button android:id="@+id/button_erase"
+      style="@style/button_default"
+      android:layout_marginEnd="@dimen/marginh"
+      android:text="@string/button_delete"
+    />
+    <Button android:id="@+id/button_save"
+      style="@style/button_default"
+      android:text="@string/button_save"
+    />
+-->
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginv"
+    android:orientation="horizontal" 
+    android:gravity="start"
+    >
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/button_cancel"
+        style="@style/button_default"
+        android:text="@string/button_cancel"
+      />
+    </LinearLayout>
+  </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,72 @@
+<html><body>
+<h3>[7] SHOT LIST</h3>
+
+The shots are shown in a list. The list has no header to save space.  The shot informations are
+<ul style="margin-top=0">
+<li>Index (optional: it is shown only if the related choice in the <i>display mode</i> dialog is checked)</li>
+<li>From station</li>
+<li>To station</li>
+<li>Distance</li>
+<li>Azimuth</li>
+<li>Inclination</li>
+<li>Extend direction: either left (&lt;), right (&gt;), vertical (|), or ignore (a blank space). The "extend" of splays is present only if explicitly set by the user in one of the shot edit dialogs.</li>
+</ul>
+There can be additional characters for the flag, and the presence of a photo (#). Finally the beginning of the comment if any.
+The flag can be: duplicate shot (&#x00b2;), surface shot (&#x00f7;), only-profile (&#x00a7;), only-plan (_).<br><p>
+
+Blank shots, and repeated-legs can be hidden. Splay shots can also be hidden to unclutter the list of shots. However, even if splays are not shown, you can see those at a station by tapping on the station name in a leg shot. To hide them tap again on the station name (even a tap on the name in a splay will do).<br><p>
+
+TopoDroid can set the station names automatically according to the <a href="page_station_policy.htm">station assignment policy</a>.<br><p>
+
+<b>Shot item taps</b>
+<ul style="margin-top=0">
+<li>a tap on a station name puts it in <i>editing-mode</i>, and the station is underlined.
+If inline station editing is enabled the station name can be edited.
+The station name edit must be finished with the ENTER key to take effect.</li>
+<li>when the station is underlined, a couple of tap toggles the display of splays at that station (only if splays are globally hidden).</li>
+<li>a tap on the shot data opens the <a href="page_shot_edit1.htm">shot edit</a> dialog, in which you can set the stations as well as other attributes of the shot.</li>
+<li>a long tap on a station name makes it the <a href="page_current.htm">active</a> station (it is highlighted green)</li>
+<li>a long tap on a shot starts the multi-shot selection</li>
+</ul>
+<br><p>
+
+If you use TopoDroid automatic <a href="page_station_policy.htm">station naming</a>, you are likely to need the shot dialog only to enter the comment, and to change the "extend" direction. These two actions can be done also from the <u>sketch window</u>, by selecting the shot in "edit" mode [A] and picking the <i>Note</i> button. The extend can be changed also graphically on the sketch. These actions are described in the section on the <u>sketch window</u>.<br><p>
+
+<b>Multi-shot selection</b><br>
+The selected shots have a gray background (possibly
+only in the back of the stations). Tapping a shot adds/removes it from the selection.
+The button bar changes to buttons for the multi-shot actions:
+<ul>
+<li>set the shot extend to "left"</li>
+<li>flip the shot extends</li>
+<li>set the shot extend to "right"</li>
+<li>special actions dialog [T]</li>
+<li>delete the selected shots. Warning: hidden secondary-leg shots are deleted when the corresponding leg shot is deleted</li>
+<li>close the multi-shot selection</li>
+</ul>
+<br><p>
+
+The special actions dialog includes [T]:
+<ul>
+<li>renumber the selected shots</li>
+<li>swap the stations of each shot</li>
+<li>set the sketch color of the selected splay shots</li>
+<li>mark the splays as X-splay or H/V-splay (or make them normal)</li>
+<li>compute the strike and dip of the plane containing the shots</li>
+</ul>
+
+The stations of the first shot are used to seed the renumbering. They can be changed in the dialog.
+If both stations are entered the first selected shot is a leg and the following selected shots are renumbered consistently.
+If only the FROM station is entered (and the TO station is left empty), all the shots are renumbered as splay.
+<br><p>
+
+<div style="font-size:90%">
+Setting the color of splays is enabled if only splays have been selected, otherwise it is disabled.<br>
+The computation of strike and dip of the bedding plane requires that all the selected shots have the same FROM station. Otherwise it is disabled.
+The result is shown in the dialog and added to (replaced if already present) the comment of the first selected shot.
+</div><br><p>
+
+<a href="manual06.htm">&lt; Survey data</a> |
+<a href="manual08.htm">Survey info &gt;</a>
+
+</body></html>

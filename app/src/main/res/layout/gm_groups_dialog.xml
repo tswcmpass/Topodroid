@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    style="@style/base_padding"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView android:id="@+id/group_policy" 
+      android:maxLines="1" 
+      android:layout_marginTop="@dimen/margintiny"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" 
+      android:text="@string/calib_gm_policy"
+    />
+    <RadioGroup android:id="@+id/gm_policies"
+      android:layout_marginTop="@dimen/margintiny"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" 
+      android:text="@string/calib_gm_policy"
+      >
+      <RadioButton android:id="@+id/gm_policy_td"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="@string/topodroid"
+        />
+      <RadioButton android:id="@+id/gm_policy_pt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="@string/pockettopo"
+        />
+    </RadioGroup>
+
+    <LinearLayout android:id="@+id/help"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:orientation="horizontal" 
+      android:layout_marginTop="@dimen/marginvbig"
+      android:gravity="start"
+      >
+      <Button android:id="@+id/button_help"
+          style="@style/button_empty"
+          android:text="@string/button_help"
+      />
+      <LinearLayout 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        >
+        <Button android:id="@+id/group_cancel"
+          style="@style/button_default"
+          android:text="@string/button_cancel"
+          android:layout_marginEnd="@dimen/marginh"
+        />
+        <Button android:id="@+id/group_reset" 
+          style="@style/button_default"
+          android:text="@string/group_reset"
+          android:layout_marginEnd="@dimen/marginh"
+        />
+        <Button android:id="@+id/group_ok"
+          style="@style/button_default"
+          android:text="@string/button_ok"
+        />
+      </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

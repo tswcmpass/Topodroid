@@ -1,0 +1,181 @@
+<html><body>
+<h3>[6] SURVEY DATA WINDOW</h3>
+
+The survey <u>data window</u> displays the list of the shots of the survey.<br><p>
+
+The title displays the survey name, and, in multi/double device mode, the active device.
+The title color depends on the current station assignment policy:
+<ul>
+<li>blue: foreshot policies</li>
+<li>dark blue: backshot policies</li>
+<li>pink: "tripod" policy</li>
+<li>violet: "backsight" policy</li>
+<li>red: "magnetic anomaly" policy</li>
+<li>orange: "toporobot" policy</li>
+</ul><br><p>
+
+Shot properties are shown through the foreground and background color of the shot data and station names.
+<br><p>
+
+TopoDroid distinguishes four kinds of shots (displayed with different colors): "leg", "repeated-leg", "splay", and "blank".
+Splays can be further classified as "cross" (X), horizontal (H), vertical (V), and "scan" (shots acquired in scan mode).
+<a href="page_shot_edit1.htm">Splay classes</a> X-H-V are disabled by default [G].<br><p>
+
+Shot data foreground color:
+<ol>
+<li>[white] "leg" (the first shot of a group of repeated measurements): this shot has both the "From" and the "To" station set</li>
+<li>[grey] repeated-leg data (the following shots of a group of leg shots): these shots do not need to have the stations set</li>
+<li>[blue] splay: it has only one station, usually the "From" station</li>
+<li>[green] X-splay</li>
+<li>[dark blue] H/V-splay</li>
+<li>[light green] scan splay</li>
+<li>[orange] blank shots, i.e, shots with the stations not set yet</li>
+<li>[yellow]: back-leg (backsight policy)</li>
+<li>[violet]: blank leg</li>
+</ol><p>
+
+Shot data background color:
+<ul>
+<li>[reddish] <a href="page_accuracy.htm">unreliable</a> shots, i.e. shots with "abnormal" field intensities (only DistoX2)</li>
+<li>[orange] short leg</li>
+<li>[gray] commented shot</li>
+</ul><p>
+
+Station name foreground color:
+<ul>
+<li>[bright green] current station</li>
+</ul><p>
+
+Station names background color:
+<ul>
+<li>[dark green] last downloaded shots</li>
+<li>[gray] shot in multiselection set</li>
+<li>[dark yellow] DistoX backsight data</li>
+</ul><p>
+
+<img src="shots_list.png" alt="shots list"/><p>
+
+<h4>Station names</h4>
+Station names are properties of the shot, like the azimuth or the distance.
+Unlike these, however, the names of the stations are used to "join" together the shots to form the midline.
+This affects both the midline and the sketches.<br>
+When the name of a leg station is changed, the midline can change.
+If the station has attached a x-section, this is unlinked from the midline (and can be later linked to another
+station).
+A sketch (plan or profile) can be unlinked from the midline if the name of its reference station (the origin)
+is changed.<br><p>
+
+<h4>ACTIONS</h4>
+<ul style="margin-top:0">
+<li>tap on the shot data opens the shot <a href="page_shot_edit1.htm">edit dialog</a></li>
+<!--li>tap on a shot clino: shot <a href="page_shot_edit2.htm">secondary actions</a></li-->
+<li>tap on a station: show/hide splays at the station</li>
+<li>long tap on a station: select/deselect the <a href="page_current.htm">"active" station</a></li>
+</ul><br><p>
+
+<h4>BUTTONS</h4>
+<ul style="margin-top:0">
+<li><img src="btn_download.png"> Data <a href="page_download.htm">download</a></li>
+<li><img src="btn_bluetooth.png"> <a href="page_bluetooth.htm">Bluetooth</a></li>
+<li><img src="btn_mode.png"> Data <a href="page_displaymode.htm">display mode</a></li>
+<li><img src="btn_sketch.png"> <a href="page_plot_list.htm">Sketches</a></li>
+<li><img src="btn_note.png"> Survey <a href="page_survey_notes.htm">notes</a></li>
+<li><img src="btn_plus.png"> Insert <a href="page_man_data.htm">manual</a> shot data</li>
+<li><img src="btn_station.png"> <a href="page_saved_station.htm">Saved stations</a></li>
+<li><img src="btn_azimuth.png"> <a href="page_azimuth.htm">Extend reference</a> azimuth</li>
+<li><img src="btn_search.png"> <a href="page_search.htm">Station/Leg search</a></li>
+<li><img src="btn_refresh.png"> Refresh data list</li>
+</ul><br><p>
+
+<b>Long taps</b><br>
+<ul style="margin-top:0">
+<li>"Download": device switch (only for multi device modes)</li>
+<li>"Sketch": immediately open the most recent sketch</li>
+<li>"Manual data": instruments calibration dialog</li>
+<li>"Search": move to the next result</li>
+</ul><br><p>
+
+
+Multi-shot selection buttons:<br>
+<ul style="margin-top:0">
+<li>set shots extend to <i>left</i></li>
+<li>flip shots extend</li>
+<li>set shots extend to <i>right</i></li>
+<li>special actions [T]</li>
+<li><i>cut</i> the shots and put them in the shot-buffer</li>
+<li><i>copy</i> the shotsi into the shot-buffer</li>
+<li><i>close</i> the multi-shot selection</li>
+</ul><br><p>
+
+<h4>Sketch dialog</h4>
+Through the "sketch" dialog you create a new sketch or open an existing one. There is a button to create a new sketch, and a two-column list of the current survey sketches. Items in the left column open a sketch in plan view, those in the right column open it in profile view. You can also switch between sketches from within the <u>sketch window</u>.<br><p>
+<!--
+If the 3D modelling is enabled there is also a button to create a new 3D model, and the existing 3D models are listed after the sketches.<br><p>
+-->
+
+<h4>MENUS</h4>
+<ul style="margin-top:0">
+<li><u>Survey info</u>: survey information window</li>
+<li><u>Recover</u>: deleted item (shot or sketch) <a href="page_undelete.htm">recovery</a></li>
+<li><u>Photo</u>: pictures taken for this survey</li>
+<li><u>Sensor</u>: sensor data taken for this survey</li>
+<li><u>3D</u>: <a href="manual15.htm">3D viewer</a></li>
+<li><u>Device</u>: switches to the device window</li>
+<li><u>Settings</u></li>
+<li><u>Help</u></li>
+</ul><br><p>
+
+<h4>SURVEY SETTINGS</h4>
+<ul style="margin-top:0">
+  <li><i>Team</i>: the default surveying team. If the value is not empty, it is used to set the "Team" field when you create a new survey. Write your name and that of the cavers you usually survey with. [default unset]</li>
+  <li><i>Stations policy</i>: select the automatic <a href="page_station_policy.htm">station naming policy.</a> [default "splays+foresight"]</li>
+  <li><i>Station names</i> specifies the type of the station names, either alphanumeric or numeric [default "alphanumeric"]</li>
+  <li><i>Start station</i>: the default first station name for new surveys. Can be overridden in the <i>New survey</i> dialog. [default unset]</li>
+  <li><i>Thumbnail size</i>: size of the photo thumbnails [default 200, min 80, max 400]</li>
+  <li><i>Data default-export</i>: default data export format [default none]</li>
+  <li><i>Sketch origin</i>: whether to suggest always the same origin or not [default no]</li>
+  <li><i>Shared x-sections</i>: whether at-station x-section should be shared by default [default no]</li>
+  <li><i>DATA UNITS</i>
+    <ul style="margin-top:0; margin-bottom:0">
+    <li><i>Length units</i>: either meters or feet [default meters]</li>
+    <li><i>Angle units</i>: either degrees or grads [default degrees]</li>
+    <li><i>Sketch grid-cell unit</i>: either meters, yards, 2-ft, or 0.1 meter [default meters]</li>
+    </ul>
+  </li>
+  <li><i>SHOT DATA</i>
+    <ul style="margin-top:0; margin-bottom:0">
+    <li><i>Leg tolerance</i>: the angle tolerance (percent) between consecutive shots of a leg [default 0.05, min 0]. The length tolerance is the product of the angle tolerance and the length.</li>
+    <li><i>Max shot length</i>: longer shots are marked as "deleted" [default 50 m, min 20 m]</li>
+    <li><i>Min leg length</i>: shorter legs are highlighted with an orange background [default 0.5 m]</li>
+    <li><i>Min leg shots</i>: minimum number of close consecutive shots for a leg.[default 2, min 2, max 4]</li>
+    <li><i>Backshot DistoX</i>: DistoX in "backshot" mode [default no]</li>
+    <li><i>Splay vertical threshold</i> defines how the <a href="page_azimuth.htm">splay "extend"</a> is set [default 10, min 0, max 90]</li>
+    <li><i>Leg WENS threshold</i> (Therion "vthreshold"): the LRUD for manually entered shots are considered West-East-North-South when the shot inclination exceeds the vertical threshold [default 80, min 0, max 90]</li>
+    <li><i>Shot extend</i>: either fixed or relative to the <a href="page_azimuth.htm">extend reference</a> azimuth [default relative]</li>
+    <li><i>Loop closure</i> error compensation. It is advisable not to do the compensation, as this allows to see graphically the misclosures, and spot possible survey errors [default "none"]. The special loop compensation based on "triangles" is for <a href="page_trilateration.htm">trilateration</a> [E].</li>
+    <li>whether to show <i>prev/next</i> buttons in the shot edit dialog [default yes]</li>
+    <li><i>Backsight</i> fields in the shot manual input dialog [N] [default no]</li>
+    <li><i>Timer</i>: seconds of delay before measuring directions with the Android sensors [default 10, min 0]</li>
+    <li><i>Beep volume</i>: timer beep volume [N] [default 50, min 10, max 100]</li>
+    </ul>
+  </li>  
+  <li><i>LOCATION <a href="page_fixed_list.htm">settings</a></i></li>  
+  <li><i>ACCURACY <a href="page_accuracy.htm">settings</a></i></li>
+</ul><br><p>
+
+<div style="font-size:90%">
+<a href="page_geek.htm">Custom settings</a>: <i>Latest shots and their timeout</i>, <i>Fractional extend</i>, <i>Splay classes and coloring</i>, <i>Diving mode</i>, <i>Sensors</i>.
+</div><br><p>
+
+To exit the survey data window double tap on the <i>BACK</i> button of your device.<br>
+If the automatic backup is enabled and the default data file format is set, the data are exported whenever the data window is closed.<br><p>
+
+<b>Warning</b>
+The first shot entry on the list may not get updated after an editing or a tap, due to a problem of Android.
+The "Refresh" button can be used to request a reload of the list, if this happen.
+<br><p>
+
+<a href="manual05.htm">&lt; Calibration data</a> |
+<a href="manual07.htm">Shot list &gt;</a>
+
+</body></html>

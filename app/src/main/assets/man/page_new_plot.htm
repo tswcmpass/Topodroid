@@ -1,0 +1,64 @@
+<html>
+<body>
+
+<h3>NEW SKETCH</h3>
+
+This dialog is opened from the <i>New sketch</i> button in the <i>Sketch list</i> dialog.<br><p>
+
+It has two text field and a confirmation button.
+<ul>
+<li><b>name</b> is the name assigned to the sketch.</li>
+<li><b>reference station</b></li>
+<!-- li><b>landscape</b> mode [T] [default no]</li -->
+<li><b>extended/projected</b> profile view checkbox</li>
+<li><b>projection azimuth</b>, for projected profile view</li>
+<li><b>dangling</b> sketch (origin not attached to midline)</li>
+</ul><br><p>
+
+You can use either the <b>name</b> suggested by TopoDroid
+(an increasing integer number) or enter a mnemonic name. Each sketch is saved with two files, one for the plan,
+the other for the profile. The filenames are obtained composing the survey name, the sketch name, and a suffix 
+("p" for plan, "s" for profile). For example the sketch "2" of the survey "cave" is saved in the two files
+"cave-2p.tdr" and "cave-2s.tdr".<br><p>
+
+TopoDroid will give a warning if the name coincides with the name of an existing sketch.
+In particular it is not possible to have two sketches with names differing only by the characters case
+since the two sketches would have the same file because the filesystem is case insensitive.<br><p>
+
+<b>WARNING</b>.
+The name of the sketch cannot contain the character '/' (slash), which is the pathname separator.
+Slashes are replaced with dashes '-'.<br><p>
+
+<b>Reference station</b><br>
+The reference station (origin) defines how the sketch is translated with respect to the survey midline.
+The survey midline defines the sketch scale (the drawing is scaled at 40 canvas units per meter) and rotation, but leaves undefined
+how the drawing is translated with respect to the midline. This uncertainty is resolved by specifying the
+reference station to be at (0,0) in the reference frame of the sketch canvas.<br><p>
+
+The reference station also determines the survey midline <b>data reduction</b> for the sketch.
+From the sketch point of view the midline is built starting from the reference station and continuing
+as long as data can be attached. The resulting midline
+forms a tree, rooted at the reference station. In order to make the canvas less cluttered, 
+is possible to hide the display of portion of the midline, either
+after a station, or before it (i.e., between the reference station and the station).
+This is explained in the "Sketch station" dialog.<br><p>
+
+If the survey has "fixed station origin", TopoDroid prefills the "reference station" with the first survey station.
+Otherwise it uses the last station or the active station if this is set.
+You can change it if you want another station as sketch reference.<br><p>
+
+The app signals an error if the reference station does not exist in the survey data.
+It can be forced to use an non-existing station by checking the "dangling" checkbox.<br>
+In this case the sketch will not have a midline reference, neither splays nor stations,
+until the reference station is assigned to a leg.<br><p>
+
+If the <b>extended</b> checkbox is checked the sketch profile is extended, and <b>projection azimuth</b> is not shown.
+Otherwise the sketch profile is projected with direction of view the projection azimuth.<br><p>
+
+<div style="font-size=90%">
+In <b>landscape</b> mode the North and the vertical are towards the left side of the screen, in plan and profile views, respectively.
+Likewise, the x-sections have the vertical to the left side.
+</div><br><p>
+
+</body>
+</html>

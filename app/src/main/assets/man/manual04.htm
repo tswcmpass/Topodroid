@@ -1,0 +1,48 @@
+<html><body>
+<h3>[4] DistoX CALIBRATION WINDOW</h3>
+
+Tapping the <i>Calibration</i> menu in the <u>device window</u> shows the lists of the 
+<a href="page_calib_dialog.htm">calibrations</a> of the active device. You can open a calibration or
+create a new one. In both cases you are led to the <u>calibration window</u>.<br><p>
+
+The <u>calibration window</u> has text fields for
+<ul style="margin-top=0">
+<li>the name. Each calibration must have a unique name</li>
+<li>the date.</li>
+<li>a description</li>
+</ul>
+and radio buttons for the calibration algorithm. By default this is set to "auto" (ie, let TopoDroid decide which algorithm to use).<br><p>
+
+<h4>BUTTONS</h4>
+<ul style="margin-top=0">
+	<li><img src="btn_save.png"> save the calibration informations to the database</li>
+	<li><img src="btn_open.png"> go to the <u>calibration-data window</u></li>
+	<li><img src="btn_read.png"> display the calibration coefficients stored in the database</li>
+</ul><br><p>
+
+<h4>MENUS</h4>
+<ul style="margin-top=0">
+<li>Calibration <a href="page_calib_import.htm">export</a></li>
+<li><u>Delete</u> the calibration and its data from the database (non-recoverable action)</li>
+<li><u>Settings</u></li>
+<li><u>Help</u></li>
+</ul><br><p>
+
+<h4>CALIBRATION SETTINGS (DistoX only)</h4>
+<ul style="margin-top=0">
+<li><i>Group policy</i>: how to split the calibration data into <a href="page_groups.htm">groups</a> [default "all in groups of 4 data"]</li>
+<li><i>Group tolerance</i>: threshold to highlight calibration data with large angle distance from the group-mean [default 40 min 0]</li>
+<li><i>Error</i>: the computation of the coefficients ends if the variation of every coefficient during an iteration step is smaller than this value [default 10<sup>-6</sup>, min 0].</li>
+<li><i>Iterations</i>: the maximum number of iteration of the calibration algorithm [default 200, min 50].</li>
+<li><i>Remote data</i> immediate download.</li>
+<li><i>Raw data</i>: by default TopoDroid displays the azimuth, inclination, and roll. Select if you want to see also the raw calibration data (the components of G and M), either decimal or hex. [default "no"]</li>
+<li><i>Algorithm</i>: can be 0 (auto), 1 (linear), 2 (non-linear). If a calibration algorithm is left "auto", and this setting is not "auto", then the algorithm of the settings is used to calculate the calibration. If they are both "auto" the algorithm is chosen automatically by TopoDroid depending on the DistoX model and firmware. [default "auto"]</li>
+</ul><br><p>
+
+<a href="page_calib_howto.htm">Calibration howto</a><br>
+<p>
+
+<a href="manual03.htm">&lt; Device window</a> |
+<a href="manual05.htm">Calibration data &gt;</a>
+
+</body></html>

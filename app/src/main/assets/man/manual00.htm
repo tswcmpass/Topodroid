@@ -1,0 +1,155 @@
+<html><body>
+<h2>TopoDroid USER MANUAL</h2>
+<!-- NOW -->
+<i>marco.corvi@gmail.com</i><br><p>
+
+<img src="icon4.png"><br>
+TopoDroid is an Android app for cave surveying. TopoDroid takes the raw data, helps you to organize them, and produces the line map of the survey on the spot. You can further draw sketches around the line map while you are surveying, thereby reducing the probability of error entering in your sketch, and helping you to detect errors in the data while you are still in the cave. TopoDroid has many functions to help you get the most out of your work in the cave. In this way a working map is almost ready as you are ending the survey trip.
+<br><p>
+
+TopoDroid makes the time you spend surveying in the cave more effective.
+The purpose of TopoDroid is to help a surveyor to collect the data with more accuracy as well as to make the surveying
+task more pleasant, not to produce the final map of the cave. For that purpose good PC programs already exist.<br><p>
+
+TopoDroid has five different "activity levels". The lowest levels already have
+enough functionalities to download data, manage station names, and draw simple sketches.
+The higher levels can be used to prepare data and sketches for an easier work on the PC.<br><p>
+
+TopoDroid is designed to handle a survey at a time, not to manage complex cave survey projects that include several different surveys.
+Nevertheless it includes a <i>Cave Project Manager</i>, that can be used to compose surveys into a cave/karst project,
+and a <i>3D Viewer</i>, with which you can see the 3D of surveys and cave projects.<br><p>
+
+TopoDroid works with DistoX, Sap5, and Bric4. However, survey data can be manually entered.<br>
+Beware that Android devices (and active stilus) can influence the measurements taken with an electronic device, if they are too close.<br><p>
+
+<b><a href="page_quick.htm">TopoDroid quick guide</a></b><br><p>
+
+<img src="map_sample.png" alt="ICON" /><br><p>
+
+<b>DISCLAIMER</b><br>
+<i>TopoDroid is an open-source free app and it is ad-free. It comes with no warranty: by using it you agree that the authors are not responsible for any loss of data you might incur or damage whatsoever, in particular to the DistoX, Sap5, Bric4. While the authors do their best to provide a bug-free app, this is not guaranteed.</i>
+<hr><br><p>
+
+<h4>TopoDroid private folder</h4>
+The TopoDroid private folder, "Android/data/com.topodroid.TDX/files",
+contains the folders of the drawing tools, "point", "line", and "area", and the 
+device database "device10.sqlite" with the calibration data,
+the exported calibration files (folder "ccsv"), the DistoX2 firmware files (folder "bin"),
+and the DistoX memory dumps (folder "dump").
+<br><p>
+
+This folder, and its content, is deleted when the app is uninstalled, unless you check the box to keep
+the app data. 
+<br><p>
+
+<h4>TopoDroid survey folders</h4>
+The TopoDroid base directory is "Documents/TDX", in the external primary storage.
+It contains the project folder "TopoDroid". The project folder contains the
+database "distox14.sqlite", the "zip" folder, a folder "tmp" for temporary files ,
+and is populated with a folder for each survey that is created.
+<br><p>
+
+This folder and its subfolders are not deleted when the app is uninstalled.
+<br><p>
+
+<img src="folders.png" alt="FOLDERS" /><br><p>
+
+<h4>Survey data</h4>
+Survey data and sketches are saved in the "TopoDroid" subfolder of TDX.<br>
+Each survey has a subfolder under "TopoDroid".<br>
+The "TopoDroid" folder contains the database, "distox14.sqlite", the survey folders,
+and the folder of the cave projects, "thconfig",<br><p>
+
+<h4>Granting access permissions</h4>
+On Android-11 and later, TopoDroid may fail to create the base folder "TDX", or some subfolders or files in it,
+because it does not have enough permission to access the external storage.<br>
+In this case you cen grant permissions using "adb" (Android Debug Bridge).<br>
+<ol>
+<li>download "adb" on your PC</li>
+<li>on Android, enable "Developer options" (go to settings "About Phone", tap seven times the "Build number")</li>
+<li>enable "USB debugging" in the "Developer options"</li>
+<li>on the PC start the adb server. Enter the command "adb start-server"</li>
+<li>connect Android to the PC with a USB cable. You might have to allow adb-connection from the PC, on your Android</li>
+<li>on the PC enter the three commands:
+<ul>
+<li>adb shell appops set com.topodroid.TDX READ_EXTERNAL_STORAGE allow</li>
+<li>adb shell appops set com.topodroid.TDX WRITE_EXTERNAL_STORAGE allow</li>
+<li>adb shell appops set com.topodroid.TDX MANAGE_EXTERNAL_STORAGE allow</li>
+</ul>
+</li>
+</ol>
+<br><p>
+
+<h4>Importing old surveys</h4>
+TopoDroidX (v.6) can be installed together with the old v. 5.1.40 because they use different base folders.<br>
+Old v.5.1.40 surveys can be imported in v.6 from their zip archives created with the old TopoDroid.<br>
+They can also be created with the
+<!-- a href="http://marcocorvi.altervista.org/caving/speleoapps/speleoapks/TopoDroidZipScript.html">zip_script</a -->.
+ http://marcocorvi.altervista.org/caving/speleoapps/speleoapks/TopoDroidZipScript.html zip_script
+<br><p>
+
+<b>N.B.</b> TopoDroid v.5.1.40 cannot import v.6 zip archives, because of changes in the database.<br><p>
+
+<h4>Hardware features</h4>
+TopoDroid uses the following hardware features: "bluetooth", "camera", "microphone", "GPS", "multitouch".
+Functions of TopoDroid that require a feature not present in your Android device, are automatically turned off.
+<br>
+Internet connection is used only to install translations of the user manual.<br>
+<a href="page_perms.htm">Android permissions</a>
+<br><p>
+
+
+<h4>Errors and crashes</h4>
+Due to limited resources, the app cannot be fully tested. Make a backup of the apk and the survey database before updating the app.<br><p>
+
+<ul style="margin-top=0">
+<li>Crashes after a selection choice can be due to incomplete translations.
+Run the app with English language; if the crash disappears contact the translation maintainer.</li> 
+<li>If you find an error or the app does not behave as you expect, send me an email.
+<b>Include the app version and Android version</b>.</li>
+<li>For general questions and feature requests, send an email to TopoDroid mailing list.</li>
+</ul><br><p>
+
+<hr>
+<b>App translations:</b><br>
+<ul>
+<li>V. Georgiev (Bulgarian)</li>
+<li>H.J. Luo (Chinese)</li>
+<li>D. Ros (French)</li>
+<li>M. Keller (German)</li>
+<li>B. Holl (Hungarian)</li>
+<li>F. Toso (Italian)</li>
+<li>K. Borgiel (Polish)</li>
+<li>R. Severo (Portuguese)</li>
+<li>A. Pologea (Romanian)</li>
+<li>A. Kozhenkov (Russian)</li>
+<li>M. Jurecka - J. Hetesi (Slovak)</li>
+<li>M. Guerrero - J. Pardo (Spanish)</li>
+<!-- li>V. Kozly (Ukrainian)</li -->
+</ul>
+<br><p>
+
+Website: https://sites.google.com/site/speleoapps/<br>
+Sources: https://github.com/marcocorvi/topodroid<br><p>
+
+<b>User manual translations</b><br>
+<ul>
+<li>A. Kozhenkov - Russian: https://github.com/akozhenkov/TD_manual_RU</li>
+<li>M. Guerrero - Spanish: https://github.com/xguerrero/Topodroid_manual_es</li>
+<li>F. Toso - Italian: https://github.com/fato63/TopoItMan</li>
+<li>D. Ros - French: http://souterweb.free.fr/</li>
+<li>B. Holl - Hungarian: https://github.com/BalazsHoll/TopoDroid_manual_hu</li>
+</ul>
+<p>
+
+User manual translations are installed by choosing the translation language in the appropriate setting of the <u>main window</u>.
+(internet connection required).<br><p>
+
+If you have installed a manual translation, and there is an update you are prompted to install the translation update
+when you update the app.
+<br><p>
+
+
+<a href="manual01.htm">Introduction &gt;</a>
+
+</body></html>

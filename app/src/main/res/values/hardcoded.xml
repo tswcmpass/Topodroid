@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="topodroid" translatable="false">TopoDroid</string>
+  <string name="compass" translatable="false">Compass</string>
+  <string name="csurvey" translatable="false">cSurvey</string>
+  <string name="ghtopo" translatable="false">GHTopo</string>
+  <!-- string name="grottolf" translatable="false">GrottoLF</string -->
+  <string name="pockettopo" translatable="false">PocketTopo</string>
+  <string name="polygon" translatable="false">Polygon</string>
+  <string name="survex" translatable="false">Survex</string>
+  <string name="therion" translatable="false">Therion</string>
+  <string name="topo" translatable="false">Topo</string>
+  <string name="toporobot" translatable="false">TopoRobot</string>
+  <string name="visualtopo" translatable="false">VisualTopo</string>
+  <string name="walls" translatable="false">Walls</string>
+  <string name="winkarst" translatable="false">WinKarst</string>
+  <string name="csv" translatable="false">CSV</string>
+  <string name="dxf" translatable="false">DXF</string>
+  <string name="kml" translatable="false">KML</string>
+  <!-- string name="oziexplorer" translatable="false">OziExplorer</string -->
+  <string name="gpx" translatable="false">GPX</string>
+  <!-- string name="geojason" translatable="false">GeoJSOM</string -->
+  <string name="shapefile" translatable="false">Shapefile</string>
+
+  <!-- UNUSED string name="number_sign" translatable="false"> # </string -->
+  <!-- UNUSED string name="char_x" translatable="false"> X </string -->
+  <!-- UNUSED string name="char_less" translatable="false">&lt;</string -->
+  <!-- UNUSED string name="char_more" translatable="false">&gt;</string -->
+  <string name="char_hyphen" translatable="false">&#x2010;</string>
+
+  <string name="zero" translatable="false">0</string>
+  <string name="zerod" translatable="false">0.0</string>
+  <string name="two" translatable="false">2</string>
+  <string name="nine" translatable="false">9</string>
+  <string name="twelve" translatable="false">12</string>
+  <string name="fourteen" translatable="false">14</string>
+
+  <!-- UNUSED string name="a3" translatable="false">A3</string -->
+  <!-- UNUSED string name="x310" translatable="false">X310</string -->
+
+  <string name="empty" translatable="false"> </string>
+  <string name="one" translatable="false"> 1 </string>
+  <string name="four_zero" translatable="false">0000</string>
+  <string name="a3_max" translatable="false">4096</string>
+  <string name="x310_max" translatable="false">1040</string>
+  <string name="size_xs" translatable="false">XS</string>
+  <string name="size_s" translatable="false">S</string>
+  <string name="size_m" translatable="false">M</string>
+  <string name="size_l" translatable="false">L</string>
+  <string name="size_xl" translatable="false">XL</string>
+  <string name="dash" translatable="false">-</string>
+  <!-- UNUSED string name="mdash" translatable="false">&#2014;</string -->
+  <string name="plus" translatable="false">&#x002b;</string>
+  <string name="minus" translatable="false">&#x2212;</string>
+  <string name="doubleplus" translatable="false">&#x002b;&#x002b;</string>
+  <string name="doubleminus" translatable="false">&#x2212;&#x2212;</string>
+  <string name="minus_plus" translatable="false">&#x2212;/&#x002b;</string>
+  <string name="arrow_left" translatable="false">&#x21a4;</string>
+  <string name="arrow_right" translatable="false">&#x21a6;</string>
+  <string name="arrow_up" translatable="false">&#x21a5;</string>
+  <string name="arrow_down" translatable="false">&#x21a7;</string>
+  <string name="input_length" translatable="false">&#x2190;&#x2192;</string>
+  <string name="input_depth" translatable="false">&#x21d3;</string>
+  <string name="input_azimuth" translatable="false">&#x2191;N</string>
+  <string name="input_clino" translatable="false">/_</string>
+  <string name="less_than" translatable="false">&lt;</string>
+  <string name="greater_than" translatable="false">&gt;</string>
+  <string name="proj4" translatable="false">Proj4</string>
+
+  <string name="level_b" translatable="false">B</string>
+  <string name="level_f" translatable="false">F</string>
+  <string name="level_d" translatable="false">D</string>
+  <string name="level_c" translatable="false">C</string>
+  <string name="level_a" translatable="false">A</string>
+
+  <string name="packet_none" translatable="false">-</string>
+  <string name="packet_d" translatable="false">D</string>
+  <string name="packet_v" translatable="false">V</string>
+  <string name="packet_g" translatable="false">G</string>
+  <string name="packet_m" translatable="false">M</string>
+  <string name="packet_c" translatable="false">C</string>
+  <string name="packet_x" translatable="false">X</string>
+
+<!--  
+  <string name="p_user" translatable="false">user</string>
+  <string name="p_label" translatable="false">label</string>
+  <string name="p_station" translatable="false">station</string>
+  <string name="p_section" translatable="false">section</string>
+  <string name="p_water" translatable="false">water</string>
+  <string name="p_wall" translatable="false">wall</string>
+-->
+
+  <string name="type_b" translatable="false">&lt; B &gt;</string>
+  <string name="type_d" translatable="false">&lt; D &gt;</string>
+  <string name="type_m" translatable="false">&lt; M &gt;</string>
+
+  <string name="b_g" translatable="false">BG</string>
+  <string name="b_m" translatable="false">BM</string>
+  <string name="a_gx" translatable="false">AGx</string>
+  <string name="a_gy" translatable="false">AGy</string>
+  <string name="a_gz" translatable="false">AGz</string>
+  <string name="a_mx" translatable="false">AMx</string>
+  <string name="a_my" translatable="false">AMy</string>
+  <string name="a_mz" translatable="false">AMz</string>
+  <string name="nl_g" translatable="false">nl</string>
+</resources>

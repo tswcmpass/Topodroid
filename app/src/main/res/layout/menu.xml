@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/message_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="@dimen/textsize"
+    android:textColor="@color/menu_foreground"
+    android:singleLine="true"
+    android:typeface="monospace"
+    android:padding="@dimen/paddingmedium"
+    android:background="@color/menu_background"
+/>
+<!-- background is important, otherwise the menu get confused with the window background -->

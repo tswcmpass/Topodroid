@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/td_layout"
+     android:orientation="vertical"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     >
+
+     <LinearLayout android:id="@+id/layout_cbd"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginv"
+      >
+
+      <!-- Button android:id="@+id/button_change"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content" 
+          style="@style/button_default"
+          android:text="@string/button_change"
+       / -->
+      <TextView android:id="@+id/cbd_text"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:textSize="@dimen/textsizebig"
+      />
+    </LinearLayout>
+
+    <EditText android:id="@+id/cwd_text"
+      style="@style/edit_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginvbig"
+      android:textSize="@dimen/textsizebig"
+      android:inputType="text"
+      android:hint="@string/hint_cwd"
+      android:importantForAutofill="no"
+    />
+
+    <LinearLayout 
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:orientation="horizontal" 
+      android:layout_marginTop="@dimen/marginvbig"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/button_cancel"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content" 
+          style="@style/button_default"
+	  android:text="@string/button_cancel"
+	  android:layout_marginEnd="@dimen/marginh"
+      />
+      <Button android:id="@+id/button_ok"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content" 
+          style="@style/button_default"
+          android:text="@string/button_save"
+      />
+    </LinearLayout>
+
+    <ListView android:id="@+id/cwd_list"
+          style="@style/list_top"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/marginvbig"
+    />
+
+</LinearLayout>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/td_layout"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  >
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#111"
+    >
+    <LinearLayout android:id="@+id/right"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      >
+      <Button android:id="@+id/handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/iz_empty"
+        android:contentDescription="@string/desc_menu"
+      />
+    </LinearLayout>
+
+    <!-- LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/right"
+      -->
+      <com.topodroid.ui.MyHorizontalListView android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/right"
+      />
+    <!-- /LinearLayout -->
+  </RelativeLayout>
+  
+  <FrameLayout 
+    style="@style/base_padding"
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout 
+      android:layout_width="wrap_content" 
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:background="#111"
+      >
+      <TextView android:id="@+id/device_address"
+        android:layout_marginTop="@dimen/marginvbig"
+        android:layout_marginBottom="@dimen/marginvbig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:textSize="@dimen/textsizehead"
+        android:paddingTop="@dimen/paddingv"
+        android:paddingBottom="@dimen/paddingv"
+      />
+      <TextView android:id="@+id/device_address_b"
+        android:layout_marginTop="@dimen/margintiny"
+        android:layout_marginBottom="@dimen/marginvbig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:textSize="@dimen/textsizehead"
+        android:paddingTop="@dimen/paddingv"
+        android:paddingBottom="@dimen/paddingv"
+      />
+      <ListView android:id="@+id/dev_list"
+        style="@style/list_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+      /><!--
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/list_top" -->
+    </LinearLayout>
+
+    <ListView android:id="@+id/menu"
+      style="@style/menu_default"
+    />
+
+  </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,72 @@
+<html>
+<body>
+<h4>SKETCH ITEM PROPERTIES EDITOR</h4>
+
+The sketch item properties editor dialog is opened by selecting a point (or the point) of the sketch item and from the <i>Note</i> button.
+<br><p>
+
+<b>Point items</b> properties:
+<ul>
+<li><b>size</b> (one of XS, S, M, L, XL)</li>
+<li><b>orientation</b>, if the point item is orientable</li>
+<li><b>layers</b>, the canvas views on which the point is displayed [T]</li>
+<li><b>text</b>, for "label" points</li>
+<li>generic Therion <b>options</b></li>
+</ul>
+<br>
+
+<b>Line items</b> properties:
+<ul>
+<li>line <b>type</b></li>
+<li><b>outline</b> (either "out" or "in")</li>
+<li><b>direction</b>, i.e. whether the line is directed or reversed</li>
+<li><b>layers</b>, the canvas views on which the line is displayed [T]</li>
+<li>a polycubic line can be made polyline, i.e., composed of segments instead of cubics</li>
+<li>the line can be <b>subsampled</b>, by removing intermediate points</li>
+<li>the line can be <b>closed</b>, by appending a last point at the position of the first</li> 
+<li>generic Therion <b>options</b></li>
+</ul>
+<br>
+
+<b>Area items</b> properties:
+<ul>
+<li>area <b>type</b></li>
+<li><b>visibility</b> of the area border</li>
+<li><b>orientation</b>, if the area is orientable</li>
+<li><b>layerx</b>, the canvas views on which the line is displayed [T]</li>
+<li>generic Therion <b>options</b></li>
+</ul>
+<br>
+
+<b>Survey stations</b> properties
+(see also <a href="page_sketch_station.htm">sketch station editing</a>):
+<ul>
+<li>make the station the <b>active</b> one, i.e. to continue the survey from it</li>
+<li>show the hidden midline (only if applicable)</li>
+<li>toggle the display of <b>splays</b> at the station (overriding the global choice of splay display)</li>
+<li>adding the station to the Therion export (if "therion auto-station" option is disabled)</li>
+<li>at-station <b>x-section</b> buttons</li>
+</ul>
+<br>
+<br><p>
+
+<b>Survey shots</b> properties:
+<ul>
+<li><b>stations</b></li>
+<li>shot <b>comment</b></li>
+<li>the <b>extend</b> value</li>
+<li>the <b>flags</b>: "duplicate", "surface", or "commented"</li>
+<li>midline hiding</li>
+<li><b>auto-walls</b> generation [E]</li>
+<li>custom <b>color</b> (for splays) [T]</li>
+</ul>
+<br>
+
+<div style="font-size=90%">
+The custom color is associated to the survey splay in the list, and is used to identify the splay in the sketches.
+It is saved in the database, but it is not exported in the ZIP.<br>
+The custom splay colors are cleared by a menu in the survey <u>info window</u>.
+</div><br><p>
+
+</body>
+</html>

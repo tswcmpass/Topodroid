@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  >
+<LinearLayout
+  style="@style/base_padding"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  >
+   					  
+  <TextView android:id="@+id/coords"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:layout_marginBottom="@dimen/margintiny"
+  />
+
+  <LinearLayout 
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/marginsmall"
+    android:orientation="horizontal" 
+    >
+    <Button android:id="@+id/btn_ok_comment"
+      style="@style/button_default"
+      android:layout_marginEnd="@dimen/marginh"
+      android:text="@string/button_save"
+    />
+    <EditText android:id="@+id/comment"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" 
+      android:inputType="text"
+      android:hint="@string/comment"
+      android:importantForAutofill="no"
+    />
+  </LinearLayout>
+
+  <LinearLayout tools:ignore="ButtonOrder"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/marginsmall"
+    android:orientation="horizontal" 
+    >
+    <Button android:id="@+id/btn_ok"
+      style="@style/button_default"
+      android:layout_marginEnd="@dimen/marginh"
+      android:text="@string/button_ok"
+    />
+    <TextView android:id="@+id/station_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:text="@string/station_ask"
+    />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_set" tools:ignore="ButtonOrder"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/marginv"
+    android:orientation="horizontal" 
+    >
+
+    <Button android:id="@+id/btn_set" 
+      android:layout_marginEnd="@dimen/marginh"
+      style="@style/button_default"
+      android:text="@string/button_apply"
+    />
+    <!--  android:background="@drawable/ic_gps" -->
+
+    <TextView android:id="@+id/station_set"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:text="@string/station_set"
+    />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_barrier" tools:ignore="ButtonOrder"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginv"
+    android:orientation="horizontal" 
+    >
+
+    <Button android:id="@+id/btn_barrier"
+      android:layout_marginTop="@dimen/marginv"
+      style="@style/button_default"
+      android:text="@string/button_ok"
+    />
+    <!-- android:background="@drawable/ic_save" -->
+
+    <TextView android:id="@+id/barrier_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:text="@string/hidden_show"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_hidden" tools:ignore="ButtonOrder"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/marginh"
+      android:orientation="horizontal" 
+      >
+
+      <Button android:id="@+id/btn_hidden"
+	android:layout_marginEnd="@dimen/marginh"
+        style="@style/button_default"
+        android:text="@string/button_ok"
+      />
+
+      <TextView android:id="@+id/hidden_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="@string/hidden_show"
+        />
+  </LinearLayout>
+
+  <LinearLayout 
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginv"
+      android:orientation="horizontal" 
+      >
+      <TextView android:id="@+id/splays_on_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/splays_on_off"
+        />
+
+      <CheckBox android:id="@+id/btn_splays_on"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/button_on"
+      />
+
+      <CheckBox android:id="@+id/btn_splays_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="@string/button_off"
+      />
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/layout_xsection"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginv"
+      android:orientation="horizontal" 
+      >
+      <Button android:id="@+id/btn_xsection"
+        style="@style/button_default"
+        android:text="@string/button_xsection"
+      />
+      <EditText android:id="@+id/nick"
+        style="@style/edit_text_light"
+        android:layout_width="match_parent" 
+        android:hint="@string/section_name"
+        android:importantForAutofill="no"
+      />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/layout_xsection_data"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/marginv"
+      android:orientation="horizontal" 
+      >
+      <CheckBox android:id="@+id/cb_horizontal"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/btn_horizontal"
+      />
+      <Button android:id="@+id/btn_direct"
+        style="@style/button_default"
+        android:layout_marginEnd="@dimen/marginh"
+      />
+      <Button android:id="@+id/btn_inverse"
+        style="@style/button_default"
+        android:layout_marginEnd="@dimen/marginh"
+      />
+      <Button android:id="@+id/btn_xdelete"
+        style="@style/button_default"
+        android:text="@string/button_delete"
+      />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/help"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="start"
+      android:orientation="horizontal" 
+      android:layout_marginTop="@dimen/marginv"
+      >
+      <Button android:id="@+id/button_help"
+          style="@style/button_empty"
+          android:text="@string/button_help"
+      />
+      <LinearLayout 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        >
+        <Button android:id="@+id/btn_cancel"
+          style="@style/button_default"
+          android:text="@string/button_cancel"
+          android:layout_gravity="start"
+          />
+        <Button android:id="@+id/btn_saved"
+          style="@style/button_default"
+          android:text="@string/button_saved"
+          android:layout_gravity="end"
+          />
+      </LinearLayout>
+    </LinearLayout>
+   					  
+</LinearLayout>
+</ScrollView>

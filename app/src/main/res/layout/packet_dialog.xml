@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/layout0"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/paddingv"
+    >
+  <LinearLayout 
+    android:orientation="horizontal"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_gravity="start"
+    android:paddingBottom="@dimen/paddingv"
+    >  
+    <CheckBox android:id="@+id/type_zero"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_none"
+    />
+    <CheckBox android:id="@+id/type_d"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_d"
+      android:checked="true"
+    />
+    <CheckBox android:id="@+id/type_v"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_v"
+    />
+    <CheckBox android:id="@+id/type_g"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_g"
+      android:checked="true"
+    />
+    <CheckBox android:id="@+id/type_m"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_m"
+      android:checked="true"
+    />
+    <CheckBox android:id="@+id/type_c"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_c"
+    />
+    <CheckBox android:id="@+id/type_x"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/packet_x"
+    />
+  </LinearLayout>
+
+  <ListView android:id="@+id/packet_list"
+    style="@style/list_top"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    />  
+
+  <LinearLayout android:id="@+id/help"
+    android:orientation="horizontal"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_gravity="start"
+    android:paddingBottom="@dimen/paddingv"
+    >  
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <!-- Button android:id="@+id/clear"
+        style="@style/button_default"
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/button_clear"
+        / -->
+      <Button android:id="@+id/clear_day"
+        style="@style/button_default"
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/button_clear_day"
+        />
+      <Button android:id="@+id/clear_week"
+        style="@style/button_default"
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/button_clear_week"
+        />
+      <Button android:id="@+id/cancel"
+        style="@style/button_default"
+        android:layout_marginEnd="@dimen/marginh"
+        android:text="@string/button_back"
+        />
+    </LinearLayout>
+  </LinearLayout>
+   					  
+</LinearLayout>

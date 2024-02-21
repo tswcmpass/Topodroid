@@ -1,0 +1,37 @@
+<html>
+<body>
+
+<h4>DistoX CALIBRATION DATA</h4>
+
+This dialog is opened tapping a data entry in the <u>calibration data window</u>.<br><p>
+
+<ul>
+<li><i>azimuth, inclination, roll</i></li>
+<li>calibration <i>error</i></li>
+<li><i>group</i> number entry field</li>
+<li><i>Save</i> the changes</li>
+</ul>
+<br><p>
+
+The buttons are
+<ul>
+<li><img src="btn_renumber.png"> reassign the groups from this data onward</li>
+<li><img src="btn_delete.png"> mark the data "deleted"</li>
+</ul>
+<br><p>
+
+The item group can be set or changed. 
+<ul>
+<li><i>positive</i>: the data takes part to the computation of the calibration coefficients</li>
+<li><i>zero</i>: the data does not enter the computation</li>
+<!-- li><b>-1</b> (negative one): "delete" the data. This can be done also with the <u>Delete</u> button</li -->
+</ul>
+
+Data with the same positive group number form a group.<br><p>
+
+Deleted data are not removed from the database.<br>
+They are not usually shown in the calibration data list, are not taken into account in the automatic group assignment,
+and do not enter to the computation of the calibration coefficients.<br><p>
+
+</body>
+</html>

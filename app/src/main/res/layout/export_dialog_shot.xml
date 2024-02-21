@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+  style="@style/base_padding"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  >
+
+  <Spinner android:id="@+id/spin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/marginvbig"
+    android:drawSelectorOnTop="true"
+  />
+
+  <LinearLayout android:id="@+id/layout_zip"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/zip_share"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_share"
+      />
+    <!-- CheckBox android:id="@+id/zip_symbols"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_symbols"
+      / -->
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_compass"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <!-- CheckBox android:id="@+id/compass_prefix" OBSOLETED BY EditText
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_prefix"
+      / -->
+    <CheckBox android:id="@+id/compass_splays"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays"
+      />
+    <!-- mOrthogonalLRUDAngle
+         then compute mOrthogonalLRUDCosine
+         and mOrthogonalLRUD = ( angle > 0 )
+     
+     EditText android:id="@+id/compass_splays_ortho"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays_ortho"
+      android:importantForAutofill="no"
+      android:inputType="text"
+      / -->
+    <CheckBox android:id="@+id/compass_swap_lr"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_swap_lr"
+      />
+    <EditText android:id="@+id/compass_prefix"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:hint="@string/export_prefix_hint"
+      android:importantForAutofill="no"
+      android:inputType="text"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_csurvey"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/csurvey_prefix"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_prefix"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_survex"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/survex_splay"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays_named"
+      />
+    <CheckBox android:id="@+id/survex_lrud"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_lrud"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_therion"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/therion_config"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_config"
+      />
+    <CheckBox android:id="@+id/therion_maps"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_maps"
+      />
+    <CheckBox android:id="@+id/therion_lrud"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_lrud"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_walls"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/walls_splays"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_trobot"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <!-- CheckBox android:id="@+id/walls_splays"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays"
+      / -->
+    <EditText android:id="@+id/trobot_name"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:importantForAutofill="no"
+      android:inputType="text"
+      />
+      <!-- android:hint="@string/trobot_name_hint" -->
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_vtopo"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/vtopo_trox"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_trox"
+      />
+    <CheckBox android:id="@+id/vtopo_splays"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays"
+      />
+    <CheckBox android:id="@+id/vtopo_lrud"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_lrud_from"
+      />
+    <EditText android:id="@+id/vtopo_suffix"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:hint="@string/export_suffix_hint"
+      android:importantForAutofill="no"
+      android:inputType="text"
+      />
+  </LinearLayout>
+
+  <!-- LinearLayout android:id="@+id/layout_winkarst"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <EditText android:id="@+id/winkarst_prefix"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:hint="@string/export_prefix_hint"
+      android:importantForAutofill="no"
+      android:inputType="text"
+      />
+  </LinearLayout -->
+
+  <LinearLayout android:id="@+id/layout_csv"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/csv_rawdata"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_csv_rawdata"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_dxf"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/dxf_blocks"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_dxf_blocks"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_kml"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/kml_splays"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays"
+      />
+    <CheckBox android:id="@+id/kml_stations"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_stations"
+      />
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/layout_shp"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    >
+    <CheckBox android:id="@+id/shp_splays"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_splays"
+      />
+    <CheckBox android:id="@+id/shp_stations"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_stations"
+      />
+    <!-- CheckBox android:id="@+id/shp_georeference"
+      android:layout_width="match_parent" 
+      android:layout_height="wrap_content"
+      android:text="@string/export_georeference"
+      / -->
+  </LinearLayout>
+
+  <LinearLayout android:id="@+id/help"
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:layout_marginTop="@dimen/marginvbig"
+    android:layout_marginBottom="@dimen/marginvbig"
+    android:gravity="start"
+    >
+    <Button android:id="@+id/button_help"
+        style="@style/button_empty"
+        android:text="@string/button_help"
+    />
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:gravity="end"
+      >
+      <Button android:id="@+id/button_back"
+        style="@style/button_default"
+        android:text="@string/button_cancel"
+        android:layout_marginEnd="@dimen/marginh"
+      />
+      <Button android:id="@+id/button_ok"
+        style="@style/button_default"
+        android:text="@string/button_save"
+      />
+    </LinearLayout>
+  </LinearLayout>
+   		
+</LinearLayout>
+<!-- /ScrollView -->
