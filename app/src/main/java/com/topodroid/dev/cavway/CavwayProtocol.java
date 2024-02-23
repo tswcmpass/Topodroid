@@ -154,6 +154,10 @@ public class CavwayProtocol extends TopoDroidProtocol
             int res = handleCavwayPacket(mPacketBytes);
             if ( res != PACKET_NONE) {
               mComm.sendCommand(mPacketBytes[1] | 0x55);
+              if(res == DataType.PACKET_G) {
+                mComm.handleRegularPacket( res, mLister, 0 );
+                res = DataType.PACKET_M;
+              }
               mComm.handleRegularPacket(res, mLister, 0);
               return PACKET_MEASURE_DATA; // with ( PACKET_MEASURE_DATA | databuf[0]) shots would be distinguished from calib
             } else {
