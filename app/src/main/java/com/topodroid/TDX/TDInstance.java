@@ -183,7 +183,7 @@ public class TDInstance
    * @param device   bluetooth device
    * SIWEI_TIAN
    */
-  private static boolean isDeviceBLE( Device device )    { return device != null && ( device.isBric() || device.isSap() || device.isDistoXBLE()); }
+  private static boolean isDeviceBLE( Device device )    { return device != null && ( device.isBric() || device.isSap() || device.isDistoXBLE() || device.isCavway()); }
 
   /** @return true if the connection is set in continuous mode
    */
