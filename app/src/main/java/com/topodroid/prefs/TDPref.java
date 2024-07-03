@@ -444,7 +444,7 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     return new TDPref( cat, nm, BUTTON, tit, sum, lvl, PREF, val, def_val, ctx, hlp );
   }
 
-  /** factory cstr a "checkbox" preference
+  /** factory cstr a "checkbox" preference - not used
    * @param cat     category
    * @param nm      preference name
    * @param tit     preference title
@@ -454,13 +454,14 @@ public class TDPref implements AdapterView.OnItemSelectedListener
    * @param ctx     context
    * @param hlp     shared preferences helper
    */ 
-  private static TDPref makeCbx( int cat, String nm, int tit, int sum, int lvl, boolean def_val, Context ctx, TDPrefHelper hlp )
-  { 
-    boolean val = hlp.getBoolean( nm, def_val );
-    TDPref ret = new TDPref( cat, nm, CHECKBOX, tit, sum, lvl, BOOLEAN, (val? "true" : "false"), (def_val? "true" : "false"), ctx, hlp );
-    ret.b_value = val;
-    return ret;
-  }
+  // private static TDPref makeCbx( int cat, String nm, int tit, int sum, int lvl, boolean def_val, Context ctx, TDPrefHelper hlp )
+  // { 
+  //   boolean val = hlp.getBoolean( nm, def_val );
+  //   TDPref ret = new TDPref( cat, nm, CHECKBOX, tit, sum, lvl, BOOLEAN, (val? "true" : "false"), (def_val? "true" : "false"), ctx, hlp );
+  //   ret.b_value = val;
+  //   // TDLog.v("make CBX " + nm + " value " + val );
+  //   return ret;
+  // }
 
   /** factory cstr a "checkbox" preference
    * @param cat     category
@@ -477,6 +478,7 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     boolean val = hlp.getBoolean( nm, def_str.startsWith("t") );
     TDPref ret = new TDPref( cat, nm, CHECKBOX, tit, sum, lvl, BOOLEAN, (val? "true" : "false"), def_str, ctx, hlp );
     ret.b_value = val;
+    // TDLog.v("make CBX " + nm + " value " + val );
     return ret;
   }
 
@@ -742,19 +744,17 @@ public class TDPref implements AdapterView.OnItemSelectedListener
       makeEdt( cat, key[ 1], tit[ 1], dsc[ 1], B, def[ 1], INTEGER, ctx, hlp ),
       makeLst( cat, key[ 2], tit[ 2], dsc[ 2], B, def[ 2], R.array.sizeButtons, R.array.sizeButtonsValue, ctx, hlp ),
       makeLst( cat, key[ 3], tit[ 3], dsc[ 3], B, def[ 3], R.array.extraButtons, R.array.extraButtonsValue, ctx, hlp ),
-      makeCbx( cat, key[ 4], tit[ 4], dsc[ 4], B, def[ 4], ctx, hlp ),
-      makeCbx( cat, key[ 5], tit[ 5], dsc[ 5], T, def[ 5], ctx, hlp ),
-      makeLst( cat, key[ 6], tit[ 6], dsc[ 6], A, def[ 6], R.array.localUserMan, R.array.localUserManValue, ctx, hlp ),
-      makeLst( cat, key[ 7], tit[ 7], dsc[ 7], N, def[ 7], R.array.locale, R.array.localeValue, ctx, hlp ),
-      makeLst( cat, key[ 8], tit[ 8], dsc[ 8], T, def[ 8], R.array.orientation, R.array.orientationValue, ctx, hlp ),
+      makeLst( cat, key[ 4], tit[ 4], dsc[ 4], A, def[ 4], R.array.localUserMan, R.array.localUserManValue, ctx, hlp ),
+      makeLst( cat, key[ 5], tit[ 5], dsc[ 5], N, def[ 5], R.array.locale, R.array.localeValue, ctx, hlp ),
+      makeLst( cat, key[ 6], tit[ 6], dsc[ 6], T, def[ 6], R.array.orientation, R.array.orientationValue, ctx, hlp ),
       // makeCbx( cat, key[ 8], tit[ 8], dsc[ 8], D, def[ 8], ctx, hlp ), // IF_COSURVEY
-      makeFwd( cat, key[ 9], tit[ 9],          B,          ctx, hlp ),    // IMPORT EXPORT
-      makeFwd( cat, key[10], tit[10],          B,          ctx, hlp ),    // SURVEY DATA
-      makeFwd( cat, key[11], tit[11],          B,          ctx, hlp ),    // SKETCHING
-      makeFwd( cat, key[12], tit[12],          B,          ctx, hlp ),    // DEVICES
-      makeFwd( cat, key[13], tit[13],          N,          ctx, hlp ),    // CAVE3D
-      makeFwd( cat, key[14], tit[14],          A,          ctx, hlp ),    // GEEK
-      makeFwd( cat, key[15], tit[15],          E,          ctx, hlp ),    // EXPORT SETTINGS
+      makeFwd( cat, key[ 7], tit[ 7],          B,          ctx, hlp ),    // IMPORT EXPORT
+      makeFwd( cat, key[ 8], tit[ 8],          B,          ctx, hlp ),    // SURVEY DATA
+      makeFwd( cat, key[ 9], tit[ 9],          B,          ctx, hlp ),    // SKETCHING
+      makeFwd( cat, key[10], tit[10],          B,          ctx, hlp ),    // DEVICES
+      makeFwd( cat, key[11], tit[11],          N,          ctx, hlp ),    // CAVE3D
+      makeFwd( cat, key[12], tit[12],          A,          ctx, hlp ),    // GEEK
+      makeFwd( cat, key[13], tit[13],          E,          ctx, hlp ),    // EXPORT SETTINGS
     };
   }
 
@@ -861,6 +861,7 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     int[] tit = TDPrefKey.DEVICEtitle;
     int[] dsc = TDPrefKey.DEVICEdesc;
     String[] def = TDPrefKey.DEVICEdef;
+    
     return new TDPref[ ] {
       // makeEdt( cat, key[  ], tit[  ], dsc[  ], X, def[  ], STRING,  ctx, hlp ),
       // makeLst( cat, key[  ], tit[  ], dsc[  ], X, def[  ], R.array.deviceType, R.array.deviceTypeValue, ctx, hlp ),
@@ -873,7 +874,6 @@ public class TDPref implements AdapterView.OnItemSelectedListener
       makeCbx( cat, key[ 4], tit[ 4], dsc[ 4], N, def[ 4],          ctx, hlp ),
       makeCbx( cat, key[ 5], tit[ 5], dsc[ 5], A, def[ 5],          ctx, hlp ),
       makeLst( cat, key[ 6], tit[ 6], dsc[ 6], E, def[ 6], R.array.feedbackMode, R.array.feedbackModeValue, ctx, hlp ),
-      // makeCbx( cat, key[ 7], tit[ 7], dsc[ 7], N, def[ 7],          ctx, hlp ), // UNNAMED (change next line too)
       makeFwd( cat, key[ 7], tit[ 7],          B,                   ctx, hlp )
     };
   }
@@ -898,7 +898,7 @@ public class TDPref implements AdapterView.OnItemSelectedListener
       makeEdt( cat, key[ 4], tit[ 4], dsc[ 4], A, def[ 4], FLOAT,  ctx, hlp ),
       makeEdt( cat, key[ 5], tit[ 5], dsc[ 5], A, def[ 5], FLOAT,  ctx, hlp ),
       makeEdt( cat, key[ 6], tit[ 6], dsc[ 6], E, def[ 6], FLOAT,  ctx, hlp ),
-      makeFwd( cat, key[ 7], tit[ 7],          N,                  ctx, hlp ), // ENABLE
+      makeFwd( cat, key[ 7], tit[ 7],          B,                  ctx, hlp ), // ENABLE
       makeFwd( cat, key[ 8], tit[ 8],          N,                  ctx, hlp ), // IMPORT
       makeFwd( cat, key[ 9], tit[ 9],          N,                  ctx, hlp ), // survex
       makeFwd( cat, key[10], tit[10],          N,                  ctx, hlp ), // therion
@@ -906,13 +906,13 @@ public class TDPref implements AdapterView.OnItemSelectedListener
       makeFwd( cat, key[12], tit[12],          N,                  ctx, hlp ), // compass
       makeFwd( cat, key[13], tit[13],          N,                  ctx, hlp ), // visualtopo
       makeFwd( cat, key[14], tit[14],          N,                  ctx, hlp ), // walls
-      makeFwd( cat, key[15], tit[15],          T,                  ctx, hlp ), // svg
-      makeFwd( cat, key[16], tit[16],          T,                  ctx, hlp ), // shapefile
-      // makeFwd( cat, key[16], tit[16],          T,                  ctx, hlp ), // png NO_PNG
-      makeFwd( cat, key[17], tit[17],          T,                  ctx, hlp ), // dxf
-      makeFwd( cat, key[18], tit[18],          T,                  ctx, hlp ), // kml
-      makeFwd( cat, key[19], tit[19],          T,                  ctx, hlp ), // gpx
-      makeFwd( cat, key[20], tit[20],          T,                  ctx, hlp )  // cvs
+      makeFwd( cat, key[15], tit[15],          N,                  ctx, hlp ), // svg
+      makeFwd( cat, key[16], tit[16],          N,                  ctx, hlp ), // shapefile
+      // makeFwd( cat, key[16], tit[16],          N,                  ctx, hlp ), // png NO_PNG
+      makeFwd( cat, key[17], tit[17],          N,                  ctx, hlp ), // dxf
+      makeFwd( cat, key[18], tit[18],          N,                  ctx, hlp ), // kml
+      makeFwd( cat, key[19], tit[19],          N,                  ctx, hlp ), // gpx
+      makeFwd( cat, key[20], tit[20],          N,                  ctx, hlp )  // cvs
     };
   }
 
@@ -929,21 +929,22 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     // int[] dsc = TDPrefKey.EXPORT_ENABLEdesc;
     String[] def = TDPrefKey.EXPORT_ENABLEdef;
     return new TDPref[ ] {
-      makeCbx( cat, key[ 0], tit[ 0], -1, T, def[ 0], ctx, hlp ), // compass
-      makeCbx( cat, key[ 1], tit[ 1], -1, T, def[ 1], ctx, hlp ),
-      makeCbx( cat, key[ 2], tit[ 2], -1, T, def[ 2], ctx, hlp ),
-      makeCbx( cat, key[ 3], tit[ 3], -1, T, def[ 3], ctx, hlp ), // polygon
-      makeCbx( cat, key[ 4], tit[ 4], -1, T, def[ 4], ctx, hlp ),
-      makeCbx( cat, key[ 5], tit[ 5], -1, T, def[ 5], ctx, hlp ), // therion
-      makeCbx( cat, key[ 6], tit[ 6], -1, T, def[ 6], ctx, hlp ),
-      makeCbx( cat, key[ 7], tit[ 7], -1, T, def[ 7], ctx, hlp ),
-      makeCbx( cat, key[ 8], tit[ 8], -1, T, def[ 8], ctx, hlp ), // walls
-      makeCbx( cat, key[ 9], tit[ 9], -1, T, def[ 9], ctx, hlp ),
-      makeCbx( cat, key[10], tit[10], -1, T, def[10], ctx, hlp ), // csv
-      makeCbx( cat, key[11], tit[11], -1, T, def[11], ctx, hlp ),
-      makeCbx( cat, key[12], tit[12], -1, T, def[12], ctx, hlp ), // kml
-      makeCbx( cat, key[13], tit[13], -1, T, def[13], ctx, hlp ),
-      makeCbx( cat, key[14], tit[14], -1, T, def[14], ctx, hlp ), // shapefile
+      makeCbx( cat, key[ 0], tit[ 0], -1, B, def[ 0], ctx, hlp ), // compass
+      makeCbx( cat, key[ 1], tit[ 1], -1, B, def[ 1], ctx, hlp ), // csurvey
+      makeCbx( cat, key[ 2], tit[ 2], -1, B, def[ 2], ctx, hlp ), // ghtopo
+      makeCbx( cat, key[ 3], tit[ 3], -1, B, def[ 3], ctx, hlp ), // polygon
+      makeCbx( cat, key[ 4], tit[ 4], -1, B, def[ 4], ctx, hlp ), // survex
+      makeCbx( cat, key[ 5], tit[ 5], -1, B, def[ 5], ctx, hlp ), // therion
+      makeCbx( cat, key[ 6], tit[ 6], -1, B, def[ 6], ctx, hlp ), // topo
+      makeCbx( cat, key[ 7], tit[ 7], -1, B, def[ 7], ctx, hlp ), // toporobot
+      makeCbx( cat, key[ 8], tit[ 8], -1, B, def[ 8], ctx, hlp ), // visualtopo
+      makeCbx( cat, key[ 9], tit[ 9], -1, B, def[ 9], ctx, hlp ), 
+      makeCbx( cat, key[10], tit[10], -1, B, def[10], ctx, hlp ), // winkarst
+      makeCbx( cat, key[11], tit[11], -1, B, def[11], ctx, hlp ), // csv
+      makeCbx( cat, key[12], tit[12], -1, B, def[12], ctx, hlp ), // dxf
+      makeCbx( cat, key[13], tit[13], -1, B, def[13], ctx, hlp ), // kml
+      makeCbx( cat, key[14], tit[14], -1, B, def[14], ctx, hlp ),
+      makeCbx( cat, key[15], tit[15], -1, B, def[15], ctx, hlp ), // shapefile
     };
   }
 
@@ -1385,11 +1386,12 @@ public class TDPref implements AdapterView.OnItemSelectedListener
       makeLst( cat, key[ 2], tit[ 2], dsc[ 2], N, def[ 2], R.array.lineStyle, R.array.lineStyleValue, ctx, hlp ),
       makeEdt( cat, key[ 3], tit[ 3], dsc[ 3], N, def[ 3], INTEGER, ctx, hlp ),
       makeCbx( cat, key[ 4], tit[ 4], dsc[ 4], N, def[ 4],          ctx, hlp ),
-      makeEdt( cat, key[ 5], tit[ 5], dsc[ 5], A, def[ 5], FLOAT,   ctx, hlp ),
-      makeCbx( cat, key[ 6], tit[ 6], dsc[ 6], A, def[ 6],          ctx, hlp ),
-      // makeLst( cat, key[ 6], tit[ 6], dsc[ 6], E, def[ 6], R.array.lineContinue, R.array.lineContinueValue, ctx, hlp ),
-      makeCbx( cat, key[ 7], tit[ 7], dsc[ 7], N, def[ 7],          ctx, hlp ), // WITH CONTINUE LINE
-      makeCbx( cat, key[ 8], tit[ 8], dsc[ 8], N, def[ 8],          ctx, hlp ),
+      makeEdt( cat, key[ 5], tit[ 5], dsc[ 5], A, def[ 5], INTEGER, ctx, hlp ), // DISTOX_SLOPE_LSIDE
+      makeEdt( cat, key[ 6], tit[ 6], dsc[ 6], A, def[ 6], FLOAT,   ctx, hlp ),
+      makeCbx( cat, key[ 7], tit[ 7], dsc[ 7], A, def[ 7],          ctx, hlp ),
+      // makeLst( cat, key[ 7], tit[ 7], dsc[ 7], E, def[ 7], R.array.lineContinue, R.array.lineContinueValue, ctx, hlp ),
+      makeCbx( cat, key[ 8], tit[ 8], dsc[ 8], N, def[ 8],          ctx, hlp ), // WITH CONTINUE LINE
+      makeCbx( cat, key[ 9], tit[ 9], dsc[ 9], N, def[ 9],          ctx, hlp ),
     };
   }
 
@@ -1408,7 +1410,8 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     return new TDPref[ ] {
       makeCbx( cat, key[0], tit[0], dsc[0], N, def[0],        ctx, hlp ),
       makeEdt( cat, key[1], tit[1], dsc[1], B, def[1], FLOAT, ctx, hlp ),
-      makeEdt( cat, key[2], tit[2], dsc[2], B, def[2], FLOAT, ctx, hlp ) 
+      makeEdt( cat, key[2], tit[2], dsc[2], B, def[2], FLOAT, ctx, hlp ),
+      makeCbx( cat, key[3], tit[3], dsc[3], N, def[3],        ctx, hlp )
     };
   }
 
@@ -1513,16 +1516,19 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     int[] dsc    = TDPrefKey.GEEKDEVICEdesc;
     String[] def = TDPrefKey.GEEKDEVICEdef;
     return new TDPref[ ] {
-      makeEdt( cat, key[0], tit[0], dsc[0], E, def[0], INTEGER, ctx, hlp ),
-      makeCbx( cat, key[1], tit[1], dsc[1], T, def[1],          ctx, hlp ), // SECOND DISTOX
-      makeEdt( cat, key[2], tit[2], dsc[2], A, def[2], INTEGER, ctx, hlp ),
-      makeEdt( cat, key[3], tit[3], dsc[3], A, def[3], INTEGER, ctx, hlp ),
-      makeEdt( cat, key[4], tit[4], dsc[4], A, def[4], INTEGER, ctx, hlp ),
-      makeEdt( cat, key[5], tit[5], dsc[5], A, def[5], INTEGER, ctx, hlp ),
-      makeCbx( cat, key[6], tit[6], dsc[6], T, def[6],          ctx, hlp ), // FIRMWARE SANITY
-      makeLst( cat, key[7], tit[7], dsc[7], T, def[7], R.array.bricMode, R.array.bricModeValue, ctx, hlp ), // DISTOX_BRIC_MODE
-      makeCbx( cat, key[8], tit[8], dsc[8], N, def[8],          ctx, hlp ), // DISTOX_BRIC_ZERO_LENGTH
-      makeCbx( cat, key[9], tit[9], dsc[9], T, def[9],          ctx, hlp ), // DISTOX_SAP5_BIT16_BUG
+      makeBtn( cat, key[ 0], tit[ 0], dsc[ 0], T, def[ 0], ctx, hlp ),          // BT ALIAS
+      makeCbx( cat, key[ 1], tit[ 1], dsc[ 1], T, def[ 1],          ctx, hlp ), // BT_NONAME (change next line too)
+      makeEdt( cat, key[ 2], tit[ 2], dsc[ 2], E, def[ 2], INTEGER, ctx, hlp ),
+      makeCbx( cat, key[ 3], tit[ 3], dsc[ 3], T, def[ 3],          ctx, hlp ), // SECOND DISTOX
+      makeEdt( cat, key[ 4], tit[ 4], dsc[ 4], A, def[ 4], INTEGER, ctx, hlp ),
+      makeEdt( cat, key[ 5], tit[ 5], dsc[ 5], A, def[ 5], INTEGER, ctx, hlp ),
+      makeEdt( cat, key[ 6], tit[ 6], dsc[ 6], A, def[ 6], INTEGER, ctx, hlp ),
+      makeEdt( cat, key[ 7], tit[ 7], dsc[ 7], A, def[ 7], INTEGER, ctx, hlp ),
+      makeCbx( cat, key[ 8], tit[ 8], dsc[ 8], T, def[ 8],          ctx, hlp ), // FIRMWARE SANITY
+      makeLst( cat, key[ 9], tit[ 9], dsc[ 9], T, def[ 9], R.array.bricMode, R.array.bricModeValue, ctx, hlp ), // DISTOX_BRIC_MODE
+      makeCbx( cat, key[10], tit[10], dsc[10], N, def[10],          ctx, hlp ), // DISTOX_BRIC_ZERO_LENGTH
+      makeCbx( cat, key[11], tit[11], dsc[11], T, def[11],          ctx, hlp ), // DISTOX_CBRIC_INDEX_IS_ID
+      makeCbx( cat, key[12], tit[12], dsc[12], T, def[12],          ctx, hlp ), // DISTOX_SAP5_BIT16_BUG
     };
   }
 
@@ -1567,23 +1573,24 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     String[] def = TDPrefKey.GEEKSHOTdef;
     return new TDPref[ ] {
       makeCbx( cat, key[ 0], tit[ 0], dsc[ 0], T, def[ 0],          ctx, hlp ), // DIVING_MODE
-      makeCbx( cat, key[ 1], tit[ 1], dsc[ 1], T, def[ 1],          ctx, hlp ), // RECENT_SHOT
-      makeEdt( cat, key[ 2], tit[ 2], dsc[ 2], T, def[ 2], INTEGER, ctx, hlp ), // RECENT TIMEOUT
-      makeCbx( cat, key[ 3], tit[ 3], dsc[ 3], T, def[ 3],          ctx, hlp ), // EXTEND FRACTIONAL
-      makeCbx( cat, key[ 4], tit[ 4], dsc[ 4], T, def[ 4],          ctx, hlp ), // BACKSHOT
-      makeCbx( cat, key[ 5], tit[ 5], dsc[ 5], T, def[ 5],          ctx, hlp ), // BEDDING PLANE
-      makeCbx( cat, key[ 6], tit[ 6], dsc[ 6], A, def[ 6],          ctx, hlp ), // WITH SENSORS
-      makeLst( cat, key[ 7], tit[ 7], dsc[ 7], E, def[ 7], R.array.loopClosure, R.array.loopClosureValue, ctx, hlp ),
-      makeEdt( cat, key[ 8], tit[ 8], dsc[ 8], E, def[ 8], FLOAT,   ctx, hlp ), // LOOP THR
+      makeCbx( cat, key[ 1], tit[ 1], dsc[ 1], T, def[ 1],          ctx, hlp ), // BACKSIGHT_SPLAY
+      makeCbx( cat, key[ 2], tit[ 2], dsc[ 2], T, def[ 2],          ctx, hlp ), // RECENT_SHOT
+      makeEdt( cat, key[ 3], tit[ 3], dsc[ 3], T, def[ 3], INTEGER, ctx, hlp ), // RECENT TIMEOUT
+      makeCbx( cat, key[ 4], tit[ 4], dsc[ 4], T, def[ 4],          ctx, hlp ), // EXTEND FRACTIONAL
+      makeCbx( cat, key[ 5], tit[ 5], dsc[ 5], T, def[ 5],          ctx, hlp ), // BACKSHOT
+      makeCbx( cat, key[ 6], tit[ 6], dsc[ 6], T, def[ 6],          ctx, hlp ), // BEDDING PLANE
+      makeCbx( cat, key[ 7], tit[ 7], dsc[ 7], A, def[ 7],          ctx, hlp ), // WITH SENSORS
+      makeLst( cat, key[ 8], tit[ 8], dsc[ 8], E, def[ 8], R.array.loopClosure, R.array.loopClosureValue, ctx, hlp ),
+      makeEdt( cat, key[ 9], tit[ 9], dsc[ 9], E, def[ 9], FLOAT,   ctx, hlp ), // LOOP THR
       // makeEdt( cat, key[ 9], tit[ 9], dsc[ 9], T, def[ 9], FLOAT,   ctx, hlp ), // DIST/ANGLE TOLERANCE
       // makeCbx( cat, key[ 9], tit[ 9], dsc[ 9], A, def[ 9],          ctx, hlp )  // SPLAYS AT ACTIVE STATION
       // makeCbx( cat, key[ 9], tit[ 9], dsc[ 9], A, def[ 9],          ctx, hlp )  // WITH RENAME
-      makeCbx( cat, key[ 9], tit[ 9], dsc[ 9], A, def[ 9],          ctx, hlp ),// WITH ANDROID AZIMUTH
-      makeEdt( cat, key[10], tit[10], dsc[10], E, def[10], INTEGER, ctx, hlp ), // TIMER
-      makeEdt( cat, key[11], tit[11], dsc[11], E, def[11], INTEGER, ctx, hlp ), // VOLUME
-      makeCbx( cat, key[12], tit[12], dsc[12], T, def[12],          ctx, hlp ), // BLUNDER SHOT
-      makeCbx( cat, key[13], tit[13], dsc[13], T, def[13],          ctx, hlp ), // SPLAY STATION
-      makeCbx( cat, key[14], tit[14], dsc[14], T, def[14],          ctx, hlp ), // SPLAY GROUP
+      makeCbx( cat, key[10], tit[10], dsc[10], A, def[10],          ctx, hlp ),// WITH ANDROID AZIMUTH
+      makeEdt( cat, key[11], tit[11], dsc[11], E, def[11], INTEGER, ctx, hlp ), // TIMER
+      makeEdt( cat, key[12], tit[12], dsc[12], E, def[12], INTEGER, ctx, hlp ), // VOLUME
+      makeCbx( cat, key[13], tit[13], dsc[13], T, def[13],          ctx, hlp ), // BLUNDER SHOT
+      makeCbx( cat, key[14], tit[14], dsc[14], T, def[14],          ctx, hlp ), // SPLAY STATION
+      makeCbx( cat, key[15], tit[15], dsc[15], T, def[15],          ctx, hlp ), // SPLAY GROUP
       // makeCbx( cat, key[13], tit[13], dsc[13], T, def[13],          ctx, hlp )  // TDMANAGER
     };
   }
@@ -1663,34 +1670,40 @@ public class TDPref implements AdapterView.OnItemSelectedListener
     if ( TDLevel.isDebugBuild( ) ) {
       TDLog.v("Length " + key.length + " " + tit.length + " " + dsc.length + " " + def.length );
       return new TDPref[ ] {
-        makeCbx( cat, key[0], tit[0], dsc[0],  T, def[0],  ctx, hlp ), // PALETTES
+        makeCbx( cat, key[0], tit[0], dsc[0],  A, def[0],  ctx, hlp ), // SINGLE_BACK
+        makeCbx( cat, key[1], tit[1], dsc[1],  T, def[1],  ctx, hlp ), // PALETTES
         // makeCbx( cat, key[1], tit[1], dsc[1],  T, def[1],  ctx, hlp ), // BACKUP CLEAR - CLEAR_BACKUPS
-        makeCbx( cat, key[1], tit[1], dsc[1],  T, def[1],  ctx, hlp ), // PACKET LOGGER
-        makeCbx( cat, key[2], tit[2], dsc[2],  T, def[2],  ctx, hlp ), // TH2EDIT
-        makeFwd( cat, key[3], tit[3],          A,          ctx, hlp ), // GEEK_SHOT
-        makeFwd( cat, key[4], tit[4],          T,          ctx, hlp ), // GEEK_SPLAY
-        makeFwd( cat, key[5], tit[5],          A,          ctx, hlp ), // GEEK_PLOT
-        makeFwd( cat, key[6], tit[6],          A,          ctx, hlp ), // GEEK_LINE
+        makeCbx( cat, key[2], tit[2], dsc[2],  T, def[2],  ctx, hlp ), // KEYBOARD
+        makeCbx( cat, key[3], tit[3], dsc[3],  T, def[3],  ctx, hlp ), // CURSOR
+        makeCbx( cat, key[4], tit[4], dsc[4],  T, def[4],  ctx, hlp ), // PACKET LOGGER
+        makeCbx( cat, key[5], tit[5], dsc[5],  T, def[5],  ctx, hlp ), // TH2EDIT
+        makeFwd( cat, key[6], tit[6],          A,          ctx, hlp ), // GEEK_SHOT
+        makeFwd( cat, key[7], tit[7],          T,          ctx, hlp ), // GEEK_SPLAY
+        makeFwd( cat, key[8], tit[8],          A,          ctx, hlp ), // GEEK_PLOT
+        makeFwd( cat, key[9], tit[9],          A,          ctx, hlp ), // GEEK_LINE
         // makeFwd( cat, key[7], tit[7],          T,          ctx, hlp ), // PLOT_WALLS AUTOWALLS
-        makeFwd( cat, key[7], tit[7],          A,          ctx, hlp ), // GEEK_DEVICE
-        makeFwd( cat, key[8], tit[8],          T,          ctx, hlp ), // GEEK_IMPORT
-        makeFwd( cat, key[9], tit[9],          D,          ctx, hlp ), // SKETCH // FIXME_SKETCH_3D FIXME_FIXME
-        makeSpecial( cat, key[10], tit[10], dsc[10],  T, def[10],  ctx, hlp ), // WITH DEBUG
+        makeFwd( cat, key[10], tit[10],        A,          ctx, hlp ), // GEEK_DEVICE
+        makeFwd( cat, key[11], tit[11],        T,          ctx, hlp ), // GEEK_IMPORT
+        makeFwd( cat, key[12], tit[12],        D,          ctx, hlp ), // SKETCH // FIXME_SKETCH_3D FIXME_FIXME
+        makeSpecial( cat, key[13], tit[13], dsc[13],  T, def[13],  ctx, hlp ), // WITH DEBUG
       };
     } else {
       return new TDPref[ ] {
-        makeCbx( cat, key[0], tit[0], dsc[0],  T, def[0],  ctx, hlp ), // PALETTES
+        makeCbx( cat, key[0], tit[0], dsc[0],  A, def[0],  ctx, hlp ), // SINGLE_BACK
+        makeCbx( cat, key[1], tit[1], dsc[1],  T, def[1],  ctx, hlp ), // PALETTES
         // makeCbx( cat, key[1], tit[1], dsc[1],  T, def[1],  ctx, hlp ), // BACKUP CLEAR - CLEAR_BACKUPS
-        makeCbx( cat, key[1], tit[1], dsc[1],  T, def[1],  ctx, hlp ), // PACKET LOGGER
-        makeCbx( cat, key[2], tit[2], dsc[2],  T, def[2],  ctx, hlp ), // TH2EDIT
-        makeFwd( cat, key[3], tit[3],          A,          ctx, hlp ), // GEEK_SHOT
-        makeFwd( cat, key[4], tit[4],          T,          ctx, hlp ), // GEEK_SPLAY
-        makeFwd( cat, key[5], tit[5],          A,          ctx, hlp ), // GEEK_PLOT
-        makeFwd( cat, key[6], tit[6],          A,          ctx, hlp ), // GEEK_LINE
+        makeCbx( cat, key[2], tit[2], dsc[2],  T, def[2],  ctx, hlp ), // KEUBOARD
+        makeCbx( cat, key[3], tit[3], dsc[3],  T, def[3],  ctx, hlp ), // CURSOR
+        makeCbx( cat, key[3], tit[4], dsc[4],  T, def[4],  ctx, hlp ), // PACKET LOGGER
+        makeCbx( cat, key[5], tit[5], dsc[5],  T, def[5],  ctx, hlp ), // TH2EDIT
+        makeFwd( cat, key[6], tit[6],          A,          ctx, hlp ), // GEEK_SHOT
+        makeFwd( cat, key[7], tit[7],          T,          ctx, hlp ), // GEEK_SPLAY
+        makeFwd( cat, key[8], tit[8],          A,          ctx, hlp ), // GEEK_PLOT
+        makeFwd( cat, key[9], tit[9],          A,          ctx, hlp ), // GEEK_LINE
         // makeFwd( cat, key[7], tit[7],          T,          ctx, hlp ), // PLOT_WALLS AUTOWALLS
-        makeFwd( cat, key[7], tit[7],          A,          ctx, hlp ), // GEEK_DEVICE
-        makeFwd( cat, key[8], tit[8],          T,          ctx, hlp ), // GEEK_IMPORT
-        makeFwd( cat, key[9], tit[9],          D,          ctx, hlp )  // SKETCH // FIXME_SKETCH_3D FIXME_FIXME
+        makeFwd( cat, key[10], tit[10],        A,          ctx, hlp ), // GEEK_DEVICE
+        makeFwd( cat, key[11], tit[11],        T,          ctx, hlp ), // GEEK_IMPORT
+        makeFwd( cat, key[12], tit[12],        D,          ctx, hlp ), // SKETCH // FIXME_SKETCH_3D FIXME_FIXME
       };
     }
   }

@@ -183,6 +183,13 @@ public class TDSetting
     }
   }
 
+  public static String setSlopeLSide( int f )
+  {
+    mSlopeLSide = ( f < 1 )? 20 : f;
+    return Integer.toString( mSlopeLSide );
+  }
+     
+
   public static String keyDeviceName() { return "DISTOX_DEVICE"; }
 
   // static final  String EXPORT_TYPE    = "th";    // DISTOX_EXPORT_TH
@@ -201,8 +208,8 @@ public class TDSetting
   public static int mSizeBtns     = 0;      // action bar buttons scale (3: medium)
   public static int mSizeButtons  = BTN_SIZE_UNUSED;     // default 52 
   public static int mTextSize     = 16;     // list text size 
-  public static boolean mKeyboard = true;
-  public static boolean mNoCursor = false;
+  public static boolean mKeyboard = false;
+  public static boolean mNoCursor = true;
   public static boolean mLocalManPages = true;
   public static float mItemButtonSize  = 5.0f;    // used in ItemButton
   // public static float mItemPathScale   = 2.0f; // referred from DrawingWindow
@@ -211,6 +218,9 @@ public class TDSetting
   public static boolean mTh2Edit       = false;
 
   public static int mOrientation = 0; // 0 unspecified, 1 portrait, 2 landscape
+
+  public static float mPictureMin =   5.0f; 
+  public static float mPictureMax = 100.0f;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // IMPORT EXPORT
@@ -397,7 +407,7 @@ public class TDSetting
   // public static boolean isConnectionModeDouble() { return mConnectionMode == CONN_MODE_DOUBLE; }
 
   public static boolean mZ6Workaround  = true;
-  public static boolean mUnnamedDevice = false; // UNNAMED
+  public static boolean mUnnamedDevice = false; // BT_NONAME
 
   public static boolean mAutoReconnect = true;
   public static boolean mSecondDistoX  = false;
@@ -406,8 +416,9 @@ public class TDSetting
   public static int mConnectSocketDelay = 0; // wait time if not paired [0.1 sec]
 
   public static boolean mFirmwareSanity = true; // enforce firmware sanity checks
-  public static int mBricMode = BricMode.MODE_NO_INDEX;
+  public static int mBricMode = BricMode.MODE_ALL;
   public static boolean mBricZeroLength = false; // whether to handle 0-length data
+  public static boolean mBricIndexIsId  = false; // whether to display BRIC index instead of id
   public static boolean mSap5Bit16Bug   = true;  // whether to apply SAP5 bit-16 bug workaround
 
   // public static final boolean CHECK_BT = true;
@@ -503,7 +514,8 @@ public class TDSetting
   public static float mExtendThr = 10;          // extend legs in the interval (-10, +10) ortogonal to the reference azimuth
   public static boolean mBlunderShot  = false;  // skip intermediate leg blunder-shot
   public static boolean mSplayStation = true;   // re-assign station to splays, even if already have it, 
-  public static boolean mSplayOnlyForward = false;  //assign station to splay group only forward
+  public static boolean mSplayOnlyForward = false;  // assign station to splay group only forward
+  public static boolean mBacksightSplay   = false;  // whether first splay is backsight check
 
   public static int mThumbSize = 200;           // thumbnail size
   public static boolean mWithSensors = false;   // whether sensors are enabled
@@ -518,8 +530,8 @@ public class TDSetting
   public static float mReduceCosine = 0.7f;  // cosine of mReduceAngle
 
   // public static boolean mZoomControls = false;
-  public static int mZoomCtrl = 1;
-  public static boolean mSideDrag = false;
+  public static int mZoomCtrl = 0; // 0: gone, 1: temporary, 2: permanent
+  public static boolean mSideDrag = true;
   public static boolean mTripleToolbar = false;
 
   // ------------- UNIT SIZES
@@ -546,6 +558,7 @@ public class TDSetting
   // public static final int PICKER_GRID_3 = 3;
   // public static int mPickerType = PICKER_LIST;
   // public static int mRecentNr     = 4;        // nr. most recent symbols
+  public static boolean mSingleBack = false; // with single back
   public static boolean mPalettes = false;   // extra tools palettes
   public static boolean mCompositeActions = false;
   public static boolean mWithLineJoin = false;  // with line join
@@ -580,13 +593,14 @@ public class TDSetting
   public static boolean mSlantXSection = false; // whether to allow profile slanted xsections
   public static int mObliqueMax = 0; // in [10,80] if enabled, or 0 if disabled
 
-  public static float mStationSize    = 20;   // size of station names [pt]
-  public static float mLabelSize      = 24;   // size of labels [pt]
-  public static float mFixedThickness = 1;    // width of fixed lines
-  public static float mLineThickness  = 1;    // width of drawing lines
+  public static float mStationSize     = 20;   // size of station names [pt]
+  public static float mLabelSize       = 24;   // size of labels [pt]
+  public static boolean mScalableLabel = false; // whether labels scale with the drawing
+  public static float mFixedThickness  = 1;    // width of fixed lines
+  public static float mLineThickness   = 1;    // width of drawing lines
   public static boolean mAutoSectionPt = false;
-  public static int   mBackupNumber   = 5;
-  public static int   mBackupInterval = 60;
+  public static int   mBackupNumber    = 5;
+  public static int   mBackupInterval  = 60;
   // public static boolean mBackupsClear = false; // CLEAR_BACKUPS
   public static boolean mFixedOrigin     = false; 
   public static boolean mSharedXSections = false; // default value
@@ -595,6 +609,8 @@ public class TDSetting
   // public static boolean mPlotCache       = true;  // default value
   public static float mDotRadius      = 5;  // radius of selection dots - splay dots are 1.5 as big
   public static float mArrowLength    = 8;
+  public static int   mSlopeLSide     = 20;  // l-side of slope lines
+
 
   // NOTE not used, but could set a default for section splays
   // public static int mSectionStations = 3; // 1: From, 2: To, 3: both
@@ -935,22 +951,23 @@ public class TDSetting
 
     String[] keyGeek = TDPrefKey.GEEK;
     String[] defGeek = TDPrefKey.GEEKdef;
-    setPalettes(  prefs.getBoolean( keyGeek[0], bool(defGeek[0]) ) ); // DISTOX_PALETTES
+    mSingleBack = prefs.getBoolean( keyGeek[0], bool(defGeek[0]) ); // DISTOX_SINGLE_BACK
+    setPalettes(  prefs.getBoolean( keyGeek[1], bool(defGeek[1]) ) ); // DISTOX_PALETTES
     // setBackupsClear( prefs.getBoolean( keyGeek[1], bool(defGeek[1]) ) ); // DISTOX_BACKUPS_CLEAR CLEAR_BACKUPS
-    mPacketLog = prefs.getBoolean( keyGeek[1], bool(defGeek[1]) ); // DISTOX_PACKET_LOGGER
-    mTh2Edit   = prefs.getBoolean( keyGeek[2], bool(defGeek[2]) ); // DISTOX_TH2_EDIT
-    mWithDebug = TDLevel.isDebugBuild() ? prefs.getBoolean( keyGeek[10], bool(defGeek[10]) ) : false; // DISTOX_WITH_DEBUG
+    mKeyboard = prefs.getBoolean( keyGeek[2], bool(defGeek[2]) ); // DISTOX_MKEYBOARD
+    mNoCursor = prefs.getBoolean( keyGeek[3], bool(defGeek[3]) ); // DISTOX_NO_CURSOR
+    mPacketLog = prefs.getBoolean( keyGeek[4], bool(defGeek[4]) ); // DISTOX_PACKET_LOGGER
+    mTh2Edit   = prefs.getBoolean( keyGeek[5], bool(defGeek[5]) ); // DISTOX_TH2_EDIT
+    mWithDebug = TDLevel.isDebugBuild() ? prefs.getBoolean( keyGeek[13], bool(defGeek[13]) ) : false; // DISTOX_WITH_DEBUG
 
     // String[] keyGPlot = TDPrefKey.GEEKPLOT;
     // String[] defGPlot = TDPrefKey.GEEKPLOTdef;
 
     setTextSize( tryInt(    prefs,     keyMain[1], defMain[1] ) );      // DISTOX_TEXT_SIZE
     setSizeButtons( tryInt( prefs,     keyMain[2], defMain[2] ) );      // DISTOX_SIZE_BUTTONS
-    mKeyboard      = prefs.getBoolean( keyMain[4], bool(defMain[4]) );  // DISTOX_MKEYBOARD
-    mNoCursor      = prefs.getBoolean( keyMain[5], bool(defMain[5]) );  // DISTOX_NO_CURSOR
-    mLocalManPages = handleLocalUserMan( /* my_app, */ prefs.getString( keyMain[6], defMain[6] ), false ); // DISTOX_LOCAL_MAN
-    setLocale( prefs.getString( keyMain[7], TDString.EMPTY ), false ); // DISTOX_LOCALE
-    mOrientation = Integer.parseInt( prefs.getString( keyMain[8], defMain[8] ) ); // DISTOX_ORIENTATION choice: 0, 1, 2
+    mLocalManPages = handleLocalUserMan( /* my_app, */ prefs.getString( keyMain[4], defMain[4] ), false ); // DISTOX_LOCAL_MAN
+    setLocale( prefs.getString( keyMain[5], TDString.EMPTY ), false ); // DISTOX_LOCALE
+    mOrientation = Integer.parseInt( prefs.getString( keyMain[6], defMain[6] ) ); // DISTOX_ORIENTATION choice: 0, 1, 2
     // setLocale( prefs.getString( keyMain[7], defMain[7] ), false ); // DISTOX_LOCALE
     // TDLog.Profile("locale");
     // boolean co_survey = prefs.getBoolean( keyMain[8], bool(defMain[8]) );        // DISTOX_COSURVEY 
@@ -965,7 +982,8 @@ public class TDSetting
     String[] keyData = TDPrefKey.DATA;
     String[] defData = TDPrefKey.DATAdef;
     mAzimuthManual = prefs.getBoolean( keyData[6], bool(defData[6]) );   // DISTOX_AZIMUTH_MANUAL 
-    TDAzimuth.resetRefAzimuth( null, SurveyInfo.SURVEY_EXTEND_NORMAL ); // BUG ?? may call setRefAzimuthButton on non-UI thread
+    // TDAzimuth.setAzimuthManual( mAzimuthManual ); // FIXME FIXED_EXTEND 20240603
+    TDAzimuth.resetRefAzimuth( null, SurveyInfo.SURVEY_EXTEND_NORMAL, mAzimuthManual ); // BUG ?? may call setRefAzimuthButton on non-UI thread
     
     // ------------------- DEVICE PREFERENCES -def--fallback--min-max
     String[] keyDevice = TDPrefKey.DEVICE;
@@ -1038,21 +1056,22 @@ public class TDSetting
     mAutoPair        = prefs.getBoolean( keyDevice[ 5], bool(defDevice[ 5]) );  // DISTOX_AUTO_PAIR
     // TDLog.v("SETTING load device next " + keyDevice[6] + " " + defDevice[6] );
     mConnectFeedback = tryInt( prefs,   keyDevice[ 6],      defDevice[ 6] );   // DISTOX_CONNECT_FEEDBACK
-    // mUnnamedDevice   = prefs.getBoolean( keyDevice[ 7], bool(defDevice[ 7])  ); // DISTOX_UNNAMED_DEVICE
     // TDLog.v("SETTING load device done");
 
     String[] keyGDev = TDPrefKey.GEEKDEVICE;
     String[] defGDev = TDPrefKey.GEEKDEVICEdef;
-    mConnectSocketDelay = tryInt(prefs, keyGDev[ 0],      defGDev[ 0] );   // DISTOX_SOCKET_DELAY
-    mSecondDistoX   = prefs.getBoolean( keyGDev[ 1], bool(defGDev[ 1]) );  // DISTOX_SECOND_DISTOX
-    mWaitData       = tryInt( prefs,    keyGDev[ 2],      defGDev[ 2] );   // DISTOX_WAIT_DATA
-    mWaitConn       = tryInt( prefs,    keyGDev[ 3],      defGDev[ 3] );   // DISTOX_WAIT_CONN
-    mWaitLaser      = tryInt( prefs,    keyGDev[ 4],      defGDev[ 4] );   // DISTOX_WAIT_LASER
-    mWaitShot       = tryInt( prefs,    keyGDev[ 5],      defGDev[ 5] );   // DISTOX_WAIT_SHOT
-    mFirmwareSanity = prefs.getBoolean( keyGDev[ 6], bool(defGDev[ 6]) );  // DISTOX_FIRMWARE_SANITY
-    mBricMode       = tryInt( prefs,    keyGDev[ 7],      defGDev[ 7] );   // DISTOX_BRIC_MODE
-    mBricZeroLength = prefs.getBoolean( keyGDev[ 8], bool(defGDev[ 8]) );  // DISTOX_BRIC_ZERO_LENGTH
-    mSap5Bit16Bug   = prefs.getBoolean( keyGDev[ 9], bool(defGDev[ 9]) );  // DISTOX_SAP5_BIT16_BUG
+    mUnnamedDevice  = prefs.getBoolean( keyGDev[ 1], bool(defGDev[ 1])  ); // DISTOX_UNNAMED_DEVICE BT_NONAME
+    mConnectSocketDelay = tryInt(prefs, keyGDev[ 2],      defGDev[ 2] );   // DISTOX_SOCKET_DELAY
+    mSecondDistoX   = prefs.getBoolean( keyGDev[ 3], bool(defGDev[ 3]) );  // DISTOX_SECOND_DISTOX
+    mWaitData       = tryInt( prefs,    keyGDev[ 4],      defGDev[ 4] );   // DISTOX_WAIT_DATA
+    mWaitConn       = tryInt( prefs,    keyGDev[ 5],      defGDev[ 5] );   // DISTOX_WAIT_CONN
+    mWaitLaser      = tryInt( prefs,    keyGDev[ 6],      defGDev[ 6] );   // DISTOX_WAIT_LASER
+    mWaitShot       = tryInt( prefs,    keyGDev[ 7],      defGDev[ 7] );   // DISTOX_WAIT_SHOT
+    mFirmwareSanity = prefs.getBoolean( keyGDev[ 8], bool(defGDev[ 8]) );  // DISTOX_FIRMWARE_SANITY
+    mBricMode       = tryInt( prefs,    keyGDev[ 9],      defGDev[ 9] );   // DISTOX_BRIC_MODE
+    mBricZeroLength = prefs.getBoolean( keyGDev[10], bool(defGDev[10]) );  // DISTOX_BRIC_ZERO_LENGTH
+    mBricIndexIsId  = prefs.getBoolean( keyGDev[11], bool(defGDev[11]) );  // DISTOX_BRIC_INDEX_IS_ID
+    mSap5Bit16Bug   = prefs.getBoolean( keyGDev[12], bool(defGDev[12]) );  // DISTOX_SAP5_BIT16_BUG
     // TDLog.v("SETTING load geek device done");
 
     String[] keyCave3D = TDPrefKey.CAVE3D;
@@ -1259,21 +1278,22 @@ public class TDSetting
 
     String[] keyGShot = TDPrefKey.GEEKSHOT;
     String[] defGShot = TDPrefKey.GEEKSHOTdef;
-    mDivingMode    = prefs.getBoolean( keyGShot[ 0], bool(defGShot[ 0]) ); // DISTOX_DIVING_MODE
-    mShotRecent    = prefs.getBoolean( keyGShot[ 1], bool(defGShot[ 1]) ); // DISTOX_RECENT_SHOT
-    mRecentTimeout = tryInt(   prefs,  keyGShot[ 2],      defGShot[ 2] );  // DISTOX_RECENT_TIMEOUT
-    mExtendFrac    = prefs.getBoolean( keyGShot[ 3], bool(defGShot[ 3]) ); // DISTOX_EXTEND_FRAC
-    mDistoXBackshot= prefs.getBoolean( keyGShot[ 4], bool(defGShot[ 4]) ); // DISTOX_BACKSHOT
-    mBedding       = prefs.getBoolean( keyGShot[ 5], bool(defGShot[ 5]) ); // DISTOX_BEDDING
-    mWithSensors   = prefs.getBoolean( keyGShot[ 6], bool(defGShot[ 6]) ); // DISTOX_WITH_SENSORS
-    setLoopClosure( tryInt(   prefs,   keyGShot[ 7],      defGShot[ 7] ) );// DISTOX_LOOP_CLOSURE_VALUE
-    mLoopThr       = tryFloat( prefs,  keyGShot[ 8],      defGShot[ 8] );  // DISTOX_LOOP_THR
-    mWithAzimuth   = prefs.getBoolean( keyGShot[ 9], bool(defGShot[ 9]) ); // DISTOX_ANDROID_AZIMUTH
-    mTimerWait     = tryInt(   prefs,  keyGShot[10],      defGShot[10] );  // DISTOX_SHOT_TIMER
-    mBeepVolume    = tryInt(   prefs,  keyGShot[11],      defGShot[11] );  // DISTOX_BEEP_VOLUME
-    mBlunderShot   = prefs.getBoolean( keyGShot[12], bool(defGShot[12]) ); // DISTOX_BLUNDER_SHOT
-    mSplayStation  = prefs.getBoolean( keyGShot[13], bool(defGShot[13]) ); // DISTOX_SPLAY_STATION
-    mSplayOnlyForward    = prefs.getBoolean( keyGShot[14], bool(defGShot[14]) ); // DISTOX_SPLAY_GROUP
+    mDivingMode       = prefs.getBoolean( keyGShot[ 0], bool(defGShot[ 0]) ); // DISTOX_DIVING_MODE
+    mBacksightSplay   = prefs.getBoolean( keyGShot[ 1], bool(defGShot[ 1]) ); // DISTOX_BACKSIGHT_SPLAY
+    mShotRecent       = prefs.getBoolean( keyGShot[ 2], bool(defGShot[ 2]) ); // DISTOX_RECENT_SHOT
+    mRecentTimeout    = tryInt(   prefs,  keyGShot[ 3],      defGShot[ 3] );  // DISTOX_RECENT_TIMEOUT
+    mExtendFrac       = prefs.getBoolean( keyGShot[ 4], bool(defGShot[ 4]) ); // DISTOX_EXTEND_FRAC
+    mDistoXBackshot   = prefs.getBoolean( keyGShot[ 5], bool(defGShot[ 5]) ); // DISTOX_BACKSHOT
+    mBedding          = prefs.getBoolean( keyGShot[ 6], bool(defGShot[ 6]) ); // DISTOX_BEDDING
+    mWithSensors      = prefs.getBoolean( keyGShot[ 7], bool(defGShot[ 7]) ); // DISTOX_WITH_SENSORS
+    setLoopClosure( tryInt(   prefs,      keyGShot[ 8],      defGShot[ 8] ) );// DISTOX_LOOP_CLOSURE_VALUE
+    mLoopThr          = tryFloat( prefs,  keyGShot[ 9],      defGShot[ 9] );  // DISTOX_LOOP_THR
+    mWithAzimuth      = prefs.getBoolean( keyGShot[10], bool(defGShot[10]) ); // DISTOX_ANDROID_AZIMUTH
+    mTimerWait        = tryInt(   prefs,  keyGShot[11],      defGShot[11] );  // DISTOX_SHOT_TIMER
+    mBeepVolume       = tryInt(   prefs,  keyGShot[12],      defGShot[12] );  // DISTOX_BEEP_VOLUME
+    mBlunderShot      = prefs.getBoolean( keyGShot[13], bool(defGShot[13]) ); // DISTOX_BLUNDER_SHOT
+    mSplayStation     = prefs.getBoolean( keyGShot[14], bool(defGShot[14]) ); // DISTOX_SPLAY_STATION
+    mSplayOnlyForward = prefs.getBoolean( keyGShot[15], bool(defGShot[15]) ); // DISTOX_SPLAY_GROUP
     // mWithTdManager = prefs.getBoolean( keyGShot[13], bool(defGShot[13]) ); // DISTOX_TDMANAGER
     // TDLog.v("SETTING load secondary GEEK data done");
 
@@ -1395,17 +1415,19 @@ public class TDSetting
     setLineStyleAndType( prefs.getString( keyLine[2],   defLine[2] ) ); // DISTOX_LINE_STYLE
     setLineSegment( tryInt(    prefs,  keyLine[3],      defLine[3] ) ); // DISTOX_LINE_SEGMENT
     mLineClose     = prefs.getBoolean( keyLine[4], bool(defLine[4]) );  // DISTOX_LINE_CLOSE
-    mArrowLength   = tryFloat( prefs,  keyLine[5],      defLine[5] );   // DISTOX_ARROW_LENGTH
-    mAutoSectionPt = prefs.getBoolean( keyLine[6], bool(defLine[6]) );  // DISTOX_AUTO_SECTION_PT
-    // mContinueLine  = tryInt(   prefs,  keyLine[6],      defLine[6] );   // DISTOX_LINE_CONTINUE
-    mWithLineJoin  = prefs.getBoolean( keyLine[7], bool(defLine[7]) );  // DISTOX_WITH_CONTINUE_LINE
-    mAreaBorder    = prefs.getBoolean( keyLine[8], bool(defLine[8]) );  // DISTOX_AREA_BORDER
+    mSlopeLSide    = tryInt(   prefs,  keyLine[5],      defLine[5] );   // DISTOX_SLOPE_LSIDE
+    mArrowLength   = tryFloat( prefs,  keyLine[6],      defLine[6] );   // DISTOX_ARROW_LENGTH
+    mAutoSectionPt = prefs.getBoolean( keyLine[7], bool(defLine[7]) );  // DISTOX_AUTO_SECTION_PT
+    // mContinueLine  = tryInt(   prefs,  keyLine[7],      defLine[7] );   // DISTOX_LINE_CONTINUE
+    mWithLineJoin  = prefs.getBoolean( keyLine[8], bool(defLine[8]) );  // DISTOX_WITH_CONTINUE_LINE
+    mAreaBorder    = prefs.getBoolean( keyLine[9], bool(defLine[9]) );  // DISTOX_AREA_BORDER
 
     String[] keyPoint = TDPrefKey.POINT;
     String[] defPoint = TDPrefKey.POINTdef;
     mUnscaledPoints = prefs.getBoolean( keyPoint[0], bool(defPoint[0]) ); // DISTOX_UNSCALED_POINTS
     mUnitIcons     = tryFloat( prefs,   keyPoint[1], defPoint[1] );       // DISTOX_DRAWING_UNIT 
     mLabelSize     = tryFloat( prefs,   keyPoint[2], defPoint[2] );       // DISTOX_LABEL_SIZE
+    mScalableLabel = prefs.getBoolean(  keyPoint[3], bool(defPoint[3]) ); // DISTOX_SCALABLE_LABEL
     // mPlotCache  = prefs.getBoolean( keyPoint[], bool(defPoint[]) );    // DISTOX_PLOT_CACHE
 
     // AUTOWALLS
@@ -1496,17 +1518,13 @@ public class TDSetting
     } else if ( k.equals( key[ 3 ] ) ) {             // DISTOX_EXTRA_BUTTONS (choice)
       int level = tryIntValue( hlp, k, v, def[3] );
       setActivityBooleans( hlp.getSharedPrefs(), level );
-    } else if ( k.equals( key[ 4 ] ) ) {           // DISTOX_MKEYBOARD (bool)
-      mKeyboard = tryBooleanValue( hlp, k, v, bool(def[4]) );
-    } else if ( k.equals( key[ 5 ] ) ) {           // DISTOX_NO_CURSOR(bool)
-      mNoCursor = tryBooleanValue( hlp, k, v, bool(def[5]) );
-    } else if ( k.equals( key[ 6 ] ) ) {           // DISTOX_LOCAL_MAN (choice)
+    } else if ( k.equals( key[ 4 ] ) ) {           // DISTOX_LOCAL_MAN (choice)
       // TDLog.v("SETTING handle local man pages - key " + k + " default " + def[6] );
-      mLocalManPages = handleLocalUserMan( /* hlp.getApp(), */ tryStringValue( hlp, k, v, def[6] ), true );
-    } else if ( k.equals( key[ 7 ] ) ) {           // DISTOX_LOCALE (choice)
-      setLocale( tryStringValue( hlp, k, v, def[7] ), true );
-    } else if ( k.equals( key[ 8 ] ) ) {           // DISTOX_ORIENTATION (choice)
-      mOrientation = tryIntValue( hlp, k, v, def[8] );
+      mLocalManPages = handleLocalUserMan( /* hlp.getApp(), */ tryStringValue( hlp, k, v, def[4] ), true );
+    } else if ( k.equals( key[ 5 ] ) ) {           // DISTOX_LOCALE (choice)
+      setLocale( tryStringValue( hlp, k, v, def[5] ), true );
+    } else if ( k.equals( key[ 6 ] ) ) {           // DISTOX_ORIENTATION (choice)
+      mOrientation = tryIntValue( hlp, k, v, def[6] );
       TopoDroidApp.setScreenOrientation( );
       TDandroid.setScreenOrientation( TDPrefActivity.mPrefActivityAll );
     /* ---- IF_COSURVEY
@@ -1685,8 +1703,6 @@ public class TDSetting
       TopoDroidApp.checkAutoPairing();
     } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_CONNECT_FEEDBACK
       mConnectFeedback = tryIntValue( hlp, k, v, def[6] );
-    // } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_UNNAMED_DEVICE
-    //   mUnnamedDevice = tryBooleanValue( hlp, k, v, bool(def[7]) );
     } else {
       TDLog.Error("missing DEVICE key: " + k );
     }
@@ -1799,17 +1815,23 @@ public class TDSetting
     // TDLog.v("update pref data: " + k );
     String[] key = TDPrefKey.GEEK;
     String[] def = TDPrefKey.GEEKdef;
-    if ( k.equals( key[ 0 ] ) ) { // DISTOX_PALETTES
-      setPalettes( tryBooleanValue( hlp, k, v, bool(def[0]) ) );
+    if ( k.equals( key[0] ) ) {
+      mSingleBack = tryBooleanValue( hlp, k, v, bool(def[0]) ); // DISTOX_SINGLE_BACK
+    } else if ( k.equals( key[ 1 ] ) ) { // DISTOX_PALETTES
+      setPalettes( tryBooleanValue( hlp, k, v, bool(def[1]) ) );
     // } else if ( k.equals( key[1] ) ) { // CLEAR_BACKUPS
     //   setBackupsClear( tryBooleanValue( hlp, k, v, bool(def[1]) ) ); // DISTOX_BACKUPS_CLEAR
-    } else if ( k.equals( key[1] ) ) {
-      mPacketLog = tryBooleanValue( hlp, k, v, bool(def[1]) ); // DISTOX_PACKET_LOGGER
-    } else if ( k.equals( key[2] ) ) {
-      mTh2Edit = tryBooleanValue( hlp, k, v, bool(def[2]) ); // DISTOX_TH2_EDIT
+    } else if ( k.equals( key[ 2 ] ) ) {           // DISTOX_MKEYBOARD (bool)
+      mKeyboard = tryBooleanValue( hlp, k, v, bool(def[2]) );
+    } else if ( k.equals( key[ 3 ] ) ) {           // DISTOX_NO_CURSOR(bool)
+      mNoCursor = tryBooleanValue( hlp, k, v, bool(def[3]) );
+    } else if ( k.equals( key[4] ) ) {
+      mPacketLog = tryBooleanValue( hlp, k, v, bool(def[4]) ); // DISTOX_PACKET_LOGGER
+    } else if ( k.equals( key[5] ) ) {
+      mTh2Edit = tryBooleanValue( hlp, k, v, bool(def[5]) ); // DISTOX_TH2_EDIT
       mMainFlag |= FLAG_BUTTON;
-    } else if ( TDLevel.isDebugBuild() && k.equals( key[10] ) ) {
-      mWithDebug =  tryBooleanValue( hlp, k, v, bool(def[10]) ); // DISTOX_WITH_DEBUG
+    } else if ( TDLevel.isDebugBuild() && k.equals( key[13] ) ) {
+      mWithDebug =  tryBooleanValue( hlp, k, v, bool(def[13]) ); // DISTOX_WITH_DEBUG
       TDLevel.setLevelWithDebug( mWithDebug );
     } else {
       TDLog.Error("missing GEEK key: " + k );
@@ -1817,6 +1839,7 @@ public class TDSetting
     // if ( ret != null ) hlp.update( k, ret );
     return ret;
   }
+
   private static String updatePrefGeekShot( TDPrefHelper hlp, String k, String v )
   {
     String ret = null;
@@ -1825,36 +1848,38 @@ public class TDSetting
     String[] def = TDPrefKey.GEEKSHOTdef;
     if ( k.equals( key[ 0 ] ) ) { // DISTOX_DIVING_MODE
       mDivingMode   = tryBooleanValue( hlp, k, v, bool(def[0]) );
-    } else if ( k.equals( key[ 1 ] ) ) { // DISTOX_RECENT_SHOT
-      mShotRecent   = tryBooleanValue( hlp, k, v, bool(def[1]) );
-    } else if ( k.equals( key[ 2 ] ) ) { // DISTOX_RECENT_TIMEOUT
-      mRecentTimeout = tryIntValue( hlp, k, v, def[2] );
+    } else if ( k.equals( key[ 1 ] ) ) { // DISTOX_BACKSIGHT_SPLAY
+      mBacksightSplay = tryBooleanValue( hlp, k, v, bool(def[1]) );
+    } else if ( k.equals( key[ 2 ] ) ) { // DISTOX_RECENT_SHOT
+      mShotRecent   = tryBooleanValue( hlp, k, v, bool(def[2]) );
+    } else if ( k.equals( key[ 3 ] ) ) { // DISTOX_RECENT_TIMEOUT
+      mRecentTimeout = tryIntValue( hlp, k, v, def[3] );
       if ( mRecentTimeout < 0 ) { mRecentTimeout = 0; ret = TDString.ZERO; }
-    } else if ( k.equals( key[ 3 ] ) ) { // DISTOX_EXTEND_FRAC
-      mExtendFrac   = tryBooleanValue( hlp, k, v, bool(def[ 3]) );
-    } else if ( k.equals( key[ 4 ] ) ) { // DISTOX_BACKSHOT (bool)
-      mDistoXBackshot = tryBooleanValue( hlp, k, v, bool(def[4]) );
-    } else if ( k.equals( key[ 5 ] ) ) { // DISTOX_BEDDING
-      mBedding      = tryBooleanValue( hlp, k, v, bool(def[ 5]) );
-    } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_WITH_SENSORS
-      mWithSensors  = tryBooleanValue( hlp, k, v, bool(def[ 6]) );
-    } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_LOOP_CLOSURE_VALUE
-      setLoopClosure( tryIntValue( hlp, k, v, def[ 7] ) );
-    } else if ( k.equals( key[ 8 ] ) ) { // DISTOX_LOOP_THR
-      mLoopThr = tryFloatValue( hlp, k, v, def[ 8] );
-    } else if ( k.equals( key[ 9 ] ) ) { // DISTOX_ANDROID_AZIMUTH
-      mWithAzimuth  = tryBooleanValue( hlp, k, v, bool(def[ 9]) );
-    } else if ( k.equals( key[10  ] ) ) { // DISTOX_SHOT_TIMER [3 ..)
-      mTimerWait        = tryIntValue( hlp, k, v, def[10] );
+    } else if ( k.equals( key[ 4 ] ) ) { // DISTOX_EXTEND_FRAC
+      mExtendFrac   = tryBooleanValue( hlp, k, v, bool(def[ 4]) );
+    } else if ( k.equals( key[ 5 ] ) ) { // DISTOX_BACKSHOT (bool)
+      mDistoXBackshot = tryBooleanValue( hlp, k, v, bool(def[5]) );
+    } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_BEDDING
+      mBedding      = tryBooleanValue( hlp, k, v, bool(def[ 6]) );
+    } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_WITH_SENSORS
+      mWithSensors  = tryBooleanValue( hlp, k, v, bool(def[ 7]) );
+    } else if ( k.equals( key[ 8 ] ) ) { // DISTOX_LOOP_CLOSURE_VALUE
+      setLoopClosure( tryIntValue( hlp, k, v, def[ 8] ) );
+    } else if ( k.equals( key[ 9 ] ) ) { // DISTOX_LOOP_THR
+      mLoopThr = tryFloatValue( hlp, k, v, def[ 9] );
+    } else if ( k.equals( key[10 ] ) ) { // DISTOX_ANDROID_AZIMUTH
+      mWithAzimuth  = tryBooleanValue( hlp, k, v, bool(def[10]) );
+    } else if ( k.equals( key[11  ] ) ) { // DISTOX_SHOT_TIMER [3 ..)
+      mTimerWait        = tryIntValue( hlp, k, v, def[11] );
       if ( mTimerWait < 0 ) { mTimerWait = 0; ret = TDString.ZERO; }
-    } else if ( k.equals( key[ 11 ] ) ) { // DISTOX_BEEP_VOLUME [0 .. 100]
-      ret = setBeepVolume( tryIntValue( hlp, k, v, def[11] ) );
-    } else if ( k.equals( key[ 12 ] ) ) { // DISTOX_BLUNDER_SHOT
-      mBlunderShot = tryBooleanValue( hlp, k, v, bool(def[12]) );
-    } else if ( k.equals( key[ 13 ] ) ) { // DISTOX_SPLAY_STATION 
-      mSplayStation = tryBooleanValue( hlp, k, v, bool(def[13]) );
-    } else if ( k.equals( key[ 14 ] ) ) { // DISTOX_SPLAY_GROUP
-      mSplayOnlyForward = tryBooleanValue( hlp, k, v, bool(def[14]) );
+    } else if ( k.equals( key[ 12 ] ) ) { // DISTOX_BEEP_VOLUME [0 .. 100]
+      ret = setBeepVolume( tryIntValue( hlp, k, v, def[12] ) );
+    } else if ( k.equals( key[ 13 ] ) ) { // DISTOX_BLUNDER_SHOT
+      mBlunderShot = tryBooleanValue( hlp, k, v, bool(def[13]) );
+    } else if ( k.equals( key[ 14 ] ) ) { // DISTOX_SPLAY_STATION 
+      mSplayStation = tryBooleanValue( hlp, k, v, bool(def[14]) );
+    } else if ( k.equals( key[ 15 ] ) ) { // DISTOX_SPLAY_GROUP
+      mSplayOnlyForward = tryBooleanValue( hlp, k, v, bool(def[15]) );
     // } else if ( k.equals( key[13 ] ) ) { // DISTOX_TDMANAGER
     //   mWithTdManager = tryBooleanValue( hlp, k, v, bool(def[13]) );
 
@@ -1979,36 +2004,41 @@ public class TDSetting
     String ret = null;
     String[] key = TDPrefKey.GEEKDEVICE;
     String[] def = TDPrefKey.GEEKDEVICEdef;
-    if ( k.equals( key[ 0 ] ) ) { // DISTOX_SOCKET_DELAY
-      mConnectSocketDelay = tryIntValue( hlp, k, v, def[0] );  
+    int j = 0;
+    if ( k.equals( key[ ++j ] ) ) { // DISTOX_UNNAMED_DEVICE 
+      mUnnamedDevice = tryBooleanValue( hlp, k, v, bool(def[j]) ); // BT_NONAME
+    } else if ( k.equals( key[ ++j ] ) ) { // DISTOX_SOCKET_DELAY index 1
+      mConnectSocketDelay = tryIntValue( hlp, k, v, def[j] );  
       if ( mConnectSocketDelay < 0  ) { mConnectSocketDelay =  0; ret = TDString.ZERO; }
       if ( mConnectSocketDelay > 60 ) { mConnectSocketDelay = 60; ret = TDString.SIXTY; } // was 100
-    } else if ( k.equals( key[ 1 ] ) ) { // DISTOX_SECOND_DISTOX (bool)
-      mSecondDistoX = tryBooleanValue( hlp, k, v, bool(def[1]) );
-    } else if ( k.equals( key[ 2 ] ) ) { // DISTOX_WAIT_DATA
-      mWaitData = tryIntValue( hlp, k, v, def[2] ); 
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_SECOND_DISTOX (bool)
+      mSecondDistoX = tryBooleanValue( hlp, k, v, bool(def[j]) );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_WAIT_DATA
+      mWaitData = tryIntValue( hlp, k, v, def[j] ); 
       if ( mWaitData <    0 ) { mWaitData =    0; ret = Integer.toString( mWaitData ); }
       if ( mWaitData > 2000 ) { mWaitData = 2000; ret = Integer.toString( mWaitData ); }
-    } else if ( k.equals( key[ 3 ] ) ) { // DISTOX_WAIT_CONN
-      mWaitConn = tryIntValue( hlp, k, v, def[3] );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_WAIT_CONN
+      mWaitConn = tryIntValue( hlp, k, v, def[j] );
       if ( mWaitConn <   50 ) { mWaitConn =   50; ret = Integer.toString( mWaitConn ); }
       if ( mWaitConn > 2000 ) { mWaitConn = 2000; ret = Integer.toString( mWaitConn ); }
-    } else if ( k.equals( key[ 4 ] ) ) { // DISTOX_WAIT_LASER
-      mWaitLaser = tryIntValue( hlp, k, v, def[4] );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_WAIT_LASER
+      mWaitLaser = tryIntValue( hlp, k, v, def[j] );
       if ( mWaitLaser <  500 ) { mWaitLaser =  500; ret = Integer.toString( mWaitLaser ); }
       if ( mWaitLaser > 5000 ) { mWaitLaser = 5000; ret = Integer.toString( mWaitLaser ); }
-    } else if ( k.equals( key[ 5 ] ) ) { // DISTOX_WAIT_SHOT
-      mWaitShot  = tryIntValue( hlp, k, v, def[5] );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_WAIT_SHOT
+      mWaitShot  = tryIntValue( hlp, k, v, def[j] );
       if ( mWaitShot <   500 ) { mWaitShot =   500; ret = Integer.toString( mWaitShot ); }
       if ( mWaitShot > 10000 ) { mWaitShot = 10000; ret = Integer.toString( mWaitShot ); }
-    } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_FIRMWARE_SANITY
-      mFirmwareSanity = tryBooleanValue( hlp, k, v, bool(def[6]) );
-    } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_BRIC_MODE
-      mBricMode = tryIntValue( hlp, k, v, def[7] );
-    } else if ( k.equals( key[ 8 ] ) ) { // DISTOX_BRIC_ZERO_LENGTH
-      mBricZeroLength = tryBooleanValue( hlp, k, v, bool(def[8]) );
-    } else if ( k.equals( key[ 9 ] ) ) { // DISTOX_SAP5_BIT16_BUG
-      mSap5Bit16Bug = tryBooleanValue( hlp, k, v, bool(def[9]) );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_FIRMWARE_SANITY
+      mFirmwareSanity = tryBooleanValue( hlp, k, v, bool(def[j]) );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_BRIC_MODE
+      mBricMode = tryIntValue( hlp, k, v, def[j] );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_BRIC_ZERO_LENGTH
+      mBricZeroLength = tryBooleanValue( hlp, k, v, bool(def[j]) );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_BRIC_INDEX_IS_ID
+      mBricIndexIsId = tryBooleanValue( hlp, k, v, bool(def[j]) );
+    } else if ( k.equals( key[ ++j] ) ) { // DISTOX_SAP5_BIT16_BUG
+      mSap5Bit16Bug = tryBooleanValue( hlp, k, v, bool(def[j]) );
     } else {
       TDLog.Error("missing DEVICE key: " + k );
     }
@@ -2445,7 +2475,8 @@ public class TDSetting
       if ( mVThreshold > 90 ) { mVThreshold = 90; ret = TDString.NINETY; }
     } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_AZIMUTH_MANUAL (bool)
       mAzimuthManual  = tryBooleanValue( hlp, k, v, bool(def[6]) ); 
-      TDAzimuth.resetRefAzimuth( TopoDroidApp.mShotWindow, TDAzimuth.mRefAzimuth );
+      // TDAzimuth.setAzimuthManual( mAzimuthManual ); // FIXME FIXED_EXTEND 20240603
+      TDAzimuth.resetRefAzimuth( TopoDroidApp.mShotWindow, TDAzimuth.mRefAzimuth, mAzimuthManual ); // FIXME FIXED_EXTEND 20240603
     } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_PREV_NEXT (bool)
       mPrevNext = tryBooleanValue( hlp, k, v, bool(def[ 7]) );
     } else if ( k.equals( key[ 8 ] ) ) { // DISTOX_BACKSIGHT (bool)
@@ -2611,16 +2642,18 @@ public class TDSetting
       ret = setLineSegment( tryIntValue(   hlp, k, v, def[3] ) );
     } else if ( k.equals( key[ 4 ] ) ) { // DISTOX_LINE_CLOSE
       mLineClose = tryBooleanValue( hlp, k, v, bool(def[4]) );
-    } else if ( k.equals( key[ 5 ] ) ) { // DISTOX_ARROW_LENGTH
-      ret = setArrowLength( tryFloatValue( hlp, k, v, def[5] ) );
-    } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_AUTO_SECTION_PT (bool)
-      mAutoSectionPt = tryBooleanValue( hlp, k, v, bool(def[6]) );
+    } else if ( k.equals( key[ 5 ] ) ) { // DISTOX_SLOPE_LSIDE
+      ret = setSlopeLSide( tryIntValue( hlp, k, v, def[5] ) );
+    } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_ARROW_LENGTH
+      ret = setArrowLength( tryFloatValue( hlp, k, v, def[6] ) );
+    } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_AUTO_SECTION_PT (bool)
+      mAutoSectionPt = tryBooleanValue( hlp, k, v, bool(def[7]) );
     // } else if ( k.equals( key[ 6 ] ) ) { // DISTOX_LINE_CONTINUE (choice)
-    //   mContinueLine  = tryIntValue( hlp, k, v, def[6] );
-    } else if ( k.equals( key[ 7 ] ) ) { // DISTOX_WITH_CONTINUE_LINE (bool)
-      mWithLineJoin = tryBooleanValue(  hlp, k, v, bool(def[7]) );
-    } else if ( k.equals( key[ 8 ] ) ) { // DISTOX_AREA_BORDER (bool)
-      mAreaBorder = tryBooleanValue( hlp, k, v, bool(def[8]) );
+    //   mContinueLine  = tryIntValue( hlp, k, v, def[7] );
+    } else if ( k.equals( key[ 8 ] ) ) { // DISTOX_WITH_CONTINUE_LINE (bool)
+      mWithLineJoin = tryBooleanValue(  hlp, k, v, bool(def[8]) );
+    } else if ( k.equals( key[ 9 ] ) ) { // DISTOX_AREA_BORDER (bool)
+      mAreaBorder = tryBooleanValue( hlp, k, v, bool(def[9]) );
     } else {
       TDLog.Error("missing LINE key: " + k );
     }
@@ -2650,6 +2683,8 @@ public class TDSetting
       }
       // FIXME changing label size affects only new labels; not existing labels (until they are edited)
       ret = String.format(Locale.US, "%.2f", mLabelSize );
+    } else if ( k.equals( key[ 3 ] ) ) { // DISTOX_SCALABLE_LABEL
+      mScalableLabel = tryBooleanValue( hlp, k, v, bool(def[3]) );
     } else {
       TDLog.Error("missing POINT key: " + k );
     }
@@ -3196,8 +3231,7 @@ public class TDSetting
 
       pw.printf(Locale.US, "BT: check %d, autopair %c \n", mCheckBT, tf(mAutoPair) );
       pw.printf(Locale.US, "Socket: type %d, delay %d \n", mSockType, mConnectSocketDelay );
-      // pw.printf(Locale.US, "Connection mode %d Z6 %c, feedback %d unnamed %c\n", mConnectionMode, tf(mZ6Workaround), mConnectFeedback, tf(mUnnamedDevice) ); // UNNAMED
-      pw.printf(Locale.US, "Connection mode %d Z6 %c, feedback %d \n", mConnectionMode, tf(mZ6Workaround), mConnectFeedback );
+      pw.printf(Locale.US, "Connection mode %d Z6 %c, feedback %d unnamed %c\n", mConnectionMode, tf(mZ6Workaround), mConnectFeedback, tf(mUnnamedDevice) ); // BT_NONAME
       // pw.printf(Locale.US, "Communication autoreconnect %c, DistoX-B %c, retry %d, head/tail %c\n", tf(mAutoReconnect), tf(mSecondDistoX), mCommRetry, tf(mHeadTail) );
       pw.printf(Locale.US, "Communication DistoX-B %c, retry %d, head/tail %c \n", tf(mSecondDistoX), mCommRetry, tf(mHeadTail) );
       pw.printf(Locale.US, "Packet log %c Th2Edit %c WithDebug %c \n", tf(mPacketLog), tf(mTh2Edit), tf(mWithDebug) );
@@ -3235,14 +3269,15 @@ public class TDSetting
       pw.printf(Locale.US, "Plot: zoom %d, drag %c, fix-origin %c, split %c, shift %c, levels %d, affine %c, stylus %.1f, slant-xsection %c, oblique %d\n", // STYLUS_MM
         mZoomCtrl, tf(mSideDrag), tf(mFixedOrigin), tf(mPlotSplit), tf(mPlotShift), mWithLevels, tf(mFullAffine), mStylusSize, tf(mSlantXSection), mObliqueMax );
       pw.printf(Locale.US, "Units: icon %.2f, line %.2f, grid %.2f, ruler %.2f\n", mUnitIcons, mUnitLines, mUnitGrid, mUnitMeasure );
-      pw.printf(Locale.US, "Size: station %.1f, label %.1f, fixed %.1f line %.1f\n", mStationSize, mLabelSize, mFixedThickness, mLineThickness );
+      pw.printf(Locale.US, "Size: station %.1f, label %.1f, fixed %.1f line %.1f, scaleable_label %c\n",
+        mStationSize, mLabelSize, mFixedThickness, mLineThickness, tf(mScalableLabel) );
       pw.printf(Locale.US, "Select: radius %.2f, pointing %d, shift %d, dot %.1f, multiple %c \n",
         mSelectness, mPointingRadius, mMinShift, mDotRadius, tf(mPathMultiselect) );
       pw.printf(Locale.US, "Erase: radius %.2f\n", mEraseness );
       // pw.printf(Locale.US, "Picker: type %d\n", mPickerType );
       pw.printf(Locale.US, "Point: unscaled %c\n", tf(mUnscaledPoints) );
       // pw.printf(Locale.US, "Line: style %d, type %d, segment %d, continue %d, arrow %.1f\n", mLineStyle, mLineType, mLineSegment, mContinueLine, mArrowLength );
-      pw.printf(Locale.US, "Line: style %d, type %d, segment %d, continue 0, arrow %.1f, close %c\n", mLineStyle, mLineType, mLineSegment, mArrowLength, tf(mLineClose) );
+      pw.printf(Locale.US, "Line: style %d, type %d, segment %d, continue 0, arrow %.1f, close %c, l-side %d\n", mLineStyle, mLineType, mLineSegment, mArrowLength, tf(mLineClose), mSlopeLSide );
       pw.printf(Locale.US, "Bezier: step %.2f, accuracy %.2f, corner %.2f\n", mBezierStep, mLineAccuracy, mLineCorner );
       pw.printf(Locale.US, "Weed: distance %.2f, length %.2f, buffer %.2f\n", mWeedDistance, mWeedLength, mWeedBuffer );
       pw.printf(Locale.US, "Area: border %c\n", tf(mAreaBorder) );
@@ -3599,9 +3634,9 @@ public class TDSetting
               mConnectionMode  = getInt( vals, 2, 0 );     setPreference( editor, "DISTOX_CONN_MODE", mConnectionMode );
               mZ6Workaround    = getBoolean( vals, 4 ); setPreference( editor, "DISTOX_Z6_WORKAROUND", mZ6Workaround );
               mConnectFeedback = getInt( vals, 6, 0 );     setPreference( editor, "DISTOX_CONNECT_FEEDBACK", mConnectFeedback );
-              // if ( vals.length > 8 ) { // UNNAMED
-              //   mUnnamedDevice = getBoolean( vals, 8 ); setPreference( editor, "DISTOX_UNNAMED_DEVICE", mUnnamedDevice );
-              // }
+              if ( vals.length > 8 ) { // BT_NONAME
+                mUnnamedDevice = getBoolean( vals, 8 ); setPreference( editor, "DISTOX_UNNAMED_DEVICE", mUnnamedDevice );
+              }
             }
           }
           continue;
@@ -3898,6 +3933,9 @@ public class TDSetting
               mLabelSize      = getFloat( vals, 4, 24.0f ); setPreference( editor, "DISTOX_LABEL_SIZE", mLabelSize );
               mFixedThickness = getFloat( vals, 6, 1.0f );  setPreference( editor, "DISTOX_FIXED_THICKNESS", mFixedThickness );
               mLineThickness  = getFloat( vals, 8, 1.0f );  setPreference( editor, "DISTOX_LINE_THICKNESS", mLineThickness );
+              if ( vals.length > 10 ) {
+                mScalableLabel = getBoolean( vals, 10 ); setPreference( editor, "DISTOX_SCALABLE_LABEL", mScalableLabel );
+              }
             }
           }
           continue;
@@ -3949,6 +3987,9 @@ public class TDSetting
             mArrowLength  = getFloat( vals, 10, 10.0f ); setPreference( editor, "DISTOX_ARROW_LENGTH", mArrowLength );
             if ( vals.length > 12 ) {
               mLineClose = getBoolean( vals, 12 ); setPreference( editor, "DISTOX_LINE_CLOSE", mLineClose );
+            }
+            if ( vals.length > 14 ) {
+              mSlopeLSide = getInt( vals, 12, 20 ); setPreference( editor, "DISTOX_SLOPE_LSIDE", mSlopeLSide );
             }
           }
           continue;

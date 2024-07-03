@@ -85,27 +85,35 @@ public class TDInstance
    */
   public static boolean isDeviceDistoX() { return deviceA != null && deviceA.isDistoX(); }
 
-  /** @return true if the primary device is set and is of type SAP5
+  /** @return true if the primary device is set and is of type SAP (SAP5 or SAP6)
    */
   public static boolean isDeviceSap()    { return deviceA != null && deviceA.isSap(); } // FIXME_SAP6
 
+  /** @return true if the primary device is set and is of type SAP5
+   */
   public static boolean isDeviceSap5()   { return deviceA != null && deviceA.isSap5(); }
 
+  /** @return true if the primary device is set and is of type SAP6
+   */
   public static boolean isDeviceSap6()   { return deviceA != null && deviceA.isSap6(); }
+
+  /** @return true if the primary device is set and is of type BRIC (BRIC4 or BRIC5)
+   */
+  public static boolean isDeviceBric()   { return deviceA != null && deviceA.isBric(); }
 
   /** @return true if the primary device is set and is of type BRIC4
    */
-  public static boolean isDeviceBric()   { return deviceA != null && deviceA.isBric(); }
+  public static boolean isDeviceBric4()   { return deviceA != null && deviceA.isBric4(); }
+
+  /** @return true if the primary device is set and is of type BRIC5
+   */
+  public static boolean isDeviceBric5()   { return deviceA != null && deviceA.isBric5(); }
 
   /** @return true if the primary device is set and is of type DistoXBLE
    * SIWEI_TIAN
    */
   public static boolean isDeviceXBLE()   { return deviceA != null && deviceA.isDistoXBLE(); }
 
-  /** @return true if the primary device is set and is of type DistoXBLE
-   * SIWEI_TIAN
-   */
-  public static boolean isDeviceCavway()   { return deviceA != null && deviceA.isCavway(); }
   /** @return primary bluetooth device
    */
   public static Device getDeviceA() 
@@ -166,14 +174,14 @@ public class TDInstance
 
   /** @return true if the primary device is LE
    * SIWEI_TIAN
-   * FIXME_SAP6 this is OK
    */
   static boolean isDeviceBLE()    { return deviceA != null && ( deviceA.isBric() || deviceA.isSap() || deviceA.isDistoXBLE()); }
+
+  public static boolean isDeviceCavway()   { return deviceA != null && deviceA.isCavway(); }
 
   /** @return true if the device is LE
    * @param device   bluetooth device
    * SIWEI_TIAN
-   * FIXME_SAP6 this is OK
    */
   private static boolean isDeviceBLE( Device device )    { return device != null && ( device.isBric() || device.isSap() || device.isDistoXBLE()); }
 

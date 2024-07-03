@@ -878,7 +878,9 @@ public class SketchWindow extends ItemDrawer
   public void onBackPressed () // askClose
   {
     // if ( dismissPopups() != DISMISS_NONE ) return;
-    if ( doubleBack ) {
+    if ( TDSetting.mSingleBack ) {
+      super.onBackPressed();
+    } else if ( doubleBack ) {
       if ( doubleBackToast != null ) doubleBackToast.cancel();
       doubleBackToast = null;
       // TDLog.v( "double back pressed ...");
@@ -1516,6 +1518,9 @@ public class SketchWindow extends ItemDrawer
     // TDLog.v( "Drawing activity onDestroy");
     TopoDroidApp.mDrawingWindow = null;
     // TDLog.Log( TDLog.LOG_PLOT, "drawing activity on destroy done");
+    if ( doubleBackHandler != null ) {
+      doubleBackHandler.removeCallbacks( doubleBackRunnable );
+    }
   }
 
   /** lifecycle: implement RESUME
@@ -2234,9 +2239,9 @@ public class SketchWindow extends ItemDrawer
     } else if ( mMode == MODE_EDIT /* || mMode == MODE_SHIFT */ ) {
       int k3 = 3;
       // if ( k3 < NR_BUTTON3 && b == mButton3[k3++] ) { // PREV
-      //   TDLog.v("TODO item previous");
+      //   // TDLog.v("TODO item previous");
       // } else if ( k3 < NR_BUTTON3 && b == mButton3[k3++] ) { // NEXT
-      //   TDLog.v("TODO item next");
+      //   // TDLog.v("TODO item next");
       // } else 
       if ( k3 < NR_BUTTON3 && b == mButton3[k3++] ) { // SELECT MODE
         setSelectMode( ! mSelectStation );

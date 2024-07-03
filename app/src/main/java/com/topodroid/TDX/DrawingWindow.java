@@ -209,10 +209,11 @@ public class DrawingWindow extends ItemDrawer
   private static final int IC_TOOLS_AREA_TILDE = IC_MEDIUM+30;
   private static final int IC_MENU_RED        = IC_MEDIUM+31;
 
-  private static final int BTN_DOWNLOAD = 3;  // index of mButton1 download button
+  private static final int BTN_DOWNLOAD  = 3; // index of mButton1 download button
   private static final int BTN_BLUETOOTH = 4; // index of mButton1 bluetooth button
-  private static final int BTN_PLAN   = 6;    // index of mButton1 plot button
-  private static final int BTN_DIAL   = 8;    // index of mButton1 azimuth button (level > normal)
+  private static final int BTN_PLAN      = 6; // index of mButton1 plot button
+  private static final int BTN_DIAL      = 8; // index of mButton1 azimuth button (level > normal)
+  private static final int BTN_REFRESH   = 9; // index of mButton1 azimuth button (level > normal)
 
   private static final int BTN_TOOL   = 5;    // index of mButton2 tools
   private static final int BTN_SPLAYS = 6;    // index of mButton2 splays
@@ -671,14 +672,17 @@ public class DrawingWindow extends ItemDrawer
   // private Button mButtonHelp;
   private int mButtonSize;
   private Button[] mButton1; // primary
+  private Button[] mButton1x; // primary x-sections
   private Button[] mButton2; // draw
   private Button[] mButton3; // edit
   private Button[] mButton5; // eraser
   private int mNrButton1 = TDLevel.overNormal? NR_BUTTON1 : 8; // main-primary [8: if level <= normal]
+  private int mNrButton1x;
   private int mNrButton2 = TDLevel.overNormal? NR_BUTTON2 : 7; // draw
   private int mNrButton3 = TDLevel.overAdvanced ? NR_BUTTON3 : ( TDLevel.overNormal ? 8 : 6); // edit [6 if level <= normal, 8 if level <= advanced]
   private int mNrButton5 = NR_BUTTON5; // erase
   private MyHorizontalButtonView mButtonView1;
+  private MyHorizontalButtonView mButtonView1x;
   private MyHorizontalButtonView mButtonView2;
   private MyHorizontalButtonView mButtonView3;
   private MyHorizontalButtonView mButtonView5;
@@ -1410,10 +1414,11 @@ public class DrawingWindow extends ItemDrawer
         doStart( false, -1, null );
         // FIXME_POP-INFO recomputeReferences( mNum, mZoom );
       } else {
-        if ( doubleBack ) {
+        if ( TDSetting.mSingleBack ) {
+          super.onBackPressed();
+        } else if ( doubleBack ) {
           if ( doubleBackToast != null ) doubleBackToast.cancel();
           doubleBackToast = null;
-          // TDLog.v( "double back pressed ...");
           super.onBackPressed();
         } else {
           doubleBack = true;
@@ -2315,7 +2320,7 @@ public class DrawingWindow extends ItemDrawer
   {
    
     Resources res = getResources();
-    if ( ! TDSetting.mWithLineJoin ) {
+    if ( ! TDSetting.mWithLineJoin && ! mTh2Edit ) {
       // TDLog.v("not with line join");
       mNrButton2 --;
     }
@@ -2323,17 +2328,24 @@ public class DrawingWindow extends ItemDrawer
     // TDLog.v("Make Buttons 1: " + mNrButton1 + " 2: " + mNrButton2 + " 3: " + mNrButton3 + " 5: " + mNrButton5 );
 
     // if ( ! TDLevel.overNormal ) mNrButton1 -= 2; // AZIMUTH, REFRESH requires advanced level
-    mButton1 = new Button[ mNrButton1 + 1 ]; // MOVE
+    mNrButton1x = mNrButton1 - 1;
+    mButton1  = new Button[ mNrButton1  + 1 ]; // MOVE
+    mButton1x = new Button[ mNrButton1x + 1 ]; // MOVE
     int off = 0;
     int ic = 0;
+    int kx = 0;
     for ( int k=0; k<mNrButton1; ++k ) {
       ic = ( k <3 )? k : off+k;
-      mButton1[k] = MyButton.getButton( mActivity, this, izons[ic] );
+      mButton1[k]  = MyButton.getButton( mActivity, this, izons[ic] );
+      if ( k != BTN_DIAL ) {
+        mButton1x[kx++] = mButton1[k];
+      }
       if ( ic == IC_DOWNLOAD )  { mBMdownload = MyButton.getButtonBackground( this, res, izons[ic] ); }
       else if ( ic == IC_BLUETOOTH ) { mBMbluetooth = MyButton.getButtonBackground( this, res, izons[ic] ); }
       else if ( ic == IC_PLAN ) { mBMplan     = MyButton.getButtonBackground( this, res, izons[ic] ); }
     }
-    mButton1[ mNrButton1 ] = MyButton.getButton( mActivity, null, R.drawable.iz_empty );
+    mButton1[ mNrButton1 ]   = MyButton.getButton( mActivity, null, R.drawable.iz_empty );
+    mButton1x[ mNrButton1x ] = MyButton.getButton( mActivity, null, R.drawable.iz_empty );
 
     // FIXME_AZIMUTH_DIAL 1,2
     mBMdial          = BitmapFactory.decodeResource( res, R.drawable.iz_dial_transp ); 
@@ -2448,10 +2460,11 @@ public class DrawingWindow extends ItemDrawer
     setButtonEraseSize( Drawing.SCALE_MEDIUM );
     setButtonSelectSize( Drawing.SCALE_MEDIUM );
 
-    mButtonView1 = new MyHorizontalButtonView( mButton1 );
-    mButtonView2 = new MyHorizontalButtonView( mButton2 );
-    mButtonView3 = new MyHorizontalButtonView( mButton3 );
-    mButtonView5 = new MyHorizontalButtonView( mButton5 );
+    mButtonView1  = new MyHorizontalButtonView( mButton1 );
+    mButtonView1x = new MyHorizontalButtonView( mButton1x );
+    mButtonView2  = new MyHorizontalButtonView( mButton2 );
+    mButtonView3  = new MyHorizontalButtonView( mButton3 );
+    mButtonView5  = new MyHorizontalButtonView( mButton5 );
   }
 
   /** set the params of the tools toolbar
@@ -2675,7 +2688,9 @@ public class DrawingWindow extends ItemDrawer
     mScaleBar.setOnSeekBarChangeListener( new SeekBar.OnSeekBarChangeListener() {
       public void onProgressChanged( SeekBar seekbar, int progress, boolean fromUser) {
         if ( fromUser ) {
-          setPointScaleProgress( progress );
+          if ( setPointScaleProgress( progress ) ) {
+            seekbar.setProgress( 100 );
+          }
         }
       }
       public void onStartTrackingTouch(SeekBar seekbar) { }
@@ -2847,7 +2862,11 @@ public class DrawingWindow extends ItemDrawer
 
     // mButton1[ BTN_PLAN ].setVisibility( View.VISIBLE );
     if ( ! TDLevel.overExpert && BTN_PLAN < mNrButton1 ) mButton1[ BTN_PLAN ].setOnLongClickListener( this );
-    if ( TDLevel.overNormal && BTN_DIAL < mNrButton1 ) mButton1[ BTN_DIAL ].setVisibility( View.VISIBLE );
+    if ( TDLevel.overNormal ) {
+      mListView.setAdapter( mButtonView1.mAdapter );
+      // if ( BTN_DIAL < mNrButton1 ) mButton1[ BTN_DIAL ].setVisibility( View.VISIBLE );
+      // if ( BTN_REFRESH < mNrButton1 ) mButton1[ BTN_REFRESH ].setVisibility( View.VISIBLE );
+    }
   }
 
   /** push the status info when a xsection is opened
@@ -2888,7 +2907,11 @@ public class DrawingWindow extends ItemDrawer
 
     // mButton1[ BTN_PLAN ].setVisibility( View.GONE );
     if ( ! TDLevel.overExpert && BTN_PLAN < mNrButton1 ) mButton1[BTN_PLAN].setOnLongClickListener( null );
-    if ( TDLevel.overNormal && BTN_DIAL < mNrButton1 ) mButton1[ BTN_DIAL ].setVisibility( View.GONE );
+    if ( TDLevel.overNormal ) {
+      mListView.setAdapter( mButtonView1x.mAdapter );
+      // if (  BTN_DIAL < mNrButton1 ) mButton1[ BTN_DIAL ].setVisibility( View.GONE );
+      // if (  BTN_REFRESH < mNrButton1 ) mButton1[ BTN_REFRESH ].setVisibility( View.GONE );
+    }
   }
 
   /** update the display of the splays - for XSections
@@ -3228,6 +3251,7 @@ public class DrawingWindow extends ItemDrawer
   /** start the sketch display 
    * @param do_load whether to load plot from file
    * @param tt      used only by leg x-sections when created to insert leg intersection point
+   * @param center  plot center - for multileg x-section
    * @note called by onCreate, switchPlotType, onBackPressed and pushInfo
    * 
    * FIXME null ptr in 5.1.40 on ANDROID-11 at line 2507 
@@ -4019,6 +4043,7 @@ public class DrawingWindow extends ItemDrawer
     // TDLog.v( "delete point type " + point.mPointType );
     if ( point instanceof DrawingPhotoPath ) { 
       DrawingPhotoPath photo = (DrawingPhotoPath)point;
+      if ( photo.mPicture != null ) mDrawingSurface.deletePath( photo.mPicture ); // delete associated picture
       mApp_mData.deletePhoto( TDInstance.sid, photo.mId );
       TDFile.deleteFile( TDPath.getSurveyJpgFile( TDInstance.survey, Long.toString( photo.mId ) ) );
     } else if ( point instanceof DrawingAudioPath ) { 
@@ -4332,6 +4357,7 @@ public class DrawingWindow extends ItemDrawer
       f = (det12 * y0 + det20 * y1 + det01 * y2)/det;
     } 
     // apply affine transform to sketch
+    TDLog.v("Affine Transform C " + c + " F " + f ); 
     mDrawingSurface.affineTransformDrawing( a, b, c, d, e, f );
     return 0;
   }
@@ -4525,7 +4551,6 @@ public class DrawingWindow extends ItemDrawer
     }
   }
 
-
   /** react to a touch event
    * @param view  touched view
    * @param rawEvent raw event
@@ -4545,7 +4570,6 @@ public class DrawingWindow extends ItemDrawer
     int act = event.getAction();
     int action = act & MotionEvent.ACTION_MASK;
     int id = 0;
-    boolean threePointers = false;
 
     if ( TDSetting.mStylusOnly ) {
       int np = event.getPointerCount();
@@ -4569,7 +4593,6 @@ public class DrawingWindow extends ItemDrawer
       // TDLog.v("STYLUS action " + action + " of " + act );
     } else {
       if (action == MotionEvent.ACTION_POINTER_DOWN) {
-        threePointers = (event.getPointerCount() == 3);
         if ( mTouchMode == MODE_MOVE ) {
           if ( mMode == MODE_ERASE ) {
             finishErasing();
@@ -4582,7 +4605,6 @@ public class DrawingWindow extends ItemDrawer
         return true;
       } else if ( action == MotionEvent.ACTION_POINTER_UP) {
         int np = event.getPointerCount();
-        threePointers = (np > 3);
         if ( np > 2 ) return true;
         mTouchMode = MODE_MOVE;
         id = 1 - ((act & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT);
@@ -4603,7 +4625,7 @@ public class DrawingWindow extends ItemDrawer
       return onTouchDown( x_canvas, y_canvas, x_scene, y_scene );
 
     } else if ( action == MotionEvent.ACTION_MOVE ) { // ------------------------------- MOVE
-      return onTouchMove( x_canvas, y_canvas, x_scene, y_scene, event, threePointers );
+      return onTouchMove( x_canvas, y_canvas, x_scene, y_scene, event );
 
     } else if (action == MotionEvent.ACTION_UP) { // ----------------------------------- UP
       return onTouchUp( x_canvas, y_canvas, x_scene, y_scene );
@@ -5180,10 +5202,9 @@ public class DrawingWindow extends ItemDrawer
    * @param xs   scene X coord
    * @param ys   scene Y coord
    * @param event motion event
-   * @param threePointers whether the event has three pointers
    * @return ...
    */
-  private boolean onTouchMove( float xc, float yc, float xs, float ys, MotionEventWrap event, boolean threePointers )
+  private boolean onTouchMove( float xc, float yc, float xs, float ys, MotionEventWrap event )
   {
     // TDLog.v( "STYLUS action MOVE mode " + mMode + " touch " + mTouchMode + " (" + xc + " " + yc + ") " );
     if ( mTouchMode == MODE_MOVE) {
@@ -5363,10 +5384,9 @@ public class DrawingWindow extends ItemDrawer
         // } else {
         //   moveCanvas( x_shift, y_shift );
         }
-        if ( threePointers ) {
-            // int ret =
-            affineTransformByEvent( event );
-            // TDLog.v("affine transform returns " + ret );
+        if ( event.getPointerCount() == 3 ) {
+            int ret = affineTransformByEvent( event );
+            TDLog.v("affine transform returns " + ret );
             // mDrawingSurface.scaleDrawing( 1+(factor-1)*0.01f );
             saveEventPoint( event );
         } else {
@@ -5705,9 +5725,22 @@ public class DrawingWindow extends ItemDrawer
    */
   private void createPhotoPoint()
   {
-    DrawingPhotoPath photo = new DrawingPhotoPath( mMediaManager.getComment(), mMediaManager.getX(), mMediaManager.getY(), mPointScale, null, mMediaManager.getPhotoId(), mDrawingSurface.scrapIndex() );
+    float x = mMediaManager.getX();
+    float y = mMediaManager.getY();
+    float s = mMediaManager.getPhotoSize();
+    long id = mMediaManager.getPhotoId();
+    int scrap = mDrawingSurface.scrapIndex();
+    DrawingPhotoPath photo = new DrawingPhotoPath( mMediaManager.getComment(), x, y, mPointScale, 
+      "", // String.format(Locale.US, "-size %.2f", mMediaManager.getPhotoSize() ),
+      id, scrap );
     photo.mLandscape = mLandscape;
     mDrawingSurface.addDrawingPath( photo );
+
+    DrawingPicturePath picture = new DrawingPicturePath( s, x+1, y+1, id, scrap );
+    picture.setLink( photo );
+    photo.setPicture( picture );
+    mDrawingSurface.addDrawingPath( picture );
+
     modified();
   }
 
@@ -5730,7 +5763,8 @@ public class DrawingWindow extends ItemDrawer
    */
   public void insertPhoto( )
   {
-    mApp_mData.insertPhoto( TDInstance.sid, mMediaManager.getPhotoId(), -1, "", TDUtil.currentDate(), mMediaManager.getComment(), mMediaManager.getCamera() );
+    mApp_mData.insertPhoto( TDInstance.sid, mMediaManager.getPhotoId(), -1, "", TDUtil.currentDateTime(), 
+      mMediaManager.getComment(), mMediaManager.getCamera(), mMediaManager.getCode() );
     // FIXME NOTIFY ? no
     createPhotoPoint();
   }
@@ -5775,11 +5809,13 @@ public class DrawingWindow extends ItemDrawer
 
   /** insert a "photo" point
    * @param comment  photo comment
+   * @param size   photo size (horizontal width) [m]
    * @param x      X coord
    * @param y      Y coord
    * @param camera camera type (API)
+   # @param code   geomorphology code
    */
-  public void addPhotoPoint( String comment, float x, float y, int camera )
+  public void addPhotoPoint( String comment, float size, float x, float y, int camera, String code )
   {
     // TDLog.v("addPhoto " + ( (mLastLinePath != null)? mLastLinePath.mLineType : "null" ) );
     assert( mLastLinePath == null );
@@ -5788,7 +5824,7 @@ public class DrawingWindow extends ItemDrawer
     } else {
       mMediaManager.setPoint( x, y );
     }
-    mMediaManager.prepareNextPhoto( -1, ((comment == null)? "" : comment), camera );
+    mMediaManager.prepareNextPhoto( -1, ((comment == null)? "" : comment), size, camera, ((code == null)? "" : code) );
     // mMediaComment = (comment == null)? "" : comment;
     // mMediaId = mApp_mData.nextPhotoId( TDInstance.sid );
     // File imagefile = TDFile.getFile( TDPath.getSurveyJpgFile( TDInstance.survey, Long.toString(mMediaId) ) );
@@ -6952,7 +6988,7 @@ public class DrawingWindow extends ItemDrawer
   public boolean onLongClick( View view ) 
   {
     Button b = (Button)view;
-    if ( TDLevel.overAdvanced && b == mButton1[ BTN_DOWNLOAD ] ) {
+    if ( TDLevel.overAdvanced && BTN_DOWNLOAD < mNrButton1 && b == mButton1[ BTN_DOWNLOAD ] ) {
       if ( mDataDownloader != null ) { // TH2EDIT added this test 
         if (  ! mDataDownloader.isDownloading() && TDSetting.isConnectionModeMulti() && TopoDroidApp.mDData.getDevices().size() > 1 ) {
           if ( TDSetting.mSecondDistoX && TDInstance.getDeviceB() != null ) {
@@ -6968,14 +7004,14 @@ public class DrawingWindow extends ItemDrawer
           mDataDownloader.doDataDownload( mApp.mListerSet, DataType.DATA_SHOT );
         }
       }
-    } else if ( TDLevel.overAdvanced && b == mButton1[ BTN_DIAL ] ) {
+    } else if ( TDLevel.overAdvanced && BTN_DIAL < mNrButton1 && b == mButton1[ BTN_DIAL ] ) {
       if ( /* TDLevel.overAdvanced && */ mType == PlotType.PLOT_PLAN && TDAzimuth.mFixedExtend == 0 ) {
         mRotateAzimuth = true;
         setButtonAzimuth();
       } else {
         onClick( view );
       }
-    } else if ( b == mButton1[ BTN_PLAN ] ) {
+    } else if ( BTN_PLAN < mNrButton1 && b == mButton1[ BTN_PLAN ] ) {
       if ( PlotType.isSketch2D( mType ) ) {
         if ( /* TDLevel.overBasic && */ mType == PlotType.PLOT_EXTENDED ) {
           new DrawingProfileFlipDialog( mActivity, this ).show();
@@ -7000,7 +7036,7 @@ public class DrawingWindow extends ItemDrawer
         onClick( view ); // execute rotateRecentToolset();
       }
 
-    } else if ( TDLevel.overBasic && b == mButton3[ BTN_REMOVE ] ) {
+    } else if ( TDLevel.overBasic && BTN_REMOVE < mNrButton3 && b == mButton3[ BTN_REMOVE ] ) {
       SelectionPoint sp = mDrawingSurface.hotItem();
       if ( sp != null ) {
         int t = sp.type();
@@ -7028,7 +7064,7 @@ public class DrawingWindow extends ItemDrawer
           }
         }
       }
-    } else if ( TDLevel.overAdvanced && b == mButton3[ BTN_ITEM_EDIT ] ) { // item edit dialog
+    } else if ( TDLevel.overAdvanced && BTN_ITEM_EDIT < mNrButton3 && b == mButton3[ BTN_ITEM_EDIT ] ) { // item edit dialog
       SelectionPoint sp = mDrawingSurface.hotItem();
       if ( sp != null ) {
         DrawingPath item = sp.mItem;
@@ -7254,6 +7290,14 @@ public class DrawingWindow extends ItemDrawer
               // TDLog.v( "edit point type " + point.mPointType );
               if ( point instanceof DrawingPhotoPath ) { // BrushManager.isPointPhoto( point.mPointType )
                 new DrawingPhotoEditDialog( mActivity, (DrawingPhotoPath)point ).show();
+              } else if ( point instanceof DrawingPicturePath ) { // BrushManager.isPointPhoto( point.mPointType )
+                // TODO
+                DrawingPhotoPath photo = (DrawingPhotoPath)(point.getLink() );
+                if ( photo != null ) {
+                  new DrawingPhotoEditDialog( mActivity, photo ).show();
+                } else {
+                  TDLog.Error("Picture without photo");
+                }
               } else if ( point instanceof DrawingAudioPath ) { // BrushManager.isPointAudio( point.mPointType )
                 if ( audioCheck ) {
                   DrawingAudioPath audio = (DrawingAudioPath)point;
@@ -7331,10 +7375,13 @@ public class DrawingWindow extends ItemDrawer
           mDataDownloader.doDataDownload( mApp.mListerSet, DataType.DATA_SHOT );
         }
       } else if ( k1 < mNrButton1 && b == mButton1[k1++] ) { // BLUETOOTH
+        // TDLog.v("Button BLUETOOTH");
         doBluetooth( b, dismiss );
       } else if ( k1 < mNrButton1 && b == mButton1[k1++] ) { // DISPLAY MODE 
+        // TDLog.v("Button MODE");
         new DrawingModeDialog( mActivity, this, mDrawingSurface ).show();
       } else if ( k1 < mNrButton1 && b == mButton1[k1++] ) { // TOGGLE PLAN/EXTENDED
+        // TDLog.v("Button PLAV/EXTENDED");
         if ( PlotType.isSketch2D( mType ) ) { 
           // TDLog.v( "saving TOGGLE ...");
           startSaveTdrTask( mType, PlotSave.TOGGLE, TDSetting.mBackupNumber+2, TDPath.NR_BACKUP ); 
@@ -7346,9 +7393,11 @@ public class DrawingWindow extends ItemDrawer
           updateSplays( (mApp.mSplayMode + 2)%4 );
         }
       } else if ( k1 < mNrButton1 && b == mButton1[k1++] ) { //  NOTE
+        // TDLog.v("Button NOTE");
         (new DialogAnnotations( mActivity, mApp_mData.getSurveyFromId(mSid) )).show();
 
       } else if ( TDLevel.overNormal && k1 < mNrButton1 && b == mButton1[k1++] ) { //  AZIMUTH
+        // TDLog.v("Button AZIMUTH");
         if ( PlotType.isSketch2D( mType ) ) { 
           if ( TDSetting.mAzimuthManual ) {
             setRefAzimuth( 0, - TDAzimuth.mFixedExtend );
@@ -7358,6 +7407,7 @@ public class DrawingWindow extends ItemDrawer
           }
         }
       } else if ( TDLevel.overNormal && k1 < mNrButton1 && b == mButton1[k1++] ) { //  REFRESH
+        // TDLog.v("Button REFRESH");
         updateDisplay();
       }
     }
@@ -8407,10 +8457,11 @@ public class DrawingWindow extends ItemDrawer
    * @param export_type  export type
    * @param filename     export filename
    * @param prefix       station names export-prefix (not used)
+   * @param first        not-used
    * @param second       whether to export the second view instead of the current view (only for plan or profile)
    * @note called from ExportDialogPlot to do the export
    */
-  public void doExport( String export_type, String filename, String prefix, boolean second ) // EXPORT
+  public void doExport( String export_type, String filename, String prefix, long first, boolean second ) // EXPORT
   {
     if ( export_type == null ) return;
     mExportIndex  = TDConst.plotExportIndex( export_type );
@@ -9202,7 +9253,8 @@ public class DrawingWindow extends ItemDrawer
                 finish();
               }
             } else {
-              TDLog.Error("DRAW import unsupported " + ext);
+              // TDLog.Error("DRAW import unsupported " + ext);
+              TDToast.makeBad( String.format( getResources().getString( R.string.unsupported_extension ), ext ) );
               finish();
             }
           // } else if ( (type = TDPath.checkImportTypeStream( ext ) ) != null ) {
@@ -9239,7 +9291,8 @@ public class DrawingWindow extends ItemDrawer
                 finish();
               }
             } else {
-              TDLog.Error("DRAW export unsupported extension " + ext);
+              // TDLog.Error("DRAW export unsupported extension " + ext);
+              TDToast.makeBad( String.format( getResources().getString( R.string.unsupported_extension ), ext ) );
               finish();
             }
           // } else if ( (type = TDPath.checkImportTypeStream( ext ) ) != null ) {
@@ -9694,15 +9747,22 @@ public class DrawingWindow extends ItemDrawer
 
   /** set the hot-item point scale
    * @param progress  scalebar progress value
+   * @return true if the progress need to be reset
    */
-  void setPointScaleProgress( int progress )
+  boolean setPointScaleProgress( int progress )
   {
-    if ( mHotPath == null ) return;
-    if ( mHotPath instanceof DrawingPointPath ) {
+    if ( mHotPath == null ) return false;
+    if ( mHotPath instanceof DrawingPicturePath ) {
+      DrawingPicturePath picture = (DrawingPicturePath)mHotPath;
+      float scale = 1 + 0.001f * (progress - 100);
+      picture.scalePhotoSize( scale );
+      return true;
+    } else if ( mHotPath instanceof DrawingPointPath ) {
       int scale = (int)(progress / 40) - 2;
       ((DrawingPointPath)mHotPath).setScale( scale );
       // TDLog.v("set point scale " + progress + " scale " + scale );
     }
+    return false;
   }
     
   void setPointScale( int scale )

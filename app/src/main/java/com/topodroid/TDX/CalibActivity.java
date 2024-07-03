@@ -323,7 +323,7 @@ public class CalibActivity extends Activity
    
       CalibResult res = new CalibResult();
       TopoDroidApp.mDData.selectCalibError( TDInstance.cid, res );
-      (new CalibCoeffDialog( this, null, vG, mG, vM, mM, nL, null, res.delta_bh, res.error, res.stddev, res.max_error, res.iterations, res.dip, coeff /*, false */ )).show();
+      (new CalibCoeffDialog( this, null, vG, mG, vM, mM, nL, null, res.delta_bh, res.error, res.stddev, res.max_error, res.iterations, res.dip, res.roll, coeff /*, false */ )).show();
     } else {
       TDToast.make( R.string.calib_no_coeff );
     }
@@ -516,11 +516,12 @@ public class CalibActivity extends Activity
   /** export this calibration 
    * @param type    export type (string)
    * @param name    calib filename (not used)
-   * @param prefix  station-prefix (not used)
+   * @param prefix  station-prefix (not used)A
+   * @param first   not-used
    * @param second  whether to export the second view (unused)
    * @note implements IExporter
    */
-  public void doExport( String type, String name, String prefix, boolean second )
+  public void doExport( String type, String name, String prefix, long first, boolean second )
   {
     int index = TDConst.calibExportIndex( type );
     if ( index >= 0 ) {

@@ -194,6 +194,7 @@ public class BrushManager
   public static boolean isPointPhoto( int index )   { return mPointLib != null && index == mPointLib.mPointPhotoIndex; }
   public static boolean isPointAudio( int index )   { return mPointLib != null && index == mPointLib.mPointAudioIndex; }
   public static boolean isPointSection( int index ) { return mPointLib != null && index == mPointLib.mPointSectionIndex; }
+  public static boolean isPointPicture( int index ) { return mPointLib != null && index == mPointLib.mPointPictureIndex; }
 
   static boolean isPointEnabled( String name ) { return mPointLib != null && mPointLib.isSymbolEnabled( name ); }
   static boolean isLineEnabled( String name )  { return mLineLib  != null && mLineLib.isSymbolEnabled( name ); }
@@ -203,6 +204,7 @@ public class BrushManager
   static int getPointPhotoIndex()   { return (mPointLib == null)? 0 : mPointLib.mPointPhotoIndex; }
   static int getPointAudioIndex()   { return (mPointLib == null)? 0 : mPointLib.mPointAudioIndex; }
   static int getPointSectionIndex() { return (mPointLib == null)? 2 : mPointLib.mPointSectionIndex; }
+  static int getPointPictureIndex() { return (mPointLib == null)? 0 : mPointLib.mPointPictureIndex; }
 
   static String getPointName( int idx ) { return (mPointLib == null)? "" : mPointLib.getSymbolName( idx ); } 
   static String getLineName( int idx )  { return (mLineLib  == null)? "" : mLineLib.getSymbolName( idx ); } 
@@ -217,6 +219,7 @@ public class BrushManager
   static boolean isLineSlope( int idx )     { return mLineLib != null && idx == mLineLib.mLineSlopeIndex; }
   static int getLineSectionIndex()          { return (mLineLib == null)? 2 : mLineLib.mLineSectionIndex; }
   static int getLineWallIndex()             { return (mLineLib == null)? 1 : mLineLib.mLineWallIndex; }
+  static int getLineSlopeIndex()            { return (mLineLib == null)? -1 : mLineLib.mLineSlopeIndex; }
 
   // FIXME AREA_ORIENT
   static boolean isAreaOrientable( int index )      { return mAreaLib != null && mAreaLib.isSymbolOrientable( index ); }
@@ -290,6 +293,7 @@ public class BrushManager
   // fixedGridPaint.setStrokeWidth( WIDTH_FIXED * TDSetting.mFixedThickness );
   // fixedGrid10Paint.setStrokeWidth( WIDTH_FIXED * TDSetting.mFixedThickness );
   public static final Paint mSectionPaint = makePaint( TDColor.ORANGE, 2 * WIDTH_FIXED, Paint.Style.FILL_AND_STROKE );
+  public static final Paint mLSidePaint   = makePaint( TDColor.WHITE, 2 * WIDTH_FIXED, Paint.Style.FILL_AND_STROKE );
   // public static final Paint stationPaint = null;
 
   // static BitmapDrawable mSymbolHighlight = null;
@@ -615,4 +619,21 @@ public class BrushManager
     if ( mAreaLib  != null ) { mAreaLib.toDataStream(dos);  } else { try { dos.writeUTF(""); } catch (IOException e) { TDLog.Error("IO " + e.getMessage() ); } }
   }
 
+  /** @return the xored color
+   * @param color input color
+   */
+  static int xorColor( int color )
+  {
+    int a = color & 0xff000000; 
+    int r = (color >> 16) & 0xff; int r1 = 0xff - r;
+    int g = (color >>  8) & 0xff; int g1 = 0xff - g;
+    int b = (color      ) & 0xff; int b1 = 0xff - b;
+    float m = (( r1 > g1 )? ( ( r1 > b1 )? r1 : b1 ) : ( (g1 > b1 )? g1 : b1 ) ) / 256.0f;
+    r = (int)( r * m ) & 0xff;
+    g = (int)( g * m ) & 0xff;
+    b = (int)( b * m ) & 0xff;
+    int ret = a | ( r << 16 ) | ( g << 8 ) | b;
+    return ret;
+  }
+    
 }

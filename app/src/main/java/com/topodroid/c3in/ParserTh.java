@@ -293,12 +293,17 @@ public class ParserTh extends TglParser
         // KML radius is already pre-multiplied by PI/180
         double s_radius = Geodetic.meridianRadiusExact( a_lat, a_ell );
         double e_radius = Geodetic.parallelRadiusExact( a_lat, a_ell );
+ // FIXME_ELLIPSOID
+        // double s_radius = Geodetic.meridianRadiusEllipsoid( a_lat, a_ell );
+        // double e_radius = Geodetic.parallelRadiusEllipsoid( a_lat, a_ell );
         // TDLog.v("E radius " + e_radius + " S radius " + s_radius + " lon " + fx.mLongitude + " lat " + fx.mLatitude );
 
         // TODO use a_lng a_lat a_ell
 
         x0 = fx.mLongitude * e_radius;
         y0 = fx.mLatitude  * s_radius;
+ // FIXME_ELLIPSOID
+        // y0 = Geodetic.equatorialDistance( fx.mLatitude );
         z0 = fx.mGeoidAlt; // 20221201 use geoid altitude
         // TDLog.v( "Th fix Long-Lat " + x0 + " " + y0 + " " + z0 + " cs1 <" + ((fx.mCsName!=null)?fx.mCsName:"null") + ">" );
         if ( mOrigin == null ) {
@@ -313,12 +318,12 @@ public class ParserTh extends TglParser
             mOrigin = new Cave3DFix( name, x1, y1, z1, cs1, fx.mLongitude, fx.mLatitude, fx.mEllipAlt /*, fx.mGeoidAlt */, fx.mToUnits, fx.mToVUnits );
 	    fixes.add( mOrigin );
           } else {
-            // TDLog.v( "Th CS0 " + x0 + " " + y0 + " " + z0 );
+            TDLog.v( "Th origin CS0 " + x0 + " " + y0 + " " + z0 );
             mOrigin = new Cave3DFix( name, x0, y0, z0, cs0, fx.mLongitude, fx.mLatitude, fx.mEllipAlt /*, fx.mGeoidAlt */, 1, 1); // M_TO_UNITS = 1
 	    fixes.add( mOrigin );
           }
         } else {
-          // TDLog.v( "Th Fix relative " + name + " " + x0 + " " + y0 + " " + z0 + " cs1 " + ((fx.mCsName!=null)?fx.mCsName:"null") );
+          TDLog.v( "Th Fix " + name + " with " + x0 + " " + y0 + " " + z0 + " cs1 " + ((fx.mCsName!=null)?fx.mCsName:"null") );
           if ( cs1 != null ) {
             if ( cs1.equals( fx.mCsName ) ) {
               x1 = fx.mCsLongitude;
@@ -338,7 +343,7 @@ public class ParserTh extends TglParser
           } else {
             double yy = mOrigin.latToNorth( fx.mLatitude, fx.mEllipAlt ); // north diff to the origin
             double xx = mOrigin.lngToEast( fx.mLongitude, fx.mLatitude, fx.mEllipAlt, yy-mOrigin.y );
-            // TDLog.v( "Th fix relative use CS0 " + xx + " " + yy + " " + z0 );
+            TDLog.v( "  relative to origin: " + xx + " " + yy + " " + z0 );
             fixes.add( new Cave3DFix( name, xx, yy, z0, cs0, fx.mLongitude, fx.mLatitude, fx.mEllipAlt /*, fx.mGeoidAlt */, 1, 1 ) ); // M_TO_UNITS = 1
           }
         }

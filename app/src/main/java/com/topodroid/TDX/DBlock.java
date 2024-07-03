@@ -15,6 +15,7 @@ import com.topodroid.utils.TDLog;
 import com.topodroid.utils.TDMath;
 import com.topodroid.utils.TDColor;
 import com.topodroid.utils.TDString;
+import com.topodroid.utils.TDUtil;
 import com.topodroid.math.TDVector;
 import com.topodroid.prefs.TDSetting;
 import com.topodroid.common.LegType;
@@ -42,7 +43,7 @@ public class DBlock
 
   // shot data:
   public long   mId;
-  public long   mTime;
+  public long   mTime;     // database time
   private long  mSurveyId;
   // private String mName;
   public String mFrom;     // N.B. mfrom and mTo must be not null - can be empty
@@ -62,6 +63,7 @@ public class DBlock
   int  mBlockType;     // data type: BLANK, LEG, SEC_LEG, BACKLEG, SPLAY
   private int  mShotType;      // 0: DistoX, 1: manual, -1: DistoX backshot
   boolean mWithPhoto;
+  boolean mFailBacksplay;  // whether this splay failed to backsight the preceeding leg
 
   private boolean mMultiBad; // whether it disagree with siblings
   private float mStretch;
@@ -74,6 +76,9 @@ public class DBlock
   int mRawGx = 0;
   int mRawGy = 0;
   int mRawGz = 0;
+
+  int mIndex = 0;      // device index
+  long mDeviceTime = 0; // device tiem [s]
 
   // ------------------------------------------------------------------
   // FLAGS
@@ -89,6 +94,17 @@ public class DBlock
 
   static final long FLAG_NO_EXTEND     = 257; // used only in search dialog 256+1
   static final long FLAG_REVERSE_SPLAY = 258; // used only in search dialog 256+2
+
+  /** @return the block ID or the bric-index if the proper setting is active
+   * @nore used only by the DBlockAdapter
+   */
+  long getBlockIndexOrId() 
+  {
+    if ( TDSetting.mBricIndexIsId ) {
+      return ( mIndex > 0 )? mIndex : mId;
+    } 
+    return mId;
+  }
 
 
   /** test if a flag is set
@@ -114,6 +130,8 @@ public class DBlock
   public static boolean isNoProfile(long flag) { return (flag & FLAG_NO_PROFILE) == FLAG_NO_PROFILE; }
   public static boolean isNone(long flag)      { return (flag & FLAG_NONE)       == FLAG_NONE; }
   // static boolean isBackshot(int flag) { return (flag & FLAG_BACKSHOT) == FLAG_BACKSHOT; }
+
+  public boolean failBacksplay()  { return mFailBacksplay; }
 
   // void resetFlag() { mFlag = FLAG_SURVEY; }
 
@@ -435,7 +453,7 @@ public class DBlock
   boolean isRecent( )
   {
     if ( ! TDSetting.mShotRecent ) return false;
-    if ( TDSetting.isConnectionModeContinuous() ) return isTimeRecent( System.currentTimeMillis()/1000 );
+    if ( TDSetting.isConnectionModeContinuous() ) return isTimeRecent( TDUtil.getTimeStamp() );
     return mId >= TDInstance.secondLastShotId;
   }
 
@@ -484,18 +502,18 @@ public class DBlock
    */
   Paint getPaint() { return mPaint; }
 
-  /** @return the block paint (foreground) color
+  /** @return the block paint (foreground) user-set color
    */
   int getPaintColor() { return (mPaint==null)? 0 : mPaint.getColor(); }
 
-  /** reset the block paint - set the paint null
+  /** reset the block user-set paint - set the paint null
    */
   void clearPaint() { 
     // TDLog.v( "Block " + mId + " clear paint");
     mPaint = null;
   }
 
-  /** set the block paint (foreground) color
+  /** set the block paint (foreground) user-set color
    * @param color   new foreground color
    */
   void setPaintColor( int color )
@@ -978,6 +996,29 @@ public class DBlock
     double y = h1 * TDMath.sind( mBearing ) - h2 * TDMath.sind( blk.mBearing );
     return x*x + y*y + z*z;
   }
+
+  /** check if this shot is a splay backsight check for a leg
+   * @param b  leg shot
+   */ 
+  void doBacksightSplayCheck( DBlock b ) 
+  {
+    float cc, sc, cb, sb;
+    float alen = mLength;
+    cc = TDMath.cosd( mClino );
+    sc = TDMath.sind( mClino );
+    cb = TDMath.cosd( mBearing ); 
+    sb = TDMath.sind( mBearing ); 
+    TDVector v1 = new TDVector( alen * cc * sb, alen * cc * cb, alen * sc );
+    float blen = b.mLength;
+    cc =   TDMath.cosd( b.mClino );
+    sc = - TDMath.sind( b.mClino );
+    cb = - TDMath.cosd( b.mBearing ); 
+    sb = - TDMath.sind( b.mBearing ); 
+    TDVector v2 = new TDVector( blen * cc * sb, blen * cc * cb, blen * sc );
+    float d = (v1.minus(v2)).length();
+    mFailBacksplay = ( d/alen + d/blen > 2 * TDSetting.mCloseDistance );
+  }
+    
 
 }
 

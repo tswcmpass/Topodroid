@@ -27,6 +27,7 @@ class PhotoInfo
   String mDate;
   String mComment;
   int mCamera;
+  String mGeoCode;   // geomorphology code
 
   /** cstr
    * @param _sid     survey id
@@ -37,8 +38,9 @@ class PhotoInfo
    * @param dt       datetime
    * @param cmt      comment
    * @param camera   camera type
+   * @param code     geomorphology code
    */
-  PhotoInfo( long _sid, long _id, long _shotid, String t, String sn, String dt, String cmt, int camera )
+  PhotoInfo( long _sid, long _id, long _shotid, String t, String sn, String dt, String cmt, int camera, String code )
   {
     sid    = _sid;
     id     = _id;
@@ -48,6 +50,7 @@ class PhotoInfo
     mDate = dt;
     mComment = cmt;
     mCamera  = camera;
+    mGeoCode    = (code == null)? "" : code;
   }
 
   // String getPhotoName() 
@@ -63,6 +66,15 @@ class PhotoInfo
            + " <" + ( (mShotName == null)? "-" : mShotName )
            + "> " + mComment; 
   }
+
+  /** @return the geomorphology code
+   */
+  public String getGeoCode() { return mGeoCode; }
+
+  /** set the geomorphology code
+   * @param code   new code
+   */
+  public void setGeoCode( String geocode ) { mGeoCode = (geocode == null)? "" : geocode; }
 
   /** @return debug string presentation
    */

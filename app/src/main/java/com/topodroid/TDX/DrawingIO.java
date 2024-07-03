@@ -814,10 +814,18 @@ public class DrawingIO
             if ( path.mScrap == scrap_index ) {
               // if ( plotName != null ) 
 	        path.mPlotName = plotName;
-              if ( what == 'U' ) {
+              if ( path instanceof DrawingStationUser ) { // what == 'U' - USER
                 surface.addDrawingStationUser( (DrawingStationUser)path );
               } else {
                 surface.addDrawingPath( path );
+                if ( path instanceof DrawingPhotoPath ) { // what == 'Y' - PHOTO
+                  DrawingPhotoPath photo = (DrawingPhotoPath)path;
+                  DrawingPicturePath picture = photo.getPicture();
+                  if ( picture != null ) {
+                    picture.mPlotName = plotName;
+                    surface.addDrawingPath( picture );
+                  }
+                }
               }
             } else {
               TDLog.Error("Scrap/Path index mismatch " + scrap_index + " " + path.mScrap );
@@ -2009,6 +2017,7 @@ public class DrawingIO
 
   static void doExportTCsxXSection( PrintWriter pw, String filename, String survey, String cave, String branch, /* String session, */ String bind )
   {
+    // TDLog.v("export CSX x-section, survey " + survey + " cave " + cave + " branch " + branch );
     doExportAnyCsxXSection( pw, filename, survey, cave, branch, /* session, */ bind /*, 1 */ );
   }
 
@@ -2029,8 +2038,8 @@ public class DrawingIO
     // synchronized( TDPath.mTherionLock ) // FIXME-THREAD_SAFE
     {
       try {
-        // TDLog.Log( TDLog.LOG_IO, "export cSurvey. X-section file " + filename );
-        DataInputStream dis = new DataInputStream( TDFile.getMSinput( "tdr", filename, "application/octet-stream" ) );
+        // TDLog.v( "export cSurvey. survey " + survey + " X-section file " + filename );
+        DataInputStream dis = new DataInputStream( TDFile.getMSinput( subdir, filename, "application/octet-stream" ) );
         boolean todo = true;
         while ( todo ) {
           int what = dis.read();

@@ -11,7 +11,7 @@
  */
 package com.topodroid.TDX;
 
-// import com.topodroid.utils.TDLog;
+import com.topodroid.utils.TDLog;
 import com.topodroid.ui.MyDialog;
 // import com.topodroid.prefs.TDSetting;
 import com.topodroid.inport.ImportData;
@@ -59,6 +59,8 @@ public class ImportDialogShot extends MyDialog
   private LinearLayout mLayoutVTopo;
   // private LinearLayout mLayoutVTopoX;
   private LinearLayout mLayoutPTopo;
+  private LinearLayout mLayoutTRobot;
+  private LinearLayout mLayoutCsv;
 
   private CheckBox mCBtroxTro; // VTopo
   private CheckBox mCBlrudTro;
@@ -102,6 +104,8 @@ public class ImportDialogShot extends MyDialog
     mLayoutVTopo   = (LinearLayout) findViewById( R.id.layout_vtopo );
     // mLayoutVTopoX  = (LinearLayout) findViewById( R.id.layout_vtopox );
     mLayoutPTopo   = (LinearLayout) findViewById( R.id.layout_pockettopo );
+    mLayoutTRobot  = (LinearLayout) findViewById( R.id.layout_toporobot );
+    mLayoutCsv     = (LinearLayout) findViewById( R.id.layout_csv );
 
     mBtnOk   = (Button) findViewById(R.id.button_ok );
     mBtnOk.setOnClickListener( this );
@@ -159,6 +163,8 @@ public class ImportDialogShot extends MyDialog
     mLayoutVTopo.setVisibility( View.GONE );
     // mLayoutVTopoX.setVisibility( View.GONE );
     mLayoutPTopo.setVisibility( View.GONE );
+    mLayoutTRobot.setVisibility( View.GONE );
+    mLayoutCsv.setVisibility( View.GONE );
     switch ( mSelectedPos ) {
       case 0: mLayoutZip.setVisibility( View.VISIBLE );        break;
       case 1: mLayoutCompass.setVisibility( View.VISIBLE );    break;
@@ -168,6 +174,8 @@ public class ImportDialogShot extends MyDialog
       case 5: mLayoutVTopo.setVisibility( View.VISIBLE );      break;
       // case x: mLayoutVTopoX.setVisibility( View.VISIBLE );  break;
       case 6: mLayoutPTopo.setVisibility( View.VISIBLE );      break;
+      case 7: mLayoutTRobot.setVisibility( View.VISIBLE );      break;
+      case 8: mLayoutCsv.setVisibility( View.VISIBLE );      break;
     }
   }
 
@@ -205,6 +213,8 @@ public class ImportDialogShot extends MyDialog
         }
         break;
       case 6: // PTopo
+        break;
+      case 7: // TRobot
         break;
       default:
         break;

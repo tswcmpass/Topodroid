@@ -9,6 +9,7 @@
   <string name="SketchWindow" translatable="false">page_sketch.htm</string>
 
   <string name="FixedActivity" translatable="false">page_fixed_list.htm</string>
+  <string name="BtAliasActivity" translatable="false">page_bt_alias.htm</string>
 
   <string name="MainWindow" translatable="false">manual02.htm</string>
   <string name="DeviceActivity" translatable="false">manual03.htm</string>
@@ -72,6 +73,7 @@
   <string name="AutoCalibDialog" translatable="false">page_todo.htm</string>
   <string name="FirmwareDialog" translatable="false">page_firmware.htm</string>
   <string name="FirmwareFileDialog" translatable="false">page_firmware.htm</string>
+  <string name="GeoCodeDialog" translatable="false">page_geocode.htm</string>
   <string name="FixedDialog" translatable="false">page_fixed.htm</string>
   <string name="FixedAddDialog" translatable="false">page_fixed_add.htm</string>
   <string name="FixedGpsDialog" translatable="false">page_fixed_gps.htm</string>
@@ -82,7 +84,7 @@
   <!-- string name="ImportDialog" translatable="false">page_import.htm</string -->
   <string name="ImportDialogShot" translatable="false">page_import.htm</string>
   <string name="ItemPickerDialog" translatable="false">page_tools_list.htm</string>
-  <string name="MultishotDialog" translatable="false">page_todo.htm</string>
+  <string name="MultishotDialog" translatable="false">page_multishot.htm</string>
   <string name="PacketDialog" translatable="false">page_packets.htm</string>
   <string name="ShotPhotoDialog" translatable="false">page_photo_dialog.htm</string>
   <string name="PhotoViewDialog" translatable="false">page_photo_view.htm</string>

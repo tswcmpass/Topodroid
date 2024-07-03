@@ -53,7 +53,8 @@ public class ExportDialogShot extends MyDialog
   private int mSelectedPos;
   private String    mSurvey;
   private String    mExportPrefix = null;
-  private String    mExportName = null;
+  private String    mExportName   = null;
+  private long      mExportFirst  = -1L; // index of first shot to export
   private boolean   mDiving = false; // diving-mode survey
 
   private LinearLayout mLayoutZip;
@@ -87,8 +88,10 @@ public class ExportDialogShot extends MyDialog
     mTitle    = title;
     mSurvey   = survey;
     mDiving   = diving;
-    mExportPrefix = null;
-    mExportName   = null;
+    // mExportPrefix = null; // already in declaration
+    // mExportName   = null;
+    // mExportFirst  = -1L;
+    // TDLog.v("EXPORT SHOT " + survey + " Types " + types.length + " diving " + diving );
   }
 
 // -------------------------------------------------------------------
@@ -141,16 +144,21 @@ public class ExportDialogShot extends MyDialog
   private void setSelected( Spinner spin )
   {
     int pos = 0;
+    int kpos = -1;
     if ( TDSetting.mExportShotsFormat >= 0 ) {
       for ( int k = 0; k < TDConst.mSurveyExportIndex.length; ++ k ) {
-        if ( TDConst.mSurveyExportIndex[k] == TDSetting.mExportShotsFormat ) {
-          pos = k;
-          break;
+        if ( TDConst.mSurveyExportEnable[k] ) {
+          ++ kpos;
+          if ( TDConst.mSurveyExportIndex[k] == TDSetting.mExportShotsFormat ) {
+            pos = kpos;
+            break;
+          }
         }
       }
     }
-    int ppos = TDConst.surveyIndex( pos );
-    if ( ppos < 0 || ppos >= mTypes.length ) ppos = 0;
+    // int ppos = TDConst.surveyIndex( pos );
+    // TDLog.v("EXPORT Set Selected pos " + pos + " ppos " + ppos );
+    // if ( ppos < 0 || ppos >= mTypes.length ) ppos = 0;
     mSelected = mTypes[ pos ];
     mSelectedPos = pos;
     spin.setSelection( pos );
@@ -166,12 +174,12 @@ public class ExportDialogShot extends MyDialog
   public void onItemSelected( AdapterView av, View v, int pos, long id ) 
   {
     int ppos = TDConst.surveyIndex( pos );
-    TDLog.v( "EXPORT ppos " + ppos );
+    // TDLog.v( "EXPORT pos " + pos + " ppos " + ppos );
     if ( ppos < 0 ) return;
     mSelected = TDConst.mSurveyExportTypes[ ppos ];
     mSelectedPos = ppos;
     updateLayouts();
-    TDLog.v( "EXPORT ppos " + ppos + " " + mSelected );
+    // TDLog.v( "EXPORT ppos " + ppos + " " + mSelected );
   }
 
   /** react to a deselection
@@ -193,13 +201,13 @@ public class ExportDialogShot extends MyDialog
   {
     Button b = (Button)v;
     if ( b == mBtnOk && mSelected != null ) {
-      TDLog.v("Survey format selected " + mSelected + " " + TDConst.mSurveyExportIndex[ mSelectedPos ] );
+      // TDLog.v("Survey format selected " + mSelected + " " + TDConst.mSurveyExportIndex[ mSelectedPos ] );
       if ( ! setOptions() ) return;
       int selected_pos = ( mSelectedPos == TDConst.SURVEY_POS_VTOPO && TDSetting.mVTopoTrox )? -mSelectedPos : mSelectedPos;
       if ( mExportName != null ) {
-        mParent.doExport( mSelected, mExportName, mExportPrefix, false ); // second = false
+        mParent.doExport( mSelected, mExportName, mExportPrefix, mExportFirst, false ); // second = false
       } else {
-        mParent.doExport( mSelected, TDConst.getSurveyFilename( selected_pos, mSurvey ), mExportPrefix, false ); // second = false
+        mParent.doExport( mSelected, TDConst.getSurveyFilename( selected_pos, mSurvey ), mExportPrefix, mExportFirst, false ); // second = false
       }
     // } else if ( b == mBtnBack ) {
     //   /* nothing */
@@ -306,7 +314,7 @@ public class ExportDialogShot extends MyDialog
           }
         }
         export_name = sb.toString();
-        TDLog.v( "export name " + export_name + " ok " + ok );
+        // TDLog.v( "export name " + export_name + " ok " + ok );
         if ( ! ok ) {
           view.setError( mContext.getResources().getString( R.string.error_bad_name ) );
           view.setText( export_name );
@@ -380,6 +388,15 @@ public class ExportDialogShot extends MyDialog
       // case 8: // TopoRobot
       case TDConst.SURVEY_POS_TOPOROBOT:
         {
+          int first = -1;
+          EditText index =  (EditText) findViewById( R.id.trobot_index );
+          if ( index.getText() != null ) {
+            try {
+              first = Integer.parseInt( index.getText().toString() );
+            } catch ( NumberFormatException e ) { first = -1; }
+            if ( first >= mApp.mData.maxShotId( TDInstance.sid ) ) return false;
+          }
+          mExportFirst = first;
           EditText name = (EditText) findViewById( R.id.trobot_name );
           if ( ! setExportName( TDConst.SURVEY_POS_TOPOROBOT, name ) ) return false;
         }
@@ -475,8 +492,8 @@ public class ExportDialogShot extends MyDialog
     ((CheckBox) findViewById( R.id.shp_stations )).setChecked( TDSetting.mKmlStations );
     // ((CheckBox) findViewById( R.id.shp_georeference )).setChecked( TDSetting.mShpGeoref );
 
-    ((EditText) findViewById( R.id.trobot_name )).setHint( mSurvey + ".trb");
-
+    ((EditText) findViewById( R.id.trobot_name )).setHint( mSurvey + TDPath.TRB );
+    ((EditText) findViewById( R.id.trobot_index )).setHint("-1");
   }
 
 

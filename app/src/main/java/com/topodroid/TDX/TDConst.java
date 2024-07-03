@@ -68,10 +68,10 @@ public class TDConst
     "application/octet-stream", //    Compass
     "application/octet-stream", //    Survex
     "application/octet-stream", //    VisualTopo
-    "text/csv",                 //  5 *CSV
+    "text/comma-separated-values",    //  5 *CSV
     "application/dxf",          //  6 *DXF
     "application/octet-stream", //  7 *cSurvey
-    null, // "application/octet-stream", //  8 PocketTopo
+    "application/octet-stream", //  8 PocketTopo
     "application/octet-stream", //  9 Walls
     "application/vnd",          // 10 *KML
     // "application/octet-stream", //    trackfile (.plt)
@@ -86,7 +86,7 @@ public class TDConst
     null, // "application/octet-stream", // 18 Grottolf
     "application/octet-stream", // 19 GhTopo
     null, // "application/octet-stream", // 20 WinKarst
-    "application/octet-stream", // 21 TopoRobot
+    "text/plain", // "application/octet-stream", // 21 TopoRobot
     null, // "application/json",         // 22 *Json
     "application/shp",          // 23
     "application/xvi",          // 24
@@ -115,7 +115,9 @@ public class TDConst
     "VisualTopo",
     // "VisualTopo-X",
     "Walls",
-    "PocketTopo"
+    "PocketTopo",
+    "TopoRobot",
+    "BRIC csv"
   };
 
   private static final int[] mSurveyImportIndex = {
@@ -127,7 +129,9 @@ public class TDConst
     SURVEY_FORMAT_TRO,
     // SURVEY_FORMAT_TROX,
     SURVEY_FORMAT_SRV,
-    SURVEY_FORMAT_TOP
+    SURVEY_FORMAT_TOP,
+    SURVEY_FORMAT_TRB,
+    SURVEY_FORMAT_CSV
   };
 
   // ======= MODEL EXPORT  ====== see TopoGL::getFilename()
@@ -185,15 +189,15 @@ public class TDConst
   public static String getModelFilename( int type, String name )
   {
     switch( type ) {
-      case ModelType.GLTF:       return name + ".gltf";
-      case ModelType.CGAL_ASCII: return name + ".cgal";
-      case ModelType.STL_ASCII:  return name + ".stl";
-      case ModelType.STL_BINARY: return name + ".stl";
-      case ModelType.LAS_BINARY: return name + ".las";
-      case ModelType.DXF_ASCII:  return name + ".dxf";
-      case ModelType.KML_ASCII:  return name + ".kml";
-      case ModelType.SHP_ASCII:  return name + ".shz";
-      case ModelType.GPX_ASCII:  return name + ".gpx";
+      case ModelType.GLTF:       return name + TDPath.GLTF;
+      case ModelType.CGAL_ASCII: return name + TDPath.CGAL;
+      case ModelType.STL_ASCII:  return name + TDPath.STL;
+      case ModelType.STL_BINARY: return name + TDPath.STL;
+      case ModelType.LAS_BINARY: return name + TDPath.LAS;
+      case ModelType.DXF_ASCII:  return name + TDPath.DXF;
+      case ModelType.KML_ASCII:  return name + TDPath.KML;
+      case ModelType.SHP_ASCII:  return name + TDPath.SHZ;
+      case ModelType.GPX_ASCII:  return name + TDPath.GPX;
       // case ModelType.SERIAL: return name + ".txt";
     }
     return null;
@@ -271,7 +275,7 @@ public class TDConst
   {
     int ppos = 0;
     for ( int k = 0; k < mSurveyExportTypes.length; ++k ) {
-      TDLog.v("Pos " + pos + " k " + k + " " +  mSurveyExportEnable[k] );
+      // TDLog.v("Pos " + pos + " k " + k + " " +  mSurveyExportEnable[k] );
       if ( mSurveyExportEnable[k] ) {
         if ( pos == 0 ) return ppos;
         pos --;
@@ -357,30 +361,30 @@ public class TDConst
    */
   public static String getSurveyFilename( int type, String survey )
   {
-    TDLog.v("CONST export type " + type );
+    // TDLog.v("CONST export type " + type );
     switch ( type ) {
-      case SURVEY_POS_ZIP:       return survey + ".zip";
-      case SURVEY_POS_COMPASS:   return survey + ".dat";
-      case SURVEY_POS_CSURVEY:   return survey + ".csx";
-      case SURVEY_POS_GHTOPO:    return survey + ".gtx";
+      case SURVEY_POS_ZIP:       return survey + TDPath.ZIP;
+      case SURVEY_POS_COMPASS:   return survey + TDPath.DAT;
+      case SURVEY_POS_CSURVEY:   return survey + TDPath.CSX;
+      case SURVEY_POS_GHTOPO:    return survey + TDPath.GTX;
       // case SURVEY_POS_GROTTOLF: return survey + ".grt";
-      // case SURVEY_POS_PTOPO:    return survey + ".top";
-      case SURVEY_POS_POLYGON:   return survey + ".cave";
-      case SURVEY_POS_SURVEX:    return survey + ".svx"; // 5
-      case SURVEY_POS_THERION:   return survey + ".th";
-      case SURVEY_POS_TOPO:      return survey + ".cav";
-      case SURVEY_POS_TOPOROBOT: return survey + ".trb";
-      case SURVEY_POS_VTOPO:     return survey + ".tro";
-      case SURVEY_POS_WALLS:     return survey + ".srv"; // 10
-      case SURVEY_POS_WINKARST:  return survey + ".sur";
-      case SURVEY_POS_CSV:       return survey + ".csv";
-      case SURVEY_POS_DXF:       return survey + ".dxf";
-      case SURVEY_POS_KML:       return survey + ".kml";
+      // case SURVEY_POS_PTOPO:    return survey + TDPath.TOP;
+      case SURVEY_POS_POLYGON:   return survey + TDPath.CAVE;
+      case SURVEY_POS_SURVEX:    return survey + TDPath.SVX; // 5
+      case SURVEY_POS_THERION:   return survey + TDPath.TH;
+      case SURVEY_POS_TOPO:      return survey + TDPath.CAV;
+      case SURVEY_POS_TOPOROBOT: return survey + TDPath.TRB;
+      case SURVEY_POS_VTOPO:     return survey + TDPath.TRO;
+      case SURVEY_POS_WALLS:     return survey + TDPath.SRV; // 10
+      case SURVEY_POS_WINKARST:  return survey + TDPath.SUR;
+      case SURVEY_POS_CSV:       return survey + TDPath.CSV;
+      case SURVEY_POS_DXF:       return survey + TDPath.DXF;
+      case SURVEY_POS_KML:       return survey + TDPath.KML;
       // case 17: return survey + ".plt";
-      case SURVEY_POS_GPX:       return survey + ".gpx";
+      case SURVEY_POS_GPX:       return survey + TDPath.GPX;
       // case SURVEY_POS_GEOJSON:   return survey + ".json";
-      case SURVEY_POS_SHAPEFILE: return survey + ".shz"; // 15
-      case SURVEY_POS_VTOPOX:    return survey + ".trox"; // -9
+      case SURVEY_POS_SHAPEFILE: return survey + TDPath.SHZ; // 15
+      case SURVEY_POS_VTOPOX:    return survey + TDPath.TROX; // -9
     }
     return null;
   }
@@ -444,14 +448,14 @@ public class TDConst
   public static String getPlotFilename( int type, String name )
   {
     switch ( type ) { 
-      case PLOT_POS_THERION: return name + ".th2";
-      case PLOT_POS_CSURVEY: return name + ".csx";
-      case PLOT_POS_DXF:     return name + ".dxf";
-      case PLOT_POS_SVG:     return name + ".svg";
-      case PLOT_POS_SHAPEFILE: return name + ".shz";
+      case PLOT_POS_THERION: return name + TDPath.TH2;
+      case PLOT_POS_CSURVEY: return name + TDPath.CSX;
+      case PLOT_POS_DXF:     return name + TDPath.DXF;
+      case PLOT_POS_SVG:     return name + TDPath.SVG;
+      case PLOT_POS_SHAPEFILE: return name + TDPath.SHZ;
       // case PLOT_POS_PNG: return name + ".png"; // NO_PNG
-      case PLOT_POS_PDF:    return name + ".pdf";
-      case PLOT_POS_XVI:    return name + ".xvi";
+      case PLOT_POS_PDF:    return name + TDPath.PDF;
+      case PLOT_POS_XVI:    return name + TDPath.XVI;
       // case PLOT_POS_TUNNEL: return name + ".xml"; // Tunnel
       // case PLOT_POS_C3D: return name + ".c3d";
       // case PLOT_POS_PNM: return name + ".pnm"; NO_PNM
@@ -500,12 +504,12 @@ public class TDConst
   public static String getOverviewFilename( int type, String name )
   { 
     switch( type ) {
-      case OVERVIEW_POS_THERION:   return name + ".th2";
-      case OVERVIEW_POS_DXF:       return name + ".dxf";
-      case OVERVIEW_POS_SVG:       return name + ".svg";
-      case OVERVIEW_POS_SHAPEFILE: return name + ".shz";
-      case OVERVIEW_POS_PDF:       return name + ".pdf";
-      case OVERVIEW_POS_XVI:       return name + ".xvi";
+      case OVERVIEW_POS_THERION:   return name + TDPath.TH2;
+      case OVERVIEW_POS_DXF:       return name + TDPath.DXF;
+      case OVERVIEW_POS_SVG:       return name + TDPath.SVG;
+      case OVERVIEW_POS_SHAPEFILE: return name + TDPath.SHZ;
+      case OVERVIEW_POS_PDF:       return name + TDPath.PDF;
+      case OVERVIEW_POS_XVI:       return name + TDPath.XVI;
     }
     return null;
   }

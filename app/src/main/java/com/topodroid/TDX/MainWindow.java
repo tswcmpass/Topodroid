@@ -32,12 +32,14 @@ import com.topodroid.prefs.TDSetting;
 import com.topodroid.prefs.TDPrefCat;
 import com.topodroid.dev.DeviceUtil;
 import com.topodroid.inport.ImportData;
+import com.topodroid.inport.ImportBricCsvTask;
 import com.topodroid.inport.ImportCompassTask;
 import com.topodroid.inport.ImportVisualTopoTask;
 import com.topodroid.inport.ImportTherionTask;
 import com.topodroid.inport.ImportPocketTopoTask;
 import com.topodroid.inport.ImportSurvexTask;
 import com.topodroid.inport.ImportWallsTask;
+import com.topodroid.inport.ImportTRobotTask;
 import com.topodroid.inport.ImportCaveSniperTask;
 import com.topodroid.inport.ImportZipTask;
 // import com.topodroid.inport.ImportDialog;
@@ -135,7 +137,9 @@ public class MainWindow extends Activity
   private BitmapDrawable  mButtonDistoX2;
   private BitmapDrawable  mButtonDistoX3;
   private BitmapDrawable  mButtonSap5;
+  private BitmapDrawable  mButtonSap6;
   private BitmapDrawable  mButtonBric4;
+  private BitmapDrawable  mButtonBric5;
 
   private final  int BTN_DEVICE = 0;
 
@@ -370,6 +374,7 @@ public class MainWindow extends Activity
 
   void startSplitSurvey( long old_sid, long old_id )
   {
+    TDLog.v( "start split survey");
     mApp.setSurveyFromName( null, SurveyInfo.DATAMODE_NORMAL, true ); // FIXME CO-SURVEY
     (new SurveyNewDialog( mActivity, this, old_sid, old_id )).show(); // WITH SPLIT
   }
@@ -381,7 +386,7 @@ public class MainWindow extends Activity
    */
   void startMoveSurvey( long old_sid, long old_id, String new_survey )
   {
-    // TDLog.v( "start move survey");
+    TDLog.v( "start move survey");
     if ( mApp.moveSurveyData( old_sid, old_id, new_survey ) ) {
       mApp.setSurveyFromName( null, SurveyInfo.DATAMODE_NORMAL, true ); // FIXME CO-SURVEY
     // } else {
@@ -575,30 +580,36 @@ public class MainWindow extends Activity
   public void importReader( Uri uri, String name, String type, ImportData data )
   {
     // FIXME connect-title string
-    // TDLog.v( "import with reader <" + name + "> type <" + type + ">" );
+    TDLog.v( "import with reader <" + name + "> type <" + type + ">" );
     ParcelFileDescriptor pfd = TDsafUri.docReadFileDescriptor( uri );
     // InputStreamReader isr = new InputStreamReader( TDsafUri.docFileInputStream( pfd ) );
-    if ( type.equals(".th") ) {
+    if ( type.equals( TDPath.TH ) ) {
       setTitleImport();
       new ImportTherionTask( this, pfd, data ).execute( name, name );
-    } else if ( type.equals(".dat") ) {
+    } else if ( type.equals( TDPath.DAT ) ) {
       setTitleImport();
       new ImportCompassTask( this, pfd, data ).execute( name, name );
       // (new ImportDatDialog( this, this, pfd, name )).show();
-    } else if ( type.equals(".tro") || type.equals(".trox") ) {
+    } else if ( type.equals( TDPath.TRO ) || type.equals( TDPath.TROX ) ) {
       setTitleImport();
       // TDLog.v("type " + type + " data.trox " + data.mTrox );
       new ImportVisualTopoTask( this, pfd, data ).execute( name, name );
       // (new ImportTroDialog( this, this, pfd, name )).show();
-    } else if ( type.equals(".svx") ) {
+    } else if ( type.equals( TDPath.SVX ) ) {
       setTitleImport();
       new ImportSurvexTask( this, pfd ).execute( name ); 
-    } else if ( type.equals(".srv") ) {
+    } else if ( type.equals( TDPath.SRV ) ) {
       setTitleImport();
       new ImportWallsTask( this, pfd ).execute( name ); 
-    } else if ( type.equals(".csn") ) {
+    } else if ( type.equals( TDPath.TRB ) ) {
+      setTitleImport();
+      new ImportTRobotTask( this, pfd ).execute( name ); 
+    } else if ( type.equals( TDPath.CSN ) ) {
       setTitleImport();
       new ImportCaveSniperTask( this, pfd ).execute( name ); 
+    } else if ( type.equals( TDPath.CSV ) ) {
+      setTitleImport();
+      new ImportBricCsvTask( this, pfd ).execute( name ); 
     // } else {
     //   setTheTitle( );
     }
@@ -981,7 +992,9 @@ public class MainWindow extends Activity
     mButtonDistoX2 = MyButton.getButtonBackground( this, res, R.drawable.iz_disto2b );
     mButtonDistoX3 = MyButton.getButtonBackground( this, res, R.drawable.iz_disto3b );
     mButtonSap5    = MyButton.getButtonBackground( this, res, R.drawable.iz_sap5 );
+    mButtonSap6    = MyButton.getButtonBackground( this, res, R.drawable.iz_sap6 );
     mButtonBric4   = MyButton.getButtonBackground( this, res, R.drawable.iz_bric4 );
+    mButtonBric5   = MyButton.getButtonBackground( this, res, R.drawable.iz_bric5 );
 
     // mButton1[2].setOnLongClickListener( this ); // IMPORT ZIP
     setButtonDevice();
@@ -1020,10 +1033,14 @@ public class MainWindow extends Activity
       TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonDistoX3 );
     } else if ( TDInstance.isDeviceA3() ) {
       TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonDistoX1 );
-    } else if ( TDInstance.isDeviceSap() ) {
-      TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonSap5 );
-    } else if ( TDInstance.isDeviceBric() ) {
+    } else if ( TDInstance.isDeviceBric4() ) {
       TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonBric4 );
+    } else if ( TDInstance.isDeviceBric5() ) {
+      TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonBric5 );
+    } else if ( TDInstance.isDeviceSap5() ) {
+      TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonSap5 );
+    } else if ( TDInstance.isDeviceSap6() ) {
+      TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonSap6 );
     } else {
       TDandroid.setButtonBackground( mButton1[BTN_DEVICE], mButtonDistoX0 );
     }
@@ -1318,15 +1335,17 @@ public class MainWindow extends Activity
       closeMenu();
       return;
     }
-    if ( doubleBack ) {
+    if ( TDSetting.mSingleBack ) {
+      super.onBackPressed();
+    } else if ( doubleBack ) {
       if ( doubleBackToast != null ) doubleBackToast.cancel();
       doubleBackToast = null;
       super.onBackPressed();
-      return;
+    } else {
+      doubleBack = true;
+      doubleBackToast = TDToast.makeToast( R.string.double_back );
+      doubleBackHandler.postDelayed( doubleBackRunnable, 1000 );
     }
-    doubleBack = true;
-    doubleBackToast = TDToast.makeToast( R.string.double_back );
-    doubleBackHandler.postDelayed( doubleBackRunnable, 1000 );
   }
 
   public void doCloseApp()
@@ -1457,7 +1476,27 @@ public class MainWindow extends Activity
           }
         } else {
           // TDLog.Error("ZIP import: failed manifest " + manifest_ok );
-          TDToast.makeBad( String.format( getResources().getString( R.string.bad_manifest ), (-manifest_ok) ) );
+          int bad = -1;
+          switch ( -manifest_ok ) {
+            case  1: bad = R.string.bad_manifest_zip;      break;
+            case  2: bad = R.string.bad_manifest_td;       break;
+            case  3: bad = R.string.bad_manifest_db_old;   break;
+            case  4: bad = R.string.bad_manifest_db_new;   break;
+            // case  5: bad = R.string.bad_manifest_name;     break;
+            case  6: bad = R.string.bad_manifest_present;  break;
+            case  7: bad = R.string.bad_manifest_db;       break;
+            case  8: bad = R.string.bad_manifest_sql;      break;
+            case  9: bad = R.string.bad_manifest_number;   break;
+            case 10: bad = R.string.bad_manifest_manifest; break;
+            case 11: bad = R.string.bad_manifest_missing;  break;
+            case 12: bad = R.string.bad_manifest_error;    break;
+            case 13: bad = R.string.bad_manifest_other;    break;
+            default:
+              TDToast.makeBad( String.format( getResources().getString( R.string.bad_manifest ), (-manifest_ok) ) );
+          }
+          if ( bad > 0 ) {
+            TDToast.makeBad( bad );
+          }
           return null;
         }
       } else {
@@ -1472,7 +1511,8 @@ public class MainWindow extends Activity
             // TDLog.v( "import reader type " + type + " filename " + filename );
             importReader( uri, name, type, mImportData );
           } else {
-            TDLog.Error("import unsupported " + ext);
+            // TDLog.Error("import unsupported " + ext);
+            TDToast.makeBad( String.format( getResources().getString( R.string.unsupported_extension ), ext ) );
             return null;
           }
         }
@@ -1670,8 +1710,8 @@ public class MainWindow extends Activity
    */
   public void doImport( String type, ImportData data )
   {
-    int index = TDConst.surveyImportFormatIndex( type );
-    // TDLog.v( "MAIN import " + type + " " + index );
+    int index = TDConst.surveyImportFormatIndex( type ); // get the format index as in TDConst
+    TDLog.v( "MAIN import " + type + " " + index );
     selectImportFromProvider( index, data );
   }
 

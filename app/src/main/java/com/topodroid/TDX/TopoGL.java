@@ -350,6 +350,9 @@ public class TopoGL extends Activity
   {
     super.onDestroy();
     ((TopoDroidApp)getApplication()).mTopoGL = null;
+    if ( doubleBackHandler != null ) {
+      doubleBackHandler.removeCallbacks( doubleBackRunnable );
+    }
   }
 
   @Override
@@ -557,16 +560,18 @@ public class TopoGL extends Activity
       closeMenu();
       return;
     }
-    if ( doubleBack ) {
+    if ( TDSetting.mSingleBack ) {
+      super.onBackPressed();
+    } else if ( doubleBack ) {
       if ( doubleBackToast != null ) doubleBackToast.cancel();
       doubleBackToast = null;
       super.onBackPressed();
-      return;
+    } else {
+      doubleBack = true;
+      doubleBackToast = Toast.makeText( this, R.string.double_back, Toast.LENGTH_SHORT );
+      doubleBackToast.show();
+      doubleBackHandler.postDelayed( doubleBackRunnable, 1000 );
     }
-    doubleBack = true;
-    doubleBackToast = Toast.makeText( this, R.string.double_back, Toast.LENGTH_SHORT );
-    doubleBackToast.show();
-    doubleBackHandler.postDelayed( doubleBackRunnable, 1000 );
   }
 
   // ----------------------------------------------------------------
@@ -1913,7 +1918,7 @@ public class TopoGL extends Activity
   static final String CAVE3D_MEASURE_DIALOG     = "CAVE3D_MEASURE_DIALOG";
   static final String CAVE3D_STATION_TOAST      = "CAVE3D_STATION_TOAST";
   static final String CAVE3D_GRID_ABOVE         = "CAVE3D_GRID_ABOVE";
-  static final String CAVE3D_GRID_EXTENT        = "CAVE3D_GRID_EXTEND";
+  static final String CAVE3D_GRID_EXTENT        = "CAVE3D_GRID_EXTENT";
 
   // static final String CAVE3D_BLUETOOTH_DEVICE = "CAVE3D_BLUETOOTH_DEVICE"; // FIXME BLUETOOTH SETTING
 
@@ -2572,12 +2577,14 @@ public class TopoGL extends Activity
     // TDLog.v("starting bluetooth - remote " + mBtRemoteName );
     if ( mBluetoothComm == null ) {
       // mBluetoothComm = new BluetoothComm( this, this, mBtRemoteDevice );
-      if ( mBtRemoteName.startsWith("BRIC4_" ) || mBtRemoteName.startsWith("BRIC5_ ) {
+      if ( Device.isBric( mBtRemoteName ) ) {
         mBluetoothComm = new BricComm( this, this, mBtRemoteDevice );
-      } else if ( mBtRemoteName.startsWith("Shetland_" ) ) {
+      } else if ( Device.isSap( mBtRemoteName ) ) {
         mBluetoothComm = new SapComm( this, this, mBtRemoteDevice );
-      } else if ( mBtRemoteName.startsWith("DistoX-" ) ) {
+      } else if ( mBtRemoteName.startsWith( Device.NAME_DISTOX2 ) ) {
         mBluetoothComm = new DistoXComm( this, this, mBtRemoteDevice, mBtRemoteDevice.getAddress() );
+      } else if ( mBtRemoteName.startsWith( Device.NAME_DISTOXBLE ) ) {
+        mBluetoothComm = new DistoXBLEComm( this, this, mBtRemoteDevice, mBtRemoteDevice.getAddress() );
       }
       // if ( mBluetoothComm != null ) {
       //   mDataType = DATA_NONE;

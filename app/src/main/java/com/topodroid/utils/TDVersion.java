@@ -28,17 +28,17 @@ public class TDVersion
 
   // symbol version of installed symbols is stored in the database
   // symbol version of the current  symbols is in the app
-  public static final String SYMBOL_VERSION = "40";
+  public static final String SYMBOL_VERSION = "43";
 
   // increase to install last version of DistoX2 firmware
   public static final String FIRMWARE_VERSION = "28";
   
   // database version
-  public static final String DB_VERSION = "50"; 
-  public static final int DATABASE_VERSION = 50;
+  public static final String DB_VERSION = "53"; 
+  public static final int DATABASE_VERSION = 53;
   public static final int DATABASE_VERSION_MIN = 21; // was 14
 
-  public static final int DEVICE_DATABASE_VERSION = 28;
+  public static final int DEVICE_DATABASE_VERSION = 30; // FIXME ROLL_DIFFERENCE BT_ALIAS
   // public static final int DEVICE_DATABASE_VERSION_MIN = 21; // was 14
 
   public static final int PACKET_DATABASE_VERSION = 1;

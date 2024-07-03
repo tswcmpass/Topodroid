@@ -564,7 +564,11 @@ public class TDFile
   /** @return file writer
    * @param name    file fullpath
    */
-  public static FileWriter getFileWriter( String name ) throws IOException { return new FileWriter( name ); }
+  public static FileWriter getFileWriter( String name ) throws IOException 
+  { 
+    // TDLog.v("get file writer: " + name );
+    return new FileWriter( name );
+  }
 
   /** @return file writer
    * @param file    file 
@@ -700,7 +704,7 @@ public class TDFile
     if ( f1.exists() ) {
       if ( ! f1.renameTo( f2 ) ) TDLog.Error("file move: failed " + oldname + " to " + newname );
     } else {
-      TDLog.Error("file move: no-exist " + oldname );
+      TDLog.Error("file move: no-exist " + oldname ); // this may be OK
     }
   }
 
@@ -785,7 +789,11 @@ public class TDFile
   // =========================================================================
   // GENERIC INTERFACE relative to TDPath.getPathBase() (CWD)
 
-  public static File getMSfile( String name ) { return new File( TDPath.getPathBase() + "/" + name ); }
+  public static File getMSfile( String name ) 
+  { 
+    // TDLog.v("MSfile: " + TDPath.getPathBase() + "/" + name );
+    return new File( TDPath.getPathBase() + "/" + name );
+  }
 
   public static File getMSfile( String subdir, String name ) 
   { 
@@ -866,7 +874,7 @@ public class TDFile
     return new BufferedWriter( new OutputStreamWriter( os ) );
   }
 
-  /**
+  /** @return a FileInputStream
    * @param subdir    subdir relative to app base
    * @param filename  file name
    * @param mimetype  not used
@@ -874,18 +882,22 @@ public class TDFile
   static public FileInputStream getMSinput( String subdir, String filename, String mimetype ) throws IOException
   {
     if ( ! hasMSdir( subdir ) ) {
-      TDLog.Error("failed: no subdir " + subdir );
+      TDLog.Error("Get MS input - failed: no subdir " + subdir );
       throw new IOException("failed: no subdir");
     }
     return new FileInputStream( getMSfile( subdir, filename ) );
   }
 
-  // get a reader for the FileInputStream
-  // then we can read  
+  /**
+   * @return get a reader for the FileInputStream, then we can read  
+   * @param subdir    subdir relative to app base
+   * @param filename  file name
+   * @param mimetype  not used
+   */
   static public BufferedReader getMSReader( String subdir, String filename, String mimetype ) throws IOException
   {
     if ( ! hasMSdir( subdir ) ) {
-      TDLog.Error("failed: no subdir " + subdir );
+      TDLog.Error("Get MS reader - failed: no subdir " + subdir );
       throw new IOException("failed: no subdir");
     }
     FileInputStream is = new FileInputStream( getMSfile( subdir, filename ) );

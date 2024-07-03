@@ -119,6 +119,27 @@ public class TDUtil
     }
   }
 
+  public static String toStationFromName( String s )
+  {
+    if ( s == null ) return null;
+    return s.replaceAll("\\s+", "_").replaceAll("/", "-").replaceAll("\\*", "+").replaceAll("\\\\", "").replaceAll(":","-");
+  }
+
+  public static String toStationToName( String s )
+  {
+    if ( s == null ) return null;
+    s = s.replaceAll("\\s+", "_").replaceAll("/", "-").replaceAll("\\*", "+").replaceAll("\\\\", "").replaceAll(":","-");
+    if ( s.equals(".") || s.equals("-") ) return "";
+    return s;
+  }
+
+  public static boolean isStationName( String s )
+  {
+    if ( s == null || s.length() == 0 ) return true;
+    int ch = s.codePointAt( s.length() - 1);
+    return ( Character.isAlphabetic( ch ) || Character.isDigit( ch ) );
+  }
+
   public static String noSpaces( String s )
   {
     return ( s == null )? null 
@@ -175,6 +196,14 @@ public class TDUtil
   public static String currentDateTimeBric()
   {
     SimpleDateFormat sdf = new SimpleDateFormat( "yyyy MM dd HH mm ss", Locale.US );
+    return sdf.format( new Date() );
+  }
+
+  /** @return the current date-time - TopoRobot format "yy/mm/dd hh:mm:ss"
+   */
+  public static String currentDateTimeTRobot()
+  {
+    SimpleDateFormat sdf = new SimpleDateFormat( "yy/MM/dd HH:mm:ss", Locale.US );
     return sdf.format( new Date() );
   }
 
@@ -341,6 +370,13 @@ public class TDUtil
     return (new GregorianCalendar()).getTimeInMillis();
   }
 
+  /** @return the timestamp in seconds
+   */
+  public static long getTimeStamp() 
+  {
+    return System.currentTimeMillis() / 1000L;
+  }
+
   /** @return the date from the millis
    * @param millis    millis
    */
@@ -348,7 +384,18 @@ public class TDUtil
   {
     GregorianCalendar calendar = new GregorianCalendar();
     calendar.setTimeInMillis( millis );
-    return String.format("%04d-%02d-%02d", calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DAY_OF_MONTH ) );
+    return String.format("%04d-%02d-%02d", calendar.get( Calendar.YEAR ), 1+calendar.get( Calendar.MONTH ), calendar.get( Calendar.DAY_OF_MONTH ) );
+  }
+
+  /** @return the date-time from a timestamp
+   * @param time  timestamp [s]
+   */
+  public static String timestampToDateTime( long time )
+  {
+    GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTimeInMillis( time * 1000L );
+    return String.format("%04d-%02d-%02d %02d:%02d:%02d", calendar.get( Calendar.YEAR ), 1+calendar.get( Calendar.MONTH ), calendar.get( Calendar.DAY_OF_MONTH ),
+      calendar.get( Calendar.HOUR_OF_DAY ), calendar.get( Calendar.MINUTE ), (int)(calendar.get( Calendar.SECOND )) );
   }
 
   /** @return the current year

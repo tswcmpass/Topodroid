@@ -40,11 +40,23 @@ public class TDPath
   final static String BCK_SUFFIX = ".bck";
 
   final static String C3D = ".c3d";
+  final static String CAV = ".cav"; // 
+  final static String CAVE = ".cave"; // Polygon
   final static String CSN = ".csn";  // CaveSniper
-  // final static String CSV = ".csv";
+  final static String CSV = ".csv";
+  final static String CSX = ".csx"; // cSurvey
   final static String DAT = ".dat"; // Compass
+  final static String DXF = ".dxf"; // 
+  final static String GPX = ".gpx"; // 
+  final static String GTX = ".gtx"; // 
+  final static String KML = ".kml"; // 
+  final static String PDF = ".pdf"; // 
+  final static String SHZ = ".shz"; // shapefile
+  final static String SUR = ".sur"; // WinKarst
+  final static String SVG = ".svx"; // SVG
   final static String SVX = ".svx"; // Survex
   final static String SRV = ".srv"; // Walls
+  final static String TRB = ".text"; // TopoRobot
   final static String TDR = ".tdr";
   final static String TH2 = ".th2"; // TH2EDIT
   // final static private String TMP = ".tmp";
@@ -54,7 +66,13 @@ public class TDPath
   final static String TRO = ".tro"; // VisualTopo
   final static String TROX = ".trox"; // VisualTopo
   final static String TXT = ".txt";
+  final static String XVI = ".xvi";
   final static String ZIP = ".zip";
+
+  final static String GLTF = ".gltf";
+  final static String CGAL = ".cgal";
+  final static String STL  = ".stl";
+  final static String LAS  = ".las";
 
   final static String DIR_BIN   = "bin";
   final static String DIR_CCSV  = "ccsv";
@@ -384,6 +402,7 @@ public class TDPath
    */
   static String getSqlFile() 
   {
+    TDLog.v("SQL file: " + APP_SURVEY_PATH + "/survey.sql" );
     return APP_SURVEY_PATH + "/survey.sql";
   }
 
@@ -473,6 +492,12 @@ public class TDPath
    * @note used only by Archiver
    */
   static String getNoteFile( String name )  { return APP_NOTE_PATH  + "/" + name; }
+
+  /** @return the survey note file full pathname
+   * @param survey  survey name
+   * @note used by ImportTRobotTask
+   */
+  static public String getNoteTRobotFile( String survey )  { return ROOT_CW_DIR + "/" + survey + "/note/trobot.txt"; }
 
   /** @return a current survey out-file full pathname
    * @param name out filename, eg, <survey>.th
@@ -621,6 +646,10 @@ public class TDPath
    */
   public static  void deleteAreaFile( String name )  { TDFile.deletePrivateFile( DIR_AREA,  name ); }
 
+  /** @return geocodes file
+   */
+  public static File getGeocodesFile( )  { return TDFile.getPrivateFile( null, "geocodes" ); }
+
 
   // ---------------------------------------------------------------------------------------
 
@@ -649,9 +678,9 @@ public class TDPath
   }
 
   // NOTA BENE extensions include the dot, eg, ".th"
-  static final String[] IMPORT_EXT        = { TH, TOP, DAT, TRO, CSN, SVX };
+  // static final String[] IMPORT_EXT        = { TH, TOP, DAT, TRO, CSN, SVX, SRV, TRB };
   static final String[] IMPORT_EXT_STREAM = { TOP, ZIP };
-  static final String[] IMPORT_EXT_READER = { TH, DAT, TRO, TROX, CSN, SVX, SRV, TH2 }; // TH2EDIT added TH2
+  static final String[] IMPORT_EXT_READER = { TH, DAT, TRO, TROX, CSN, SVX, SRV, TRB, TH2, CSV }; // TH2EDIT added TH2
 
   // static File[] getImportFiles() // DistoX-SAF
   // { 
@@ -1015,7 +1044,7 @@ public class TDPath
 
   private static String checkType( String extension, String[] extensions )
   {
-    for ( String e : extensions ) if ( e.equals( extension ) ) return e;
+    for ( String e : extensions ) if ( e.equalsIgnoreCase( extension ) ) return e;
     return null;
   }
 

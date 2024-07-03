@@ -714,8 +714,8 @@ public class TDExporter
       lat = origin.lat;
       lng = origin.lng;
       h_geo = ellipsoid_h ? origin.h_ell : origin.h_geo; // KML uses Geoid altitude (unless altitudeMode is set)
-      mSRadius = 1 / Geodetic.meridianRadiusExact( lat, origin.h_ell );
-      mERadius = 1 / Geodetic.parallelRadiusExact( lat, origin.h_ell );
+      mSRadius = 1 / Geodetic.meridianRadiusExact( lat, origin.h_ell ); // TODO 1 / Geodetic.meridianRadiusEllipsoid( lat, origin.h_ell );
+      mERadius = 1 / Geodetic.parallelRadiusExact( lat, origin.h_ell ); //      1 / Geodetic.parallelRadiusEllipsoid( lat, origin.h_ell );
       // TDLog.v( "radius S " + (mSRadius / s_radius_e) + " E " + (mERadius / e_radius_a ) );
     }
 
@@ -1165,7 +1165,7 @@ public class TDExporter
       return 2;
     }
 
-    // now write the GXP file
+    // now write the GPX file
     try {
       // TDLog.Log( TDLog.LOG_IO, "export trackfile " + file.getName() );
       // BufferedWriter bw = TDFile.getMSwriter( "plt", surveyname + ".plt", "text/plt" );
@@ -1555,8 +1555,9 @@ public class TDExporter
           // BufferedWriter bcw = TDFile.getMSwriter( "thconfig", surveyname + ".thconfig", "text/thconfig" );
           BufferedWriter bcw = new BufferedWriter( new FileWriter( thconfig ) );
           PrintWriter pcw = new PrintWriter( bcw );
+          pcw.format("encoding uft-8\n");
           pcw.format("# %s created by TopoDroid v %s\n\n", TDUtil.getDateString("yyyy.MM.dd"), TDVersion.string() );
-          pcw.format("source \"../th/%s.th\"\n\n", info.name );
+          pcw.format("source \"./%s.th\"\n\n", info.name );
           pcw.format("layout topodroid\n");
           pcw.format("  legend on\n");
           pcw.format("  symbol-hide group centerline\n");
@@ -1600,6 +1601,7 @@ public class TDExporter
       }
       PrintWriter pw = new PrintWriter( bw );
 
+      pw.format("encoding utf-8\n");
       pw.format("# %s created by TopoDroid v %s\n\n", TDUtil.getDateString("yyyy.MM.dd"), TDVersion.string() );
 
       if ( embed_thconfig /* && TDSetting.mExportUri */ ) { // embed thconfig
@@ -2337,41 +2339,46 @@ public class TDExporter
    */
   static private void writeCsvLeg( PrintWriter pw, AverageLeg leg, float ul, float ua, int leg_extend, char sep )
   {
-    pw.format(Locale.US, "%c%.2f%c%.1f%c%.1f%c,%d", sep, leg.length() * ul, sep, leg.bearing() * ua, sep, leg.clino() * ua, sep, leg_extend );
+    pw.format(Locale.US, "%c%.2f%c%.1f%c%.1f%c%d", sep, leg.length() * ul, sep, leg.bearing() * ua, sep, leg.clino() * ua, sep, leg_extend );
     leg.reset();
     // leg_extend is not to be reset
   }
 
-  static private void writeCsvFlag( PrintWriter pw, boolean dup, boolean sur, boolean cmtd, char sep, String newline )
+  static private void writeCsvFlag( PrintWriter pw, boolean dup, boolean sur, boolean cmtd, String comment, char sep, String newline )
   {
     if ( dup ) {
       if ( sur ) {
         if ( cmtd ) {
-          pw.format("%cLSC%s", sep, newline );
+          pw.format("%cLSC", sep );
         } else {
-          pw.format("%cLS%s", sep, newline );
+          pw.format("%cLS", sep );
         }
       } else {
         if ( cmtd ) {
-          pw.format("%cLC%s", sep, newline );
+          pw.format("%cLC", sep );
         } else {
-          pw.format("%cL%s", sep, newline );
+          pw.format("%cL", sep );
         }
       }
     } else {
       if ( sur ) {
         if ( cmtd ) {
-          pw.format("%cSC%s", sep, newline );
+          pw.format("%cSC", sep );
         } else {
-          pw.format("%cS%s", sep, newline );
+          pw.format("%cS", sep );
         }
       } else {
         if ( cmtd ) {
-          pw.format("%cC%s", sep, newline );
+          pw.format("%cC", sep );
         } else {
-          pw.format("%c%s", sep, newline );
+          pw.format("%c", sep );
         }
       }
+    }
+    if ( comment == null ) {
+      pw.format("%c%s", sep, newline );
+    } else {
+      pw.format("%c%s%s", sep, TDString.escapeSeparator(sep, comment), newline );
     }
   }
 
@@ -2384,15 +2391,15 @@ public class TDExporter
    */ 
   static int exportSurveyAsRawCsv( BufferedWriter bw, long sid, DataHelper data, SurveyInfo info, String survey_name )
   {
-    List< RawDBlock > list = data.selectAllShotsRawData( sid );
     char sep = TDSetting.mCsvSeparator;
+    List< RawDBlock > list = data.selectAllShotsRawData( sid );
     String newline = TDSetting.mSurvexEol;
     try {
       // BufferedWriter bw = TDFile.getMSwriter( "csv", survey_name + ".csv", "text/csv" );
       PrintWriter pw = new PrintWriter( bw );
       pw.format("# %s [*] created by TopoDroid v %s%s", TDUtil.getDateString("yyyy.MM.dd"), TDVersion.string(), newline );
       pw.format("# %s%s", info.name, newline );
-      pw.format("# id from to dist azi clino roll G M dip time type addres extend flag leg-type status Mx, My, Mz, Gx, Gy, Gz comment%s", newline );
+      pw.format("# id, from, to, dist, azi, clino, roll, G, M, dip, time, type, addres, extend, flag, leg-type, status, Mx, My, Mz, Gx, Gy, Gz, comment%s", newline );
       for ( RawDBlock b : list ) {
 	// String f = ( b.mFrom == null )? "" : b.mFrom;
 	// String t = ( b.mTo   == null )? "" : b.mTo;
@@ -2402,9 +2409,9 @@ public class TDExporter
         String address = b.mAddress;
         if ( TDString.isNullOrEmpty( address ) ) address = "-";
         pw.format(Locale.US, "%d%c%d%c%s%c", b.mTime, sep, b.getShotType(), sep, address, sep );
-        pw.format(Locale.US, "%d%c%d%c%d%c%d%c", b.mExtend, sep, b.mFlag, sep, b.mLeg, sep, b.mStatus, sep );
+        pw.format(Locale.US, "%d%c%d%c%d%c%d%c", b.mExtend, sep, b.mFlag, sep, b.mLeg, sep, b.mStatus, sep );  // NOTE mLeg is not mBlockType
         pw.format(Locale.US, "%d%c%d%c%d%c%d%c%d%s%d%c", b.mRawMx, sep, b.mRawMy, sep, b.mRawMz, sep, b.mRawGx, sep, b.mRawGy, sep, b.mRawGz, sep );
-        pw.format(Locale.US, "%s%s", b.mComment, newline );
+        pw.format(Locale.US, "%s%s", TDString.escapeSeparator(sep, b.mComment), newline );
       }
       bw.flush();
       bw.close();
@@ -2460,6 +2467,7 @@ public class TDExporter
       boolean surface   = false;
       boolean splays = false;
       int leg_extend = 1; // RIGHT
+      int extend;
       for ( DBlock item : list ) {
         String from = item.mFrom;
         String to   = item.mTo;
@@ -2472,7 +2480,7 @@ public class TDExporter
           } else { // only TO station
             if ( leg.mCnt > 0 && ref_item != null ) {
               writeCsvLeg( pw, leg, ul, ua, leg_extend, sep );
-              writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), sep, newline );
+              writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), ref_item.mComment, sep, newline );
               duplicate = false; // reset flags
               surface   = false;
               ref_item = null; 
@@ -2484,9 +2492,11 @@ public class TDExporter
             if ( ! splays ) {
               splays = true;
             }
-            pw.format(Locale.US, "-%c%s@%s%c%.2f%c%.1f%c%.1f%c%d",
-                      sep, to, info.name, sep, item.mLength * ul, sep, item.mBearing * ua, sep, item.mClino * ua, sep, item.getIntExtend() );
-            writeCsvFlag( pw, false, false, item.isCommented(), sep, newline );
+            pw.format(Locale.US, "-%c%s@%s%c%.2f%c%.1f%c%.1f%c",
+                      sep, to, info.name, sep, item.mLength * ul, sep, item.mBearing * ua, sep, item.mClino * ua, sep );
+            extend = item.getIntExtend();
+            if ( extend <= 1 ) pw.format("%d", extend );
+            writeCsvFlag( pw, false, false, item.isCommented(), item.mComment, sep, newline );
 
             // if ( item.mComment != null && item.mComment.length() > 0 ) {
             //   pw.format(",\"%s\"\n", item.mComment );
@@ -2496,7 +2506,7 @@ public class TDExporter
           if ( TDString.isNullOrEmpty( to ) ) { // splay shot
             if ( leg.mCnt > 0 && ref_item != null ) { // write pervious leg shot
               writeCsvLeg( pw, leg, ul, ua, leg_extend, sep );
-              writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), sep, newline );
+              writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), item.mComment, sep, newline );
               duplicate = false; // reset flags
               surface   = false;
               ref_item = null; 
@@ -2508,16 +2518,18 @@ public class TDExporter
             if ( ! splays ) {
               splays = true;
             }
-            pw.format(Locale.US, "%s@%s%c-%c%.2f%c%.1f%c%.1f%c%d",
-                      from, info.name, sep, sep, item.mLength * ul, sep, item.mBearing * ua, sep, item.mClino * ua, sep, item.getIntExtend() );
-            writeCsvFlag( pw, false, false, item.isCommented(), sep, newline );
+            pw.format(Locale.US, "%s@%s%c-%c%.2f%c%.1f%c%.1f%c",
+                      from, info.name, sep, sep, item.mLength * ul, sep, item.mBearing * ua, sep, item.mClino * ua, sep );
+            extend = item.getIntExtend();
+            if ( extend <= 1 ) pw.format("%d", extend );
+            writeCsvFlag( pw, false, false, item.isCommented(), item.mComment, sep, newline );
             // if ( item.mComment != null && item.mComment.length() > 0 ) {
             //   pw.format(",\"%s\"\n", item.mComment );
             // }
           } else {
             if ( leg.mCnt > 0 && ref_item != null ) {
               writeCsvLeg( pw, leg, ul, ua, leg_extend, sep );
-              writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), sep, newline );
+              writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), ref_item.mComment, sep, newline );
               duplicate = false; // reset flags
               surface   = false;
               // n = 0;
@@ -2536,7 +2548,7 @@ public class TDExporter
       }
       if ( leg.mCnt > 0 && ref_item != null ) {
         writeCsvLeg( pw, leg, ul, ua, leg_extend, sep );
-        writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), sep, newline );
+        writeCsvFlag( pw, duplicate, surface, ref_item.isCommented(), ref_item.mComment, sep, newline );
         // duplicate = false; // reset flags
         // surface   = false;
       }
@@ -3114,87 +3126,116 @@ public class TDExporter
       }
     }
     int nr = shots.size();
-    DBlock item = shots.get( 0 );
-    String st = item.mFrom; // current station
-    trb.put( st, "1.0" );
-    // TDLog.v("TRB shots: " + nr + " start " + item.mFrom + "-" + item.mTo + " put " + st + " as 1.0" );
-    
-    boolean repeat1 = true;
-    int series = 1;
-    int start_series = 1;
-    int start_point  = 0;
-    while ( repeat1 ) {
-      repeat1 = false;
-      // TDLog.v("TRB make series " + series + " start " + start_series + "." + start_point );
-      TrbSeries trb_series = new TrbSeries( series, start_series, start_point );
-      trb.addSeries( trb_series );
-      int point  = 0;
-      boolean repeat2 = true;
-      while ( repeat2 ) {
-        repeat2 = false;
-        
-        for ( int k = 0; k < shots.size(); ) {
-          item = shots.get( k );
-          String from = item.mFrom;
-          String to   = item.mTo;
-          // TDLog.v("TRB shot " + k + "/" + shots.size() + ": " + from + "-" + to );
-          if ( from.equals( st ) && trb.get( to ) == null ) {
-            point ++;
-            // TDLog.v("TRB forward shot " + from + "-" + to + " put " + to + " as " + series + "." + point );
-            trb.put( to, String.format("%d.%d", series, point ) );
-            trb_series.appendShot( item, true );
-            st = to;
-            shots.remove( k );
-            repeat2 = true;
-            break;
-          } else if ( to.equals( st ) && trb.get( from ) == null ) {
-            point ++;
-            // TDLog.v("TRB backward shot " + from + "-" + to + " put " + from + " as " + series + "." + point );
-            trb.put( from, String.format("%d.%d", series, point ) );
-            trb_series.appendShot( item, false );
-            st = from;
-            shots.remove( k );
-            repeat2 = true;
-            break;
+    if ( trb.areStationsAllTopoRobot() ) {
+      trb.copyStations();
+      for ( DBlock shot : shots ) {
+        String from = shot.mFrom;
+        String to   = shot.mTo;
+        int sr = -1, pt = -1;
+        if ( to != null && to.length() > 0 && from != null && from.length() > 0 ) {
+          int pos = to.indexOf('.');
+          try {
+            sr = Integer.parseInt( to.substring(0, pos) );
+            pt = Integer.parseInt( to.substring( pos + 1 ) );
+          } catch ( NumberFormatException e ) {
+            TDLog.e("TROBOT error station " + to );
+          }
+        }
+        if ( sr > 0 && pt >= 0 ) {
+          TrbSeries srs = trb.getSeries( sr );
+          if ( srs != null ) {
+            srs.appendShot( shot, true );
+            srs.increaseNrPoints();
+            srs.setEndPoint( sr, pt );
+            TDLog.v("TROBOT series " + sr + " append " + shot.mId + " endpoint " + pt );
           } else {
-            ++k;
+            TDLog.v("TROBOT no-series station " + to );
           }
         }
       }
-      trb_series.setPoints( point );
+    } else {
+      DBlock item = shots.get( 0 );
+      String st = item.mFrom; // current station
+      trb.put( st, "1.0" );
+      TDLog.v("TRB shots: " + nr + " start " + item.mFrom + "-" + item.mTo + " put " + st + " as 1.0" );
+      
+      boolean repeat1 = true;
+      int series = 1;
+      int start_series = 1;
+      int start_point  = 0;
+      while ( repeat1 ) {
+        repeat1 = false;
+        TDLog.v("TRB make series " + series + " start " + start_series + "." + start_point );
+        TrbSeries trb_series = new TrbSeries( series, start_series, start_point );
+        trb.addSeries( trb_series );
+        int point  = 0;
+        boolean repeat2 = true;
+        while ( repeat2 ) {
+          repeat2 = false;
+          
+          for ( int k = 0; k < shots.size(); ) {
+            item = shots.get( k );
+            String from = item.mFrom;
+            String to   = item.mTo;
+            TDLog.v("TRB shot " + k + "/" + shots.size() + ": " + from + "-" + to );
+            if ( from.equals( st ) && trb.get( to ) == null ) {
+              point ++;
+              TDLog.v("TRB forward shot " + from + "-" + to + " put " + to + " as " + series + "." + point );
+              trb.put( to, String.format("%d.%d", series, point ) );
+              trb_series.appendShot( item, true );
+              st = to;
+              shots.remove( k );
+              repeat2 = true;
+              break;
+            } else if ( to.equals( st ) && trb.get( from ) == null ) {
+              point ++;
+              TDLog.v("TRB backward shot " + from + "-" + to + " put " + from + " as " + series + "." + point );
+              trb.put( from, String.format("%d.%d", series, point ) );
+              trb_series.appendShot( item, false );
+              st = from;
+              shots.remove( k );
+              repeat2 = true;
+              break;
+            } else {
+              ++k;
+            }
+          }
+        }
+        trb_series.setPoints( point );
 
-      // TDLog.v("TRB check new series. shots " + shots.size() );
-      boolean found = false;
-      for ( int k = 0; k < shots.size(); ++k ) { // check for a new series
-        item = shots.get( k );
-        String from = item.mFrom;
-        String to   = item.mTo;
-        String spf  = trb.get( from );
-        String spt  = trb.get( to );
-        if ( shots.size() < 7 ) TDLog.v("TRB try " + from + " " + to + " ==> " + spf + " " + spt );
-        if ( spf != null && spt == null ) { // new series
-          ++ series;
-          repeat1 = true;
-          start_series = getTrbSeries( spf );
-          start_point  = getTrbStation( spf );
-          st = from;
-          found = true;
-          // TDLog.v("TRB new series F " + series + " from " + st + " = " + spf );
-          break;
-        } else if ( spt != null && spf == null ) { // new series
-          ++ series;
-          repeat1 = true;
-          start_series = getTrbSeries( spt );
-          start_point  = getTrbStation( spt );
-          st = to;
-          found = true;
-          // TDLog.v("TRB new series T " + series + " from " + st + " = " + spt );
+        TDLog.v("TRB check new series. shots " + shots.size() );
+        boolean found = false;
+        for ( int k = 0; k < shots.size(); ++k ) { // check for a new series
+          item = shots.get( k );
+          String from = item.mFrom;
+          String to   = item.mTo;
+          String spf  = trb.get( from );
+          String spt  = trb.get( to );
+          if ( shots.size() < 7 ) TDLog.v("TRB try " + from + " " + to + " ==> " + spf + " " + spt );
+          if ( spf != null && spt == null ) { // new series
+            ++ series;
+            repeat1 = true;
+            start_series = getTrbSeries( spf );
+            start_point  = getTrbStation( spf );
+            st = from;
+            found = true;
+            TDLog.v("TRB new series F " + series + " from " + st + " = " + spf );
+            break;
+          } else if ( spt != null && spf == null ) { // new series
+            ++ series;
+            repeat1 = true;
+            start_series = getTrbSeries( spt );
+            start_point  = getTrbStation( spt );
+            st = to;
+            found = true;
+            TDLog.v("TRB new series T " + series + " from " + st + " = " + spt );
+            break;
+          }
+        }
+        if ( ! found ) { 
+          TDLog.e("TRB non-connected shots");
           break;
         }
-      }
-      if ( ! found ) { 
-        TDLog.e("TRB non-connected shots");
-        break;
       }
     }
     // TDLog.v("TRB done make series: " + trb.getNrSeries() + " stations " + trb.getNrStations() );
@@ -3204,44 +3245,58 @@ public class TDExporter
       
   private static void writeTrbSeries1( PrintWriter pw, List< DBlock > list, TrbStruct trb, String comment ) 
   {
-    // TDLog.v("TRB write trb: nr. series " + trb.getSeries().size() );
+    TDLog.v("TRB write trb: nr. series " + trb.getSeries().size() );
+    boolean first = true;
     for ( TrbSeries sr : trb.getSeries() ) {
       // TDLog.v("TRB series " + sr.series + " start " + sr.start_series + "." + sr.start_point + " pts " + sr.points );
       // sr.dumpBlocks(); // DEBUG
-      pw.format("\r\n" );
-      pw.format("%d\t-1\t%d\t%d\t%d\t%d\t%d\t0\t0\t%s\r\n", sr.series, sr.start_series, sr.start_point, sr.series, sr.points, sr.points, comment );
+      // N.B. all topodroid series are open-end
+      if ( first ) {
+        pw.format("%6d\t-2\t1\t1\t1\t%s\r\n", sr.series, comment );
+        first = false;
+      }
       int fs = sr.start_series;
       int fp = sr.start_point;
       int ts = sr.series; // this is fix
+      int end_series = sr.end_series;
+      int end_point  = sr.end_point;
+      if (sr.end_series < 1) {
+        end_series = sr.series;
+        end_point  = sr.points;
+      }
+      pw.format("%6d\t-1\t1\t1\t1\t%d\t%d\t%d\t%d\t%d\t0\t0\r\n", sr.series, sr.start_series, sr.start_point, end_series, end_point, sr.points );
       boolean atFrom = true;
+      
       TrbShot shot = sr.getShots(); // get the first shot of the series
-      LRUD lrud = computeLRUD( shot.block, list, shot.forward ); // forwrad: at FROM
-      pw.format( Locale.US, "%s\t0\t1\t1\t%.2f\t%.1f\t%.1f\t%.2f\t%.2f\t%.2f\t%.2f\r\n", ts, 0.0f, 0.0f, 0.0f, lrud.l, lrud.r, lrud.u, lrud.d );
-      int tp = 1;
-      for ( ; shot != null; shot = shot.next ) {
-        DBlock item = shot.block;
-        String spf = trb.get( shot.forward ? item.mFrom : item.mTo   );
-        String spt = trb.get( shot.forward ? item.mTo   : item.mFrom );
-        int sf = getTrbSeries( spf );
-        int pf = getTrbStation( spf );
-        int st = getTrbSeries( spt );
-        int pt = getTrbStation( spt );
-        // TDLog.v("TRB " + fs + "." + fp + " -- " + st + "." + tp + " item " + item.mFrom + "-" + item.mTo + " < " + spf + " " + sf + "." + pf + " -- " + spt + " " + st + "." + pt + " > " + shot.forward );
-        AverageLeg leg = computeAverageLeg( item, list );
-        assert( leg != null );
-        lrud = computeLRUD( item, list, (! shot.forward) ); // not forward: at TO -- forward: at FROM
-        // write block ... TODO
-        // series point topo code L A C L R U D comment
-        pw.format( Locale.US, "%s\t%s\t1\t1\t%.2f\t%.1f\t%.1f\t%.2f\t%.2f\t%.2f\t%.2f", ts, pt, leg.length(), leg.bearing(), leg.clino(), lrud.l, lrud.r, lrud.u, lrud.d );
-        if ( item.mComment != null ) {
-          pw.format( "\t%s\r\n", item.mComment );
-        } else {
-          pw.format( "\r\n" );
-        }
-        fs = ts;
-        fp = tp;
-        ++ tp;
-      } // end of series
+      if ( shot != null ) {
+        LRUD lrud = computeLRUD( shot.block, list, shot.forward ); // forwrad: at FROM
+        pw.format( Locale.US, "%6d\t0\t1\t1\t1\t%.2f\t%.1f\t%.1f\t%.2f\t%.2f\t%.2f\t%.2f\r\n", ts, 0.0f, 0.0f, 0.0f, lrud.l, lrud.r, lrud.u, lrud.d );
+        int tp = 1;
+        for ( ; shot != null; shot = shot.next ) {
+          DBlock item = shot.block;
+          String spf = trb.get( shot.forward ? item.mFrom : item.mTo   );
+          String spt = trb.get( shot.forward ? item.mTo   : item.mFrom );
+          int sf = getTrbSeries(  spf );
+          int pf = getTrbStation( spf );
+          int st = getTrbSeries(  spt );
+          int pt = getTrbStation( spt );
+          // TDLog.v("TRB " + fs + "." + fp + " -- " + st + "." + tp + " item " + item.mFrom + "-" + item.mTo + " < " + spf + " " + sf + "." + pf + " -- " + spt + " " + st + "." + pt + " > " + shot.forward );
+          AverageLeg leg = computeAverageLeg( item, list );
+          assert( leg != null );
+          lrud = computeLRUD( item, list, (! shot.forward) ); // not forward ==> at TO -- forward: at FROM
+          // write block ... TODO
+          // series point topo code L A C L R U D comment
+          pw.format( Locale.US, "%6d\t%d\t1\t1\t1\t%.2f\t%.1f\t%.1f\t%.2f\t%.2f\t%.2f\t%.2f", ts, pt, leg.length(), leg.bearing(), leg.clino(), lrud.l, lrud.r, lrud.u, lrud.d );
+          if ( item.mComment != null ) {
+            pw.format( "\t%s\r\n", item.mComment );
+          } else {
+            pw.format( "\r\n" );
+          }
+          fs = ts;
+          fp = tp;
+          ++ tp;
+        } // end of series
+      }
     }
   }
 
@@ -3276,17 +3331,17 @@ public class TDExporter
     return null;
   }
 
-  static int exportSurveyAsTrb( BufferedWriter bw, long sid, DataHelper data, SurveyInfo info, String survey_name )
+  static int exportSurveyAsTrb( BufferedWriter bw, long sid, DataHelper data, SurveyInfo info, String survey_name, long first )
   {
     int trip = 1;
     int code = 1;
-    List< DBlock > list = data.selectAllExportShots( sid, TDStatus.NORMAL );
+    List< DBlock > list = data.selectExportShots( sid, TDStatus.NORMAL, first );
     checkShotsClino( list );
     // TDLog.v( "TRB export: shots " + list.size() );
     char[] line = new char[ TRB_LINE_LENGTH ];
     try {
       // TDLog.Log( TDLog.LOG_IO, "export TopoRobot " + file.getName() );
-      // BufferedWriter bw = TDFile.getMSwriter( "trb", survey_name + ".trb", "text/trb" );
+      // BufferedWriter bw = TDFile.getMSwriter( TDPath.TRB.substring(1), survey_name + TDPath.TRB, "text/" + TDPath.TRB.substring(1) );
       PrintWriter pw = new PrintWriter( bw );
   
       // FIXME 
@@ -3294,8 +3349,7 @@ public class TDExporter
       // pw.format("# %s\r\n", TDUtil.getDateString("MM dd yyyy") );
 
       //           5 11 15 19 23
-      pw.format(Locale.US, "-6\t1\t%s\r\n", survey_name ); // info.name // -6 1 cave_name
-      // OLD pw.format(Locale.US, "%6d%6d%4d%4d%4d %s\r\n", -6, 1, 1, 1, 1, info.name ); // [-6] cave name
+      pw.format( "    -6\t1\t1\t1\t1\r\n" );
 
       List< FixedInfo > fixeds = data.selectAllFixed( sid, TDStatus.NORMAL );
       if ( fixeds.size() > 0 ) {
@@ -3304,18 +3358,13 @@ public class TDExporter
           // get TR-station from fixed name
           int pos = fixed.name.indexOf('.');
           int st = (pos < 0)? Integer.parseInt( fixed.name ) : Integer.parseInt( fixed.name.substring( pos+1 ) );
-          pw.format(Locale.US, "-5\t1\t%.2f\t%.2f\t%.2f\t1\t0\t%d\r\n", fixed.lng, fixed.lat, fixed.h_geo, st ); // series=1 point=0 (station)
-          // pw.format(Locale.US, "-5\t1\t%s\r\n", -5, 1, 1, 1, 1, fixed.name );
-          // OLD pw.format(Locale.US, "%6d%6d%4d%4d%4d%12.2f%12.2f%12.2f%8d%8d\r\n", -5, 1, 1, 1, 1, fixed.lng, fixed.lat, fixed.h_geo, 1, st );
-          //     pw.format(Locale.US, "(%5d%6d%4d%4d%4d %s \r\n", -5, 1, 1, 1, 1, fixed.name );
+          pw.format(Locale.US, "    -5\t1\t1\t1\t1\t%.7f\t%.7f\t%.2f\t1\t0\t%d\r\n", fixed.lng, fixed.lat, fixed.h_geo, st ); // series=1 point=0 (station)
         }
       } else {
-        pw.format(Locale.US, "-5\t1\t0.00\t0.00\t0.00\t1\t0\tnone\r\n" );
-        // OLD pw.format(Locale.US, "%6d%6d%4d%4d%4d%12.2f%12.2f%12.2f%8d%8d\r\n", -5, 1, 1, 1, 1, 0.0, 0.0, 0.0, 1, 0 );
+        pw.format(Locale.US, "    -5\t1\t1\t1\t1\t0.00\t0.00\t0.00\t1\t0\tnone\r\n" );
       }
-      // OLD pw.format("\r\n" );
+      pw.format(Locale.US, "(   -5\t1\t1\t1\t1\t%s\r\n", survey_name );
 
-      // TODO FIXME check if -4 and -3 are ok - both are no longer used
       String date = info.date;
       int y = 0;
       int m = 0;
@@ -3327,33 +3376,30 @@ public class TDExporter
           d = Integer.parseInt( date.substring(8,10) );
         } catch ( NumberFormatException e ) { }
       }
-      // OLD pw.format(Locale.US, "%6d%6d%4d%4d%4d %02d/%02d/%02d\r\n", -4, 1, 1, 1, 1, d, m, y );
 
-      // -3 1 1 1 1 
-      // pw.format(Locale.US, "-3\t1\t1\t1\t1\tTopoDroid v %s - %s\r\n",  TDVersion.string(), TDUtil.getDateString("MM dd yyyy") );
+      pw.format(Locale.US, "    -4\t1\t1\t1\t1\t$s TopoDroid v %s - %s\r\n",   TDUtil.currentDateTimeTRobot(), TDVersion.string() );
+      pw.format("    -3\t1\t1\t1\t1\r\n"); // not used - legacy 
 
       String team = (info.team != null)? info.team : "-";
       if ( team.length() > 26 ) team = team.substring(0,26);
       // DECLINATION TopoRobot: 0 = provided, 1 = to be calculated ???
       // 0 if declination not known, negative of declination (if known)
-      float decl = (info.hasDeclination()? -info.getDeclination() : 0);
+      int use_decl = 0;
+      float decl = 0;
+      if (info.hasDeclination() ) {
+        decl =  -info.getDeclination();
+        use_decl = 1;
+      }
       String comment = info.comment;
       if ( comment == null ) comment = "-";
-      pw.format(Locale.US, "-2\t1\t%d\t%d\t%d\t...\t%s\t0\t%.2f\t0\t1\t%s\r\n", d, m, y, team, decl, comment );
-      // OLD if ( info.comment != null ) {                   // [-4, -3]A bla-bla
-      //       pw.format(Locale.US, "%6d%6d%4d%4d%4d %s\r\n", -3, 1, 1, 1, 1, info.comment );
-      //     }
 
-      // OLD String team = (info.team != null)? info.team : "";
-      //     if ( team.length() > 26 ) team = team.substring(0,26);
-      //     int auto_declination = (info.hasDeclination()? 0 : 1); // DECLINATION TopoRobot: 0 = provided, 1 = to be calculated
-      //     pw.format(Locale.US, "%6d%6d%4d%4d%4d %02d/%02d/%02d %26s%4d%8.2f%4d%4d\r\n",
-      //       -2, 1, 1, 1, 1, d, m, y, team, auto_declination, info.getDeclination(), 0, 1 ); 
-
+      // TRIP
+      pw.format(Locale.US, "    -2\t1\t1\t1\t1\t%02d/%02d/%02d\t%s\t...\t%d\t%.2f\t0\t1\r\n", d, m, y, team, use_decl, decl ); // 0: inclination, 1: color
       //           5 11 15 19 23   31   39   47   55   63   71   79
-      pw.format(Locale.US, "-1\t1\t360\t360\t0.10\t1\t1\t100\t0\r\n" );
-      // OLD pw.format(Locale.US, "%6d%6d%4d%4d%4d%8.2f%8.2f%8.2f%8.2f%8.2f%8.2f%8.2f\r\n",
-      //       -1, 1, 1, 1, 1, 360.0, 360.0, 0.05, 0.5, 0.5, 100.0, 0.0 );
+
+      // CODE
+      // azimuth degrees (360), clino degrees, precisions (length, azimuth, clino), tape, winkel
+      pw.format(Locale.US, "    -1\t1\t1\t1\t1\t360\t360\t0.10\t1\t1\t100\t0\r\n" ); 
       
       TrbStruct trb = makeTrbStations( list );
       // at this point mTrbSeries is populated.

@@ -89,6 +89,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="thp_user">user</string>
     <string name="thp_label">label</string>
     <string name="thp_section">section</string>
+    <string name="thp_picture">picture</string>
     <string name="thp_station" copyable="fr">station</string>
     <!-- UNUSED string name="thp_danger">danger</string -->
     <string name="thl_user">user</string>
@@ -102,8 +103,10 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="station_not_found">Station not found</string>
     <string name="station_coords" copyable="all">E %1$.2f N %2$.2f Z %3$.2f</string>
     <string name="shot_not_found">No shot found</string>
+    <string name="shot_not_saved">Shot not saved</string>
     <string name="bad_sibling">Bad leg sibling</string>
     <string name="bad_station">Bad station: %1$s</string>
+    <string name="bad_station_name">Illegal station name</string>
     <!-- UNUSED string name="missing_area">AREA</string -->
     <!-- UNUSED string name="missing_hint">Please, enable the missing tools or install them</string -->
     <!-- UNUSED string name="missing_line">LINE</string -->
@@ -164,6 +167,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="calib_precision">Precision</string>
     <string name="calib_iter">Iterations: %1$d</string>
     <string name="calib_dip">Magn. dip: %1$.1f &#xb0;</string>
+    <string name="calib_roll">Roll diff.: %1$.2f &#xb0;</string>
     <string name="calib_reset">Reset DistoX calibration ?</string>
     <string name="calib_min_error">Minimum error</string>
     <string name="magn_dip">Magn. dip &#8230;</string>
@@ -266,6 +270,19 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="MT_points_none">No MobileTopographer point file</string>
     <string name="MT_bad_file">Bad MobileTopographer file</string>
     <string name="bad_manifest">Bad manifest file [%1$d]</string>
+    <string name="bad_manifest_zip">Failed: zip read error</string>
+    <string name="bad_manifest_td">Failed: TopoDroid version too old</string>
+    <string name="bad_manifest_db_old">Failed: database version too old</string>
+    <string name="bad_manifest_db_new">Failed: database version too new</string>
+    <!-- UNUSED string name="bad_manifest_name">Failed: survey name differ from zip name</string -->
+    <string name="bad_manifest_present">Failed: duplicate survey name</string>
+    <string name="bad_manifest_db">Failed: cannot open database</string>
+    <string name="bad_manifest_sql">Failed: SQL error</string>
+    <string name="bad_manifest_number">Failed: wrong number</string>
+    <string name="bad_manifest_manifest">Failed: wrong manifest</string>
+    <string name="bad_manifest_missing">Failed: missing manifest</string>
+    <string name="bad_manifest_error">Failed: manifest read error</string>
+    <string name="bad_manifest_other">Failed: unexpected error</string>
     <string name="archive_reset_color">Warning. Custom colors resetted</string>
  
     <string name="pleasewait">Please wait</string>
@@ -280,6 +297,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="datamode_diving">Diving data-mode</string>
     <string name="illegal_data_value">Illegal data value</string>
 
+    <string name="geocode_title">Geomorphology Code</string>
     <string name="photo_title" copyable="fr">Photo</string>
     <string name="photo_text">Enter photo comment</string>
     <string name="photo_failed">Failed photo</string>
@@ -597,6 +615,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="section_line_not_allowed">section line not allowed</string>
 
     <!-- UNUSED string name="sensor">sensor</string -->
+    <string name="sensor_title">Add sensor measurement</string>
     <string name="sensor_gravity">gravity</string>
     <!-- UNUSED string name="sensor_humidity">humidity</string -->
     <string name="sensor_light">light</string>
@@ -708,7 +727,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <!-- UNUSED string name="zoom_in_out">Zoom in/out</string -->
     <string name="screenshot_saved">Saved screenshot %1$s</string>
     <string name="screenshot_failed">Failed taking screenshot</string>
-
+    <string name="start_index">Start-shot index</string>
 
     <string name="survey_info">Survey info</string>
     <string name="stat_dates">From %1$s to %2$s</string>
@@ -722,7 +741,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="stat_leg" tools:ignore="PluralsCandidate">Legs %1$d Length %2$.1f %3$.1f H-length %4$.1f %5$s</string>
     <string name="stat_length">Sketch length %1$.1f %2$s</string>
     <string name="stat_extlen">3D length %1$.1f %2$s</string>
-    <string name="stat_projlen">plan length %1$.1f %2$s</string>
+    <string name="stat_projlen">Plan length %1$.1f %2$s</string>
     <string name="stat_cycle">Cycles %1$d</string>
     <string name="stat_loop">Loops %1$d [%2$d %3$d]</string>
     <string name="stat_origin">Sketch origin station: %1$s</string>
@@ -750,6 +769,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="hide_leg">Repeated leg shots</string>
     <string name="hide_ids">Shot IDs</string>
     <string name="hide_splay">Splay shots</string>
+    <string name="slope_lside">Slope l-side</string>
 
     <!-- THESE MUST AGREE WITH THE FMT STRINGS -->
     <!-- UNUSED string name="plan" copyable="fr">PLAN</string -->
@@ -783,10 +803,11 @@ There are other settings for the presentation of the sketches (icon size, label 
     <!-- UNUSED string name="ask_backups_clear">Delete sketch backups?</string -->
     <string name="ask_manual_update" tools:ignore="PluralsCandidate">Update user manual translation?\nCurrent v. %1$d Installed v. %2$d</string>
 
-    <!-- UNUSED string name="button_add"       >Add       </string -->
+    <string name="button_add"       >Add       </string>
     <string name="button_apply"     >Apply</string>
     <string name="button_back"      >Back</string>
     <string name="button_cancel"    >Cancel</string>
+    <string name="button_geocode"   >GeoCode</string>
     <!-- UNUSED string name="button_change"    >Change</string -->
     <string name="button_clipboard" >Clipboard</string>
     <string name="button_close"     >Close</string>
@@ -817,6 +838,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <!-- UNUSED string name="button_direction">Azimuth/Clino</string -->
     <!-- UNUSED string name="button_azimuth">Azimuth</string -->
     <string name="button_plot"    >Draw</string>
+    <string name="button_less"    >Less</string>
     <string name="button_more"    >More</string>
     <string name="button_move"    >Move</string>
     <string name="button_next"    >Next</string>
@@ -874,7 +896,8 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="button_xsection" copyable="fr">X-Section</string>
     <string name="xsection" copyable="fr">X-Section</string>
     <string name="buffer_size">Buffer size: %1$d</string>
-    <string name="buffer_unsorted">unsorted</string>
+    <string name="buffer_sorted">sorted</string>
+    <!-- UNUSED string name="buffer_unsorted">unsorted</string -->
 
     <string name="mode_leg">Legs</string>
     <string name="mode_splay" copyable="all">Splays</string>
@@ -935,6 +958,12 @@ There are other settings for the presentation of the sketches (icon size, label 
     <!-- UNUSED string name="azimuth">Azimuth [deg]</string -->
     <!-- UNUSED string name="clino">Clino [deg]</string -->
 
+    <string name="bt_alias_title">Bluetooth aliases</string>
+    <string name="hint_bt_alias">BT alias</string>
+    <string name="hint_bt_code">Device code</string>
+    <string name="bt_alias_missing">BT alias missing</string>
+    <string name="bt_code_missing">Device code missing</string>
+
     <string name="hint_cellsize">cell size</string>
     <string name="hint_cwd">work folder</string>
     <string name="hint_distance" copyable="fr">distance</string>
@@ -949,6 +978,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="hint_notes">notes</string>
     <string name="hint_label">label</string>
     <string name="hint_comment">comment</string>
+    <string name="hint_size">size [m]</string>
     <string name="hint_text">text</string>
     <string name="hint_options" copyable="fr">options</string>
     <string name="hint_name">name</string>
@@ -1373,6 +1403,8 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_locale_summary">App language</string>
   <string name="pref_orientation_title">Screen orientation</string>
   <string name="pref_orientation_summary">App screen orientation</string>
+  <string name="pref_single_back_title">Single back</string>
+  <string name="pref_single_back_summary">Close windows with single back</string>
 
   <string name="pref_raw_data_title">Raw data</string>
   <string name="pref_raw_data_summary">Show raw calibration data</string>
@@ -1428,6 +1460,8 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_bezier_step_summary">Max. point spacing (polyline approx. of curves) [m]</string>
   <string name="pref_leg_shots_title">Leg minimum shots</string>
   <string name="pref_leg_shots_summary">Minimum number of shots for a leg</string>
+  <string name="pref_backsight_splay_title">Backsight splay</string>
+  <string name="pref_backsight_splay_summary">Backsight check with first splay</string>
   <string name="pref_recent_timeout_title">Recent data timeout</string>
   <string name="pref_recent_timeout_summary">Timeout after which a data is no longer recent [s]</string>
   <string name="pref_triple_shot_title">Leg-shot feedback</string>
@@ -1505,6 +1539,7 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_zip_share_category_title">Zip-share category</string>
   <string name="pref_zip_share_category_summary">Add category to zip-share request</string>
 
+  <string name="pref_bt_alias_title">BT aliases</string>
   <string name="pref_sock_type_title" copyable="fr it">Socket</string>
   <string name="pref_sock_type_summary">Bluetooth socket type</string>
   <!-- UNUSED string name="pref_device_type_title">Disto type</string -->
@@ -1542,8 +1577,8 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_neg_altitude_summary">Allow negative altitudes</string>
   <string name="pref_edit_altitude_title">Editable altitude</string>
   <string name="pref_edit_altitude_summary">Allow editable altitudes</string>
-  <string name="pref_fine_location_title">Fine position [s]</string>
-  <string name="pref_fine_location_summary">Fine position time [s]</string>
+  <string name="pref_fine_location_title">Fine position</string>
+  <string name="pref_fine_location_summary">Fine position time in seconds</string>
   <string name="pref_geoimport_app_title" copyable="all">GNSS app</string>
   <string name="pref_geoimport_app_summary">External GNSS app</string>
   <!-- UNUSED string name="pref_gps_averaging_title">GPS Averaging</string -->
@@ -1552,6 +1587,8 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_bric_mode_summary">BRIC operating mode</string>
   <string name="pref_bric_zero_length_title">BRIC zero shot</string>
   <string name="pref_bric_zero_length_summary">Record BRIC zero-length shot</string>
+  <string name="pref_bric_index_is_id_title">BRIC index is ID</string>
+  <string name="pref_bric_index_is_id_summary">Use BRIC index as shot ID</string>
   <string name="pref_sap5_bit16_bug_title">SAP5 bit-16 bug</string>
   <string name="pref_sap5_bit16_bug_summary">SAP5 bit-16 bug workaround</string>
 
@@ -1696,8 +1733,8 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_linecorner_summary">Bezier corner detection threshold</string>
   <string name="pref_graph_paper_scale_title">Graph-paper scale</string>
   <string name="pref_graph_paper_scale_summary">Graph-paper scale adjustment</string>
-  <string name="pref_slant_xsection_title">Slant xsections</string>
-  <string name="pref_slant_xsection_summary">Profile view slant xsections</string>
+  <string name="pref_slant_xsection_title">Slant x-sections</string>
+  <string name="pref_slant_xsection_summary">Profile view slant x-sections</string>
   <string name="pref_oblique_projection_title">Oblique projected</string>
   <string name="pref_oblique_projection_summary">Maximum oblique projected angle</string>
   <string name="pref_weeddistance_title">Weeding point distance</string>
@@ -1713,11 +1750,15 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_group_title">Group tolerance</string>
   <string name="pref_group_summary">Tolerance among shots in the same group</string>
   <string name="pref_error_title">Algorithm error</string>
-  <string name="pref_error_summary">Calib. algorithm termination error</string>
+  <string name="pref_error_summary">Calibration algorithm termination error</string>
   <string name="pref_iter_title">Algorithm iterations</string>
   <string name="pref_iter_summary">Maximum number of iterations</string>
   <string name="pref_label_size_title">Labels size</string>
   <string name="pref_label_size_summary">Size of labels</string>
+  <string name="pref_scalable_label_title">Scaling labels</string>
+  <string name="pref_scalable_label_summary">Labels scale with the zoom</string>
+  <string name="pref_slope_lside_title">Slope line l-side</string>
+  <string name="pref_slope_lside_summary">Slope lines default l-side</string>
   <string name="pref_arrow_length_title">Section line tick size</string>
   <string name="pref_arrow_length_message">Size of the section line tick</string>
   <string name="pref_dot_radius_title">Green dots size</string>
@@ -1740,10 +1781,10 @@ There are other settings for the presentation of the sketches (icon size, label 
   <string name="pref_composite_actions_summary">Enable line/area long-tap actions</string>
   <string name="pref_with_continue_line_title">Line join</string>
   <string name="pref_with_continue_line_summary">Enable line join</string>
-  <string name="pref_plane_interpolation_title">Plane interpolation</string>
-  <string name="pref_plane_interpolation_summary">Enable plane interpolation action</string>
+  <string name="pref_plane_interpolation_title">Plane fitting</string>
+  <string name="pref_plane_interpolation_summary">Enable plane fitting of splays</string>
   <string name="pref_plot_split_title">Sketch split/merge</string>
-  <string name="pref_plot_split_summary">Enable sketch split and merge actions</string>
+  <string name="pref_plot_split_summary">Enable sketch split and merge</string>
   <string name="pref_stylus_size_title">Stylus only drawing</string>
   <string name="pref_stylus_size_summary">Stylus maximum size [pxl, 0: ignore]</string>
   <string name="pref_fixed_thickness_title">Survey line width</string>
@@ -1938,7 +1979,7 @@ There are other settings for the presentation of the sketches (icon size, label 
     <string name="welcome_title" translatable="false">TopoDroid %1$s</string>
     <string name="welcome_text">
 \nThank you for choosing TopoDroid.
-\n\nTopoDroid is an Open Source Android app for surveying caves with DistoX, BRIC4, or Sap5.
+\n\nTopoDroid is an Open Source Android app for surveying caves with DistoX, BRIC, and SAP.
 \n\nNo warranty: by using it you agree that the author is not responsible for any loss of data you might incur or damage whatsoever.
 \n\nHelp: menu "HELP"
 \nMan pages: Book icon in the Help dialog
@@ -2223,6 +2264,7 @@ READ THE HELP BEFORE ATTEMPTING A FIRMWARE UPLOAD
     <string name="error_parser_error">Error: parsing %1$s</string>
     <string name="error_export_failed">Error: export %1$s failed</string>
     <string name="unsupported_format">Unsupported file format</string>
+    <string name="unsupported_extension">Unsupported file extension %1$s</string>
 
     <!-- UNUSED string name="export_gltf_ok">Exported glTF file</string -->
     <!-- UNUSED string name="export_gltf_fail">Failed glTf export</string -->
@@ -2309,14 +2351,13 @@ READ THE HELP BEFORE ATTEMPTING A FIRMWARE UPLOAD
 
     <string name="cpref_powercrust_delta_title" copyable="all">Powercrust Delta</string>
     <string name="cpref_powercrust_delta_summary">Exclude splays differing from nearby too much [0.1]</string>
-<!--
-    <string name="cpref_convex_hull_title">Convex hull</string>
-    <string name="cpref_convex_hull_summary">Convex hull walls</string>
-    <string name="cpref_delaunay_title" translatable="false">Delaunay</string>
-    <string name="cpref_delaunay_summary">Delaunay walls</string>
-    <string name="cpref_hull_title">Hull</string>
-    <string name="cpref_hull_summary">Hull walls</string>
--->
+
+    <!-- UNUSED string name="cpref_convex_hull_title">Convex hull</string -->
+    <!-- UNUSED string name="cpref_convex_hull_summary">Convex hull walls</string -->
+    <!-- UNUSED string name="cpref_delaunay_title" translatable="false">Delaunay</string -->
+    <!-- UNUSED string name="cpref_delaunay_summary">Delaunay walls</string -->
+    <!-- UNUSED string name="cpref_hull_title">Hull</string -->
+    <!-- UNUSED string name="cpref_hull_summary">Hull walls</string -->
 
     <!-- UNUSED string name="TopoGLPerms">Permissions</string -->
     <!-- UNUSED string name="cperms_mandatory">Cave3D cannot run without:</string -->
@@ -2333,7 +2374,7 @@ READ THE HELP BEFORE ATTEMPTING A FIRMWARE UPLOAD
     <string name="help_alpha_3d" copyable="all">D.E.M.</string>
     <string name="help_wall_3d">3D model</string>
     <!-- UNUSED string name="help_temperature">Temperature</string -->
-    <string name="help_sketch_3d">3D sketch lifting</string>
+    <string name="help_sketch_3d" copyable="all">3D sketch lifting</string>
     <!-- UNUSED string name="help_fractal" translatable="false">Fractal analysis</string -->
 
     <string name="help_light_3d">Pan and light</string>

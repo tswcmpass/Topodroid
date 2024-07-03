@@ -24,8 +24,8 @@ public class TDPrefKey
     "DISTOX_TEXT_SIZE",     // size of text [pt]
     "DISTOX_SIZE_BUTTONS",  // size of buttons (S, N, M, L, XL)
     "DISTOX_EXTRA_BUTTONS", // Activity Level
-    "DISTOX_MKEYBOARD",     // whether to use TopoDroid keypads
-    "DISTOX_NO_CURSOR",     // no cursor for custom keyboard
+    // "DISTOX_MKEYBOARD",     // whether to use TopoDroid keypads
+    // "DISTOX_NO_CURSOR",     // no cursor for custom keyboard
     "DISTOX_LOCAL_MAN",     // enable local man pages
     "DISTOX_LOCALE",        // language
     "DISTOX_ORIENTATION",   // 0 unspecified, 1 portrait, 2 landscape
@@ -46,8 +46,8 @@ public class TDPrefKey
     R.string.pref_text_size_title,
     R.string.pref_size_buttons_title,
     R.string.pref_extra_buttons_title,
-    R.string.pref_mkeyboard_title,
-    R.string.pref_no_cursor_title,
+    // R.string.pref_mkeyboard_title,
+    // R.string.pref_no_cursor_title,
     R.string.pref_local_help_title,
     R.string.pref_locale_title,
     R.string.pref_orientation_title,
@@ -68,8 +68,8 @@ public class TDPrefKey
     R.string.pref_text_size_summary,
     R.string.pref_size_buttons_summary,
     R.string.pref_extra_buttons_summary,
-    R.string.pref_mkeyboard_summary,
-    R.string.pref_no_cursor_summary,
+    // R.string.pref_mkeyboard_summary,
+    // R.string.pref_no_cursor_summary,
     R.string.pref_local_help_summary,
     R.string.pref_locale_summary,
     R.string.pref_orientation_summary,
@@ -90,8 +90,8 @@ public class TDPrefKey
      TDString.TWENTY, // TEXT_SIZE
      TDString.ONE,    // BUTTON_SIZE
      TDString.ONE,    // SYMBOL_SIZE
-     FALSE,           // CUSTOM KEYBOARD
-     TRUE,            // NO CURSOR
+     // FALSE,           // CUSTOM KEYBOARD
+     // TRUE,            // NO CURSOR
      TDString.ZERO,   // USER MANUAL
      TDString.EMPTY,  // LOCALE
      TDString.ZERO,   // SCREEN ORIENTATION
@@ -237,7 +237,7 @@ public class TDPrefKey
     // FALSE,
     // TDString.FOUR, 
     TRUE, 
-    TDString.ONE,
+    TDString.ZERO,
     // TDString.THREE,
     "70",
     FALSE,
@@ -319,11 +319,11 @@ public class TDPrefKey
     // FALSE,
     TDString.ZERO,
     // TDString.ZERO,
-    "0.1",
-    "4.0",
-    "1.0",
-    "1.0",
-    "0.004",
+    "0.05",  // MIN CAL N.B. this is 1-alpha of the C++ code
+    "3.0",
+    "0.05",
+    "0.05",  // N.B. delta was not included in the C++ code
+    "0.004", // AUTO_CAL
     "0.04",
     "0.04",
     "0.04",
@@ -342,7 +342,6 @@ public class TDPrefKey
     "DISTOX_Z6_WORKAROUND",   // 4 // whether to enable Z6 workaround
     "DISTOX_AUTO_PAIR",       // 5 // whether to auto-pair the discovered DistoX
     "DISTOX_CONNECT_FEEDBACK", // 6
-    // "DISTOX_UNNAMED_DEVICE",   // 7 whether to show the menu to enter te name of a UNNAMED device
     // "DISTOX_SOCKET_DELAY",         // delay before a socket-connection attempt
     "DISTOX_CALIB_PREF",      // FORWARD
     null
@@ -360,7 +359,6 @@ public class TDPrefKey
     R.string.pref_z6_workaround_title,
     R.string.pref_auto_pair_title,
     R.string.pref_connect_feedback_title,
-    // R.string.pref_unnamed_device_title, // UNNAMED
     // R.string.pref_socket_delay_title,
     R.string.pref_cat_calib,
     -1
@@ -378,7 +376,6 @@ public class TDPrefKey
     R.string.pref_z6_workaround_summary,
     R.string.pref_auto_pair_summary,
     R.string.pref_connect_feedback_summary,
-    // R.string.pref_unnamed_device_summary, // UNNAMED
     // R.string.pref_socket_delay_summary,
     -1,
     -1
@@ -396,33 +393,32 @@ public class TDPrefKey
     TRUE,
     FALSE,
     TDString.ZERO,
-    // FALSE, // UNNAMED
     // TDString.ZERO,
     TDString.EMPTY
   };
 
   // ==============================================================================
   public static String[] EXPORT_ENABLE = { // ZIP always enabled
-    "EXPORT_DATA_COMPASS",
+    "EXPORT_DATA_COMPASS",    // 0
     "EXPORT_DATA_CSURVEY",
     "EXPORT_DATA_GHTOPO",
     // "EXPORT_DATA_GROTTOLF",
     // "EXPORT_DATA_POCKETTOPO",
-    "EXPORT_DATA_POLYGON",
+    "EXPORT_DATA_POLYGON",    // 3
     "EXPORT_DATA_SURVEX",
     "EXPORT_DATA_THERION",
-    "EXPORT_DATA_TOPO",
+    "EXPORT_DATA_TOPO",       // 6
     "EXPORT_DATA_TOPOROBOT",
     "EXPORT_DATA_VISUALTOPO",
-    "EXPORT_DATA_WALLS",
+    "EXPORT_DATA_WALLS",      // 9
     "EXPORT_DATA_WINKARST",
     "EXPORT_DATA_CVS",
-    "EXPORT_DATA_DXF",
+    "EXPORT_DATA_DXF",        // 12
     "EXPORT_DATA_KML",
     // "EXPORT_DATA_OZIEXPLORER",
     "EXPORT_DATA_GPX",
     // "EXPORT_DATA_GEOJSON",
-    "EXPORT_DATA_SHAPEFILE"
+    "EXPORT_DATA_SHAPEFILE"   // 15
   };
 
   public static int[] EXPORT_ENABLEtitle = {
@@ -1236,6 +1232,7 @@ public class TDPrefKey
     "DISTOX_LINE_STYLE",           // line style: 0 bezier, 1 fine, 2 normal, 3 coarse
     "DISTOX_LINE_SEGMENT",         // minimum distance between consecutive points on a line
     "DISTOX_LINE_CLOSE",           // close lines of closed type
+    "DISTOX_SLOPE_LSIDE",          // slope line l-side
     "DISTOX_ARROW_LENGTH",    // 3 // length of the tick at the first line-point (when applicable)
     "DISTOX_AUTO_SECTION_PT",      // whether to add section point when tracing a section line
     // "DISTOX_LINE_CONTINUE",   // 6 // default line continuation set
@@ -1251,6 +1248,7 @@ public class TDPrefKey
     R.string.pref_linestyle_title,
     R.string.pref_segment_title,
     R.string.pref_line_close_title,
+    R.string.pref_slope_lside_title,
     R.string.pref_arrow_length_title,
     R.string.pref_auto_section_pt_title,
     // R.string.pref_linecontinue_title,
@@ -1265,7 +1263,8 @@ public class TDPrefKey
     R.string.pref_line_units_summary,
     R.string.pref_linestyle_summary,
     R.string.pref_segment_message,
-    R.string.pref_line_close_title,
+    R.string.pref_line_close_summary,
+    R.string.pref_slope_lside_summary,
     R.string.pref_arrow_length_message,
     R.string.pref_auto_section_pt_summary,
     // R.string.pref_linecontinue_summary,
@@ -1281,6 +1280,7 @@ public class TDPrefKey
     TDString.TWO,
     TDString.TEN,
     TRUE,
+    "20",
     "8",
     TRUE,
     // TDString.ZERO,
@@ -1295,25 +1295,29 @@ public class TDPrefKey
     "DISTOX_UNSCALED_POINTS", // 0 // whether drawing point items should stay unscaled when zooming
     "DISTOX_DRAWING_UNIT",    // 1 // plot unit
     "DISTOX_LABEL_SIZE",      // 2 // size of labels [pt]
+    "DISTOX_SCALABLE_LABEL",
     null
   };
 
   static int[] POINTtitle = {
     R.string.pref_unscaled_points_title,
     R.string.pref_drawing_unit_title,
-    R.string.pref_label_size_title
+    R.string.pref_label_size_title,
+    R.string.pref_scalable_label_title
   };
 
   static int[] POINTdesc = {
     R.string.pref_unscaled_points_summary,
     R.string.pref_drawing_unit_summary,
-    R.string.pref_label_size_summary
+    R.string.pref_label_size_summary,
+    R.string.pref_scalable_label_summary
   };
 
   public static String[] POINTdef = {
     FALSE,
     "1.2",
-    TDString.TWENTYFOUR
+    TDString.TWENTYFOUR,
+    FALSE
   };
 
 
@@ -1494,7 +1498,7 @@ public class TDPrefKey
     "DISTOX_WEED_BUFFER",
     "DISTOX_LINE_SNAP",       // whether to show line-snap action
     "DISTOX_LINE_CURVE",      // whether to show line- smooth/straighten action
-    "DISTOX_LINE_STRAIGHT",   // whether to show lines straighten button
+    "DISTOX_LINE_STRAIGHT",   // whether to show line-straighten (more "rocky") button
     "DISTOX_PATH_MULTISELECT",// path multiselection
     "DISTOX_COMPOSITE_ACTIONS",
     null
@@ -1547,6 +1551,7 @@ public class TDPrefKey
 
   public static String[] GEEKSHOT = {
     "DISTOX_DIVING_MODE",     // enable diving mode
+    "DISTOX_BACKSIGHT_SPLAY", // whether first splay is backsight check
     "DISTOX_RECENT_SHOT",     // highlight recent shots
     "DISTOX_RECENT_TIMEOUT",  // recent block timeout
     "DISTOX_EXTEND_FRAC",     // fractional extend
@@ -1570,6 +1575,7 @@ public class TDPrefKey
 
   static int[] GEEKSHOTtitle = {
     R.string.pref_diving_mode_title,
+    R.string.pref_backsight_splay_title,
     R.string.pref_recent_shot_title,
     R.string.pref_recent_timeout_title,
     R.string.pref_extend_frac_title,
@@ -1593,6 +1599,7 @@ public class TDPrefKey
 
   static int[] GEEKSHOTdesc = {
     R.string.pref_diving_mode_summary,
+    R.string.pref_backsight_splay_summary,
     R.string.pref_recent_shot_summary,
     R.string.pref_recent_timeout_summary,
     R.string.pref_extend_frac_summary,
@@ -1615,6 +1622,7 @@ public class TDPrefKey
   };
 
   public static String[] GEEKSHOTdef = {
+    FALSE,
     FALSE,
     FALSE,
     "30",
@@ -1902,8 +1910,11 @@ public class TDPrefKey
   // ------------------------------------------------------------------------
 
   public static String[] GEEK = {
+    "DISTOX_SINGLE_BACK",    
     "DISTOX_PALETTES",
     // "DISTOX_BACKUPS_CLEAR", // CLEAR_BACKUPS
+    "DISTOX_MKEYBOARD",     // whether to use TopoDroid keypads
+    "DISTOX_NO_CURSOR",     // no cursor for custom keyboard
     "DISTOX_PACKET_LOGGER",
     "DISTOX_TH2_EDIT",         // SKETCH EDIT
     "DISTOX_GEEK_SHOT",       // FORWARD
@@ -1919,8 +1930,11 @@ public class TDPrefKey
   };
 
   static int[] GEEKtitle = {
+    R.string.pref_single_back_title,
     R.string.pref_palettes_title,
     // R.string.pref_backups_clear_title, // CLEAR_BACKUPS
+    R.string.pref_mkeyboard_title,        // 2 MKEYBOARD
+    R.string.pref_no_cursor_title,
     R.string.pref_packet_logger_title,
     R.string.pref_th2_edit_title,
     R.string.pref_cat_survey,
@@ -1931,13 +1945,16 @@ public class TDPrefKey
     R.string.pref_cat_device,
     R.string.pref_cat_import_export,
     R.string.pref_cat_sketch,
-    R.string.pref_with_debug_title,
+    R.string.pref_with_debug_title,    // 13
     -1
   };
 
   static int[] GEEKdesc = {
+    R.string.pref_single_back_summary,
     R.string.pref_palettes_summary,
     // R.string.pref_backups_clear_summary, // CLEAR_BACKUPS
+    R.string.pref_mkeyboard_summary,
+    R.string.pref_no_cursor_summary,
     R.string.pref_packet_logger_summary,
     R.string.pref_th2_edit_summary,
     -1,
@@ -1946,7 +1963,7 @@ public class TDPrefKey
     -1,
     // -1, // AUTOWALLS
     -1,
-    -1
+    -1,
     -1, // SKETCH
     R.string.pref_with_debug_summary,
     -1
@@ -1954,7 +1971,10 @@ public class TDPrefKey
 
   public static String[] GEEKdef = {
     FALSE,
+    FALSE,
     // FALSE, // CLEAR_BACKUPS
+    FALSE,           // CUSTOM KEYBOARD
+    TRUE,            // NO CURSOR
     FALSE,
     FALSE,
     TDString.EMPTY,
@@ -2019,6 +2039,8 @@ public class TDPrefKey
 
   // -------------------------------------------------------------------------------
   public static String[] GEEKDEVICE = {
+    "DISTOX_BT_ALIAS",         // open dialog for BT aliases
+    "DISTOX_UNNAMED_DEVICE",   // 7 whether to show the menu to enter te name of a UNNAMED device
     "DISTOX_SOCKET_DELAY",         // delay before a socket-connection attempt
     "DISTOX_SECOND_DISTOX",        // enable the two-disto survey
     "DISTOX_WAIT_DATA",       // 8 // msec wait after a data/vector packet
@@ -2028,11 +2050,14 @@ public class TDPrefKey
     "DISTOX_FIRMWARE_SANITY",       // enforce firmware sanity checks
     "DISTOX_BRIC_MODE",       // 1 prim_only, 3 all, 5 no_index
     "DISTOX_BRIC_ZERO_LENGTH",
+    "DISTOX_BRIC_INDEX_IS_ID", // whether to use the BRIC index as shot ID
     "DISTOX_SAP5_BIT16_BUG",   // SAP5 bit-16 bug workaround
     null
   };
 
   static int[] GEEKDEVICEtitle = {
+    R.string.pref_bt_alias_title,
+    R.string.pref_unnamed_device_title, // BT_NONAME
     R.string.pref_socket_delay_title,
     R.string.pref_second_distox_title,
     R.string.pref_wait_data_title,
@@ -2042,11 +2067,14 @@ public class TDPrefKey
     R.string.pref_firmware_sanity_title,
     R.string.pref_bric_mode_title,
     R.string.pref_bric_zero_length_title,
+    R.string.pref_bric_index_is_id_title,
     R.string.pref_sap5_bit16_bug_title,
     -1
   };
 
   static int[] GEEKDEVICEdesc = {
+    -1,
+    R.string.pref_unnamed_device_summary, // BT_NONAME
     R.string.pref_socket_delay_summary,
     R.string.pref_second_distox_summary,
     R.string.pref_wait_data_summary,
@@ -2056,11 +2084,14 @@ public class TDPrefKey
     R.string.pref_firmware_sanity_summary,
     R.string.pref_bric_mode_summary,
     R.string.pref_bric_zero_length_summary,
+    R.string.pref_bric_index_is_id_summary,
     R.string.pref_sap5_bit16_bug_summary,
     -1
   };
 
   public static String[] GEEKDEVICEdef = {
+    null,
+    FALSE, // BT_NONAME
     TDString.ZERO,
     FALSE,
     "250",
@@ -2069,6 +2100,7 @@ public class TDPrefKey
     "2000",
     TRUE,
     TDString.THREE,
+    FALSE,
     FALSE,
     TRUE,
     null

@@ -298,11 +298,11 @@ class ShotNewDialog extends MyDialog
     // adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
     // mExtend.setAdapter( adapter );
 
-    // if ( TDAzimuth.mFixedExtend == -1L ) {
-    //   mRadioLeft.setChecked( true );
-    // } else if ( TDAzimuth.mFixedExtend == 1L ) {
-    //   mRadioRight.setChecked( true );
-    // }
+    if ( TDAzimuth.mFixedExtend == -1L ) {  // FIXME FIXED_EXTEND 20240603 these five lines were commented
+      mRadioLeft.setChecked( true );
+    } else if ( TDAzimuth.mFixedExtend == 1L ) {
+      mRadioRight.setChecked( true );
+    }
 
     mBtnOk.setOnClickListener( this );
     mBtnSave.setOnClickListener( this );
@@ -411,11 +411,18 @@ class ShotNewDialog extends MyDialog
       String shot_to = "";
    
       if ( notDone && mETfrom.getText() != null ) {
-        shot_from = TDUtil.noSpaces( mETfrom.getText().toString() );
+        shot_from = TDUtil.toStationFromName( mETfrom.getText().toString() );
+        if ( ! TDUtil.isStationName( shot_from ) ) {
+          mETfrom.setError( mContext.getResources().getString( R.string.bad_station_name ) );
+          return;
+        }
       }
       if ( notDone && mETto.getText() != null ) {
-        shot_to = TDUtil.noSpaces( mETto.getText().toString() );
-        if ( shot_to.equals(".") || shot_to.equals("-") ) shot_to = "";
+        shot_to = TDUtil.toStationToName( mETto.getText().toString() );
+        if ( ! TDUtil.isStationName( shot_to ) ) {
+          mETto.setError( mContext.getResources().getString( R.string.bad_station_name ) );
+          return;
+        }
       }
 
       // if ( TDString.isNullOrEmpty( shot_from ) && TDString.isNullOrEmpty( shot_to ) ) {
@@ -481,6 +488,7 @@ class ShotNewDialog extends MyDialog
         if ( shot_to.length() > 0 ) {
           mLRUDatTo = mCBsplayAtTo.isChecked();
           String splay_station = mLRUDatTo ? shot_to : shot_from;
+          TDLog.v("manual shot at " + mAt + " with TO: " + shot_to + " splays at " + splay_station );
           if ( distance.length() == 0 ) {
             distance = backdistance;
           } else if ( backdistance.length() == 0 ) {
@@ -614,9 +622,11 @@ class ShotNewDialog extends MyDialog
             mExif.writeExif( filepath );
             TopoDroidApp.mData.insertPhoto( TDInstance.sid, photo_id, blk.mId,
                                     "",
-                                    TDUtil.currentDate(),
+                                    TDUtil.currentDateTime(),
                                     "snap " + shot_from + " " + shot_to,
-                                    PhotoInfo.CAMERA_TOPODROID ); // FIXME TITLE has to go
+                                    PhotoInfo.CAMERA_TOPODROID,
+                                    ""  // TODO geomorphology code
+            ); // FIXME TITLE has to go
           } catch ( IOException e ) {
             TDLog.Error( "IO exception " + e.getMessage() );
           }

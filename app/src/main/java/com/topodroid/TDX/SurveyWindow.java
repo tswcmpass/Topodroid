@@ -354,7 +354,7 @@ public class SurveyWindow extends Activity
   private void setButtonPhoto( int nr_photo )
   {
     if ( TDLevel.overNormal ) {
-      TDLog.v("nr photo " + nr_photo );
+      // TDLog.v("nr photo " + nr_photo );
       if ( nr_photo == 0 ) {
         TDandroid.setButtonBackground( mButton1[ BTN_PHOTO ], mBMpicture_no );
         mButton1[ BTN_PHOTO ].setOnClickListener( null );
@@ -531,7 +531,7 @@ public class SurveyWindow extends Activity
    */
   private boolean saveSurvey( boolean check_team )
   {
-    TDLog.v("Save warn " + mWarnTeam + " check " + check_team );
+    // TDLog.v("Save warn " + mWarnTeam + " check " + check_team );
     // String name = mTextName.getText().toString(); // RENAME is special
     // if ( name == null || name.length == 0 ) {
     // }
@@ -568,10 +568,11 @@ public class SurveyWindow extends Activity
    * @param type      export file format
    * @param filename  export file "name"
    * @param prefix    station name prefix (Compass, VTopo, Winkarst)
+   * @param first     not used
    * @param second    whether to export the second view (unused: only plan or profile in DrawingWindow)
    * @note interface IExporter
    */
-  public void doExport( String type, String filename, String prefix, boolean second )
+  public void doExport( String type, String filename, String prefix, long first, boolean second )
   {
     // TDLog.v( "SURVEY do export - name " + filename );
     if ( ! saveSurvey( false ) ) {
@@ -588,7 +589,7 @@ public class SurveyWindow extends Activity
       if ( TDInstance.sid < 0 ) {
         TDToast.makeBad( R.string.no_survey );
       } else {
-        mExportInfo = new ExportInfo( index, prefix, filename );
+        mExportInfo = new ExportInfo( index, prefix, filename, first );
         // APP_OUT_DIR
         // // if ( TDSetting.mExportUri ) { // FIXME-URI unused URI_EXPORT
         //   selectExportFromProvider( index, filename );

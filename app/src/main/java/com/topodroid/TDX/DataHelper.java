@@ -78,6 +78,7 @@ public class DataHelper extends DataSetObservable
   private final static String WHERE_SID_ID_MORE = "surveyId=? AND id>=?";
   private final static String WHERE_SID_NAME    = "surveyId=? AND name=?";
   private final static String WHERE_SID_STATUS  = "surveyId=? AND status=?";
+  private final static String WHERE_SID_STATUS_FROM  = "surveyId=? AND status=? AND id>=?";
   // private final static String WHERE_SID_STATUS_LEG  = "surveyId=? AND status=? AND fStation > \"\" AND tStation > \"\"";
   private final static String WHERE_SID_LEG     = "surveyId=? AND fStation > \"\" AND tStation > \"\"";
   private final static String WHERE_SID_FROM    = "surveyId=? AND fStation > \"\"";
@@ -145,17 +146,17 @@ public class DataHelper extends DataSetObservable
   // private SQLiteStatement dropPlotStmt = null;
   // private SQLiteStatement dropFixedStmt = null;
 
-  static final private String[] mFullShotFields =
+  static final private String[] mShotFullFields =
     { "id", "fStation", "tStation", "distance", "bearing", "clino", "acceleration", "magnetic", "dip",
-      "extend", "flag", "leg", "comment", "type", "millis", "color", "stretch", "address"
+      "extend", "flag", "leg", "comment", "type", "millis", "color", "stretch", "idx", "time", "address"
     };
   static final private String[] mShotFields =
     { "id", "fStation", "tStation", "distance", "bearing", "clino", "acceleration", "magnetic", "dip",  // 0 .. 8
-      "extend", "flag", "leg", "comment", "type", "millis", "color", "stretch" // 9 .. 16
+      "extend", "flag", "leg", "comment", "type", "millis", "color", "stretch", "idx", "time" // 9 .. 18
     };
   static final private String[] mShotRawDataFields = // used only by selectAllShotsRawData
     { "id", "fStation", "tStation", "distance", "bearing", "clino", "roll", "acceleration", "magnetic", "dip",
-      "type", "millis", "address", "extend", "flag", "leg", "status", "comment", "rawMx", "rawMy", "rawMz", "rawGx", "rawGy", "rawGz"
+      "type", "millis", "address", "extend", "flag", "leg", "status", "comment", "rawMx", "rawMy", "rawMz", "rawGx", "rawGy", "rawGz", "idx", "time"
     };
 
   static final private String[] mPlotFieldsFull =
@@ -177,7 +178,7 @@ public class DataHelper extends DataSetObservable
     "cs_name", "cs_longitude", "cs_latitude", "cs_altitude", "cs_decimals", "convergence", "accuracy", "accuracy_v", "m_to_units", "m_to_vunits"
   };
 
-  static final private String[] mStationFields = { "name", "comment", "flag", "presentation" };
+  static final private String[] mStationFields = { "name", "comment", "flag", "presentation", "code" };
 
   // private DataListenerSet mListeners; // IF_COSURVEY
 
@@ -330,7 +331,7 @@ public class DataHelper extends DataSetObservable
     blk.mAddress      = cursor.getString(12);
     blk.mExtend       = (int)(  cursor.getLong(13) );
     blk.mFlag         = cursor.getLong(14);
-    blk.mLeg          = (int)(  cursor.getLong(15) );
+    blk.mLeg          = (int)(  cursor.getLong(15) );  // NOTE mLeg is not mBlockType: see setBlockType()
     blk.mStatus       = (int)(  cursor.getLong(16) );
     blk.mComment      = cursor.getString( 17 );
     blk.mRawMx        = (int)(  cursor.getLong(18) );
@@ -339,6 +340,8 @@ public class DataHelper extends DataSetObservable
     blk.mRawGx        = (int)(  cursor.getLong(21) );
     blk.mRawGy        = (int)(  cursor.getLong(22) );
     blk.mRawGz        = (int)(  cursor.getLong(23) );
+    blk.mIndex        = (int)(  cursor.getLong(24) );
+    blk.mDeviceTime   = cursor.getLong(25);
   }
 
   /** fill a data block with values from the cursor
@@ -367,7 +370,7 @@ public class DataHelper extends DataSetObservable
       blk.mDepth = clino;
     }
     
-    blk.setExtend( (int)(cursor.getLong(9) ), (float)( cursor.getDouble(16) ) );
+    blk.setExtend( (int)cursor.getLong(9), (float)( cursor.getDouble(16) ) );
     blk.resetFlag( cursor.getLong(10) );
     blk.setBlockType( (int)leg );
     blk.mComment  = cursor.getString(12);
@@ -375,6 +378,8 @@ public class DataHelper extends DataSetObservable
     blk.mTime     = cursor.getLong(14);
     blk.setPaintColor( (int)cursor.getLong(15) ); // color
     // blk.setStretch( (float)cursor.getDouble(16) ); // already set above
+    blk.mIndex  = (int)cursor.getLong(17);
+    blk.mDeviceTime = cursor.getLong(18);
     // blk.setAddress( null ); 
   }
   
@@ -386,7 +391,7 @@ public class DataHelper extends DataSetObservable
   private void fullFillBlock( long sid, DBlock blk, Cursor cursor )
   {
     fillBlock( sid, blk, cursor );
-    blk.setAddress( cursor.getString(17) );
+    blk.setAddress( cursor.getString(19) );
   }
 
   // ----------------------------------------------------------------------
@@ -1750,16 +1755,15 @@ public class DataHelper extends DataSetObservable
                                 int rawMx, int rawMy, int rawMz, int rawGx, int rawGy, int rawGz )
   { // 0L=leg, status, 0L=type DISTOX
     // stretch = 0.0;
-    // return doInsertShot( sid, id, System.currentTimeMillis()/1000, 0L, "", "",  d, b, c, r, extend, 0.0, DBlock.FLAG_SURVEY, 0L, status, 0L, "", addr );
+    // return doInsertShot( sid, id, TDUtil.getTimeStamp(), 0L, "", "",  d, b, c, r, extend, 0.0, DBlock.FLAG_SURVEY, 0L, status, 0L, "", addr );
     if ( id >= 0 && hasShotId( sid, id ) ) { // if shot ID is already present, use a new ID
       id = -1L;
     }
-    return doCavwayInsertShot( sid, id, System.currentTimeMillis()/1000, 0L, d, b, c, r, mag, acc, dip, extend, 0.0, leg, status, comment, 0L, addr, rawMx, rawMy, rawMz, rawGx, rawGy, rawGz );
+    return doCavwayInsertShot( sid, id, TDUtil.getTimeStamp(), 0L, d, b, c, r, mag, acc, dip, extend, 0.0, leg, status, comment, 0L, addr, rawMx, rawMy, rawMz, rawGx, rawGy, rawGz );
   }
 
   /** insert a BRIC shot
    * @param sid     survey ID
-   * @param id      shot ID or -1
    * @param d       distance
    * @param b       azimuth
    * @param c       clino
@@ -1771,17 +1775,24 @@ public class DataHelper extends DataSetObservable
    * @param leg     leg-type
    * @param status  status
    * @param comment shot comment
-   * @param addr    BRIC4 address
+   * @param addr    BRIC address
+   * @param idx     BRIC shot index
+   * @param time    BRIC shot timestamp [s]
    * @return inserted shot ID
    */
-  public long insertBricShot( long sid, long id, double d, double b, double c, double r, double mag, double acc, double dip, long extend, int leg, long status, String comment, String addr )
+  public long insertBricShot( long sid, /*long id, */ double d, double b, double c, double r, double mag, double acc, double dip, long extend, int leg, long status, String comment, String addr, long idx, long time )
   { // 0L=leg, status, 0L=type DISTOX
     // stretch = 0.0;
-    // return doInsertShot( sid, id, System.currentTimeMillis()/1000, 0L, "", "",  d, b, c, r, extend, 0.0, DBlock.FLAG_SURVEY, 0L, status, 0L, "", addr );
-    if ( id >= 0 && hasShotId( sid, id ) ) { // if shot ID is already present, use a new ID
-      id = -1L;
-    }
-    return doBricInsertShot( sid, id, System.currentTimeMillis()/1000, 0L, d, b, c, r, mag, acc, dip, extend, 0.0, leg, status, comment, 0L, addr );
+    // return doInsertShot( sid, id, TDUtil.getTimeStamp(), 0L, "", "",  d, b, c, r, extend, 0.0, DBlock.FLAG_SURVEY, 0L, status, 0L, "", addr );
+    // if ( TDSetting.mBricIndexIsId ) {
+    //   if ( id < maxShotId( sid ) ) { // if shot ID is already present, use a new ID
+    //     id = -1L;
+    //   }
+    // } else {
+    //   id = -1L;
+    // }
+    // return doBricInsertShot( sid, id, TDUtil.getTimeStamp(), 0L, d, b, c, r, mag, acc, dip, extend, 0.0, leg, status, comment, 0L, addr, idx );
+    return doBricInsertShot( sid, -1L, TDUtil.getTimeStamp(), 0L, d, b, c, r, mag, acc, dip, extend, 0.0, leg, status, comment, 0L, addr, idx, time );
   }
 
   /** insert a DistoX shot
@@ -1794,19 +1805,20 @@ public class DataHelper extends DataSetObservable
    * @param extend extend (int)
    * @param status status
    * @param addr   DistoX address
+   * @param idx    device internal shot-index (0 by default)
    * @return inserted shot ID
    */
-  public long insertDistoXShot( long sid, long id, double d, double b, double c, double r, long extend, long status, String addr )
+  public long insertDistoXShot( long sid, long id, double d, double b, double c, double r, long extend, long status, String addr, long idx )
   { // 0L=leg, status, 0L=type DISTOX
     // stretch = 0.0;
-    // return doInsertShot( sid, id, System.currentTimeMillis()/1000, 0L, "", "",  d, b, c, r, extend, 0.0, DBlock.FLAG_SURVEY, 0L, status, 0L, "", addr );
-    return doSimpleInsertShot( sid, id, System.currentTimeMillis()/1000, 0L, d, b, c, r, extend, 0.0, 0L, status, 0L, addr );
+    // return doInsertShot( sid, id, TDUtil.getTimeStamp(), 0L, "", "",  d, b, c, r, extend, 0.0, DBlock.FLAG_SURVEY, 0L, status, 0L, "", addr );
+    return doSimpleInsertShot( sid, id, TDUtil.getTimeStamp(), 0L, d, b, c, r, extend, 0.0, 0L, status, 0L, addr, idx, 0L );
   }
 
   /** insert a shot copying from a dblock (except surveyId and Id)
    * @param sid    survey ID
    * @param blk    dblock
-   * @return inserted shot ID
+   * @return inserted shot ID (-1 on error)
    */
   public long insertDBlockShot( long sid, DBlock blk )
   {
@@ -1816,10 +1828,33 @@ public class DataHelper extends DataSetObservable
     ContentValues cv = makeShotContentValues( sid, myNextId, blk.mTime, 0L, blk.mFrom, blk.mTo, 
                          blk.mLength, blk.mBearing, blk.mClino, blk.mRoll, blk.mMagnetic, blk.mAcceleration, blk.mDip, 
                          blk.mExtend, blk.getStretch(), blk.mFlag, blk.getLegType(), 0, blk.getShotType(), blk.mComment, blk.getAddress(),
-                         blk.mRawMx, blk.mRawMy, blk.mRawMz, blk.mRawGx, blk.mRawGy, blk.mRawGz );
-    doInsert( SHOT_TABLE, cv, "dblock insert" );
+                         blk.mRawMx, blk.mRawMy, blk.mRawMz, blk.mRawGx, blk.mRawGy, blk.mRawGz, blk.mIndex, blk.mDeviceTime );
+    if ( ! doInsert( SHOT_TABLE, cv, "dblock insert" ) ) return -1L;
     return myNextId;
   }
+
+  // /**
+  //  * @param sid       survey ID
+  //  * @param id        shot ID
+  //  * @param millis    millis/1000 ie seconds
+  //  * @param color     custom color
+  //  * @param d         distance [m]
+  //  * @param b         azimuth [degree]
+  //  * @param c         clino [degree]
+  //  * @param r         roll [degree]
+  //  * @param extend    extend (-1,0,1,2,...)
+  //  * @param stretch   fractional extend (in [-1,1])
+  //  * @param leg      
+  //  * @param shot_type shot type (?)
+  //  * @param addr      device address (?)
+  //  */
+  // public long insertSimpleShot( long sid, long id, long millis, long color, double d, double b, double c, double r,
+  //       	   long extend, double stretch, long leg,
+  //                  long shot_type, String addr )
+  // { // leg, 0L=status, type 
+  //   // return doInsertShot( sid, id, millis, color, "", "",  d, b, c, r, extend, stretch, DBlock.FLAG_SURVEY, leg, 0L, shot_type, "", addr );
+  //   return doSimpleInsertShot( sid, id, millis, color, d, b, c, r, extend, stretch, leg, 0L, shot_type, addr, 0, 0L );
+  // }
 
   /**
    * @param sid       survey ID
@@ -1834,22 +1869,14 @@ public class DataHelper extends DataSetObservable
    * @param stretch   fractional extend (in [-1,1])
    * @param leg      
    * @param shot_type shot type (?)
-   * @param addr      device address (?)
+   * @return id of the shot record
    */
-  public long insertShot( long sid, long id, long millis, long color, double d, double b, double c, double r,
-		   long extend, double stretch, long leg,
-                   long shot_type, String addr )
-  { // leg, 0L=status, type 
-    // return doInsertShot( sid, id, millis, color, "", "",  d, b, c, r, extend, stretch, DBlock.FLAG_SURVEY, leg, 0L, shot_type, "", addr );
-    return doSimpleInsertShot( sid, id, millis, color, d, b, c, r, extend, stretch, leg, 0L, shot_type, addr );
-  }
-
   long insertManualShot(long sid, @SuppressWarnings("SameParameterValue") long id, long millis, long color, double d, double b, double c, double r,
                         long extend, double stretch, long leg,
                         long shot_type )
   { // leg, 0L=status, type 
     // return doInsertShot( sid, id, millis, color, "", "",  d, b, c, r, extend, stretch, DBlock.FLAG_SURVEY, leg, 0L, shot_type, "", "" );
-    return doSimpleInsertShot( sid, id, millis, color, d, b, c, r, extend, stretch, leg, 0L, shot_type, "" );
+    return doSimpleInsertShot( sid, id, millis, color, d, b, c, r, extend, stretch, leg, 0L, shot_type, "", 0, 0L );
   }
 
   void resetShotColor( long sid )
@@ -2136,7 +2163,7 @@ public class DataHelper extends DataSetObservable
     cv.put( "status",   TDStatus.NORMAL ); // status );
     cv.put( "comment",  "" ); // comment );
     cv.put( "type",     type ); 
-    cv.put( "millis",   millis );
+    cv.put( "millis",   millis ); // [s]
     cv.put( "color",    color );
     cv.put( "stretch",  stretch );
     cv.put( "address",  "" );
@@ -2146,15 +2173,17 @@ public class DataHelper extends DataSetObservable
     cv.put( "rawGx",    0.0 );
     cv.put( "rawGy",    0.0 );
     cv.put( "rawGz",    0.0 );
+    cv.put( "idx",      0 );
+    cv.put( "time",     0L ); // [s]
 
-    doInsert( SHOT_TABLE, cv, "insert at" );
+    if ( ! doInsert( SHOT_TABLE, cv, "insert at" ) ) return -1L;
     return at;
   }
 
   private ContentValues makeShotContentValues( long sid, long id, long millis, long color, String from, String to, 
                           double d, double b, double c, double r, double acc, double mag, double dip,
                           long extend, double stretch, long flag, long leg, long status, long shot_type, String comment, String addr,
-                          int rawMx, int rawMy, int rawMz, int rawGx, int rawGy, int rawGz )
+                          int rawMx, int rawMy, int rawMz, int rawGx, int rawGy, int rawGz, long idx, long time )
   {
     ContentValues cv = new ContentValues();
     cv.put( "surveyId", sid );
@@ -2174,7 +2203,7 @@ public class DataHelper extends DataSetObservable
     cv.put( "status",   status );
     cv.put( "comment",  comment );
     cv.put( "type",     shot_type );
-    cv.put( "millis",   millis );
+    cv.put( "millis",   millis ); // [s]
     cv.put( "color",    color );
     cv.put( "stretch",  stretch );
     cv.put( "address",  addr );
@@ -2184,6 +2213,8 @@ public class DataHelper extends DataSetObservable
     cv.put( "rawGx",    rawGx );
     cv.put( "rawGy",    rawGy );
     cv.put( "rawGz",    rawGz );
+    cv.put( "idx",      idx );  // device index
+    cv.put( "time",     time ); // [s]
     return cv;
   }
 
@@ -2207,8 +2238,8 @@ public class DataHelper extends DataSetObservable
     }
     if (addr == null) addr = "";
     ContentValues cv = makeShotContentValues( sid, id, millis, color, from, to, d, b, c, r, 0.0, 0.0, 0.0,
-		    extend, stretch, flag, leg, status, shot_type, comment, addr, 0, 0, 0, 0, 0, 0 );
-    doInsert( SHOT_TABLE, cv, "insert" );
+		    extend, stretch, flag, leg, status, shot_type, comment, addr, 0, 0, 0, 0, 0, 0,  0, 0L );
+    if ( ! doInsert( SHOT_TABLE, cv, "insert" ) ) return -1L;
     return id;
   }
   */
@@ -2218,7 +2249,7 @@ public class DataHelper extends DataSetObservable
   //
   // @param sid           survey ID
   // @param id            shot id
-  // @param millis        timestamp
+  // @param millis        timestamp [s]
   // @param color         custom color (splay)
   // @param d, b, c, r    distance, bearing, clino, roll
   // @param extend
@@ -2227,6 +2258,8 @@ public class DataHelper extends DataSetObservable
   // @param status        shot status
   // @param shot_type     either DISTOX or MANUAL
   // @param addr          device address
+  // @param idx           device shot-index
+  // @param time          device shot-time [s]
   //
   // FROM and TO are set to ""
   // mag, acc, dip are set to 0
@@ -2234,10 +2267,10 @@ public class DataHelper extends DataSetObservable
   // flag is set to SURVEY
   private long doSimpleInsertShot( long sid, long id, long millis, long color, 
                           double d, double b, double c, double r, 
-                          long extend, double stretch, long leg, long status, long shot_type, String addr )
+                          long extend, double stretch, long leg, long status, long shot_type, String addr, long idx, long time )
   {
-    // TDLog.Log( TDLog.LOG_DB, "insert shot <" + id + "> " + from + "-" + to + " extend " + extend );
-    // TDLog.v("DB simple insert shot id " + id + " d " + d + " b " + b + " c " + c );
+    TDLog.v("DB simple insert shot id " + id + " d " + d + " b " + b + " c " + c + " extend " + extend + "/" + stretch + " leg " + leg + 
+      " status " + status + " type " + shot_type + " addr " + addr + " idx " + idx + " millis " + millis + " color " + color );
     if ( myDB == null ) return -1L;
     if ( id == -1L ) {
       ++ myNextId;
@@ -2245,18 +2278,18 @@ public class DataHelper extends DataSetObservable
     } else {
       myNextId = id;
     }
-    if (addr == null) addr = "";
-    ContentValues cv = makeShotContentValues( sid, id, millis, color, "", "", d, b, c, r, 0.0, 0.0, 0.0, extend, stretch, DBlock.FLAG_SURVEY, leg, status, shot_type, "", addr, 0, 0, 0, 0, 0, 0 );
-    doInsert( SHOT_TABLE, cv, "simple insert" );
+    if (addr == null) addr = "";                                  // from-to              acc  mag  dip  ext str flag leg status type comment addr raw... index
+    ContentValues cv = makeShotContentValues( sid, id, millis, color, "", "", d, b, c, r, 0.0, 0.0, 0.0, extend, stretch, DBlock.FLAG_SURVEY, leg, status, shot_type, "", addr, 
+      0, 0, 0, 0, 0, 0, idx, time );
+    if ( ! doInsert( SHOT_TABLE, cv, "simple insert" ) ) return -1L;
     return id;
   }
 
   private long doBricInsertShot( long sid, long id, long millis, long color, 
                           double d, double b, double c, double r, double mag, double acc, double dip,
-                          long extend, double stretch, long leg, long status, String comment, long shot_type, String addr )
+                          long extend, double stretch, long leg, long status, String comment, long shot_type, String addr, long idx, long time )
   {
-    // TDLog.Log( TDLog.LOG_DB, "insert shot <" + id + "> " + from + "-" + to + " extend " + extend );
-    // TDLog.v("DB complete insert shot id " + id + " d " + d + " b " + b + " c " + c );
+    TDLog.v("DB complete insert shot id " + id + " d " + d + " b " + b + " c " + c );
     if ( myDB == null ) return -1L;
     if ( id == -1L ) {
       ++ myNextId;
@@ -2266,8 +2299,8 @@ public class DataHelper extends DataSetObservable
     }
     if (addr == null) addr = "";
     ContentValues cv = makeShotContentValues( sid, id, millis, color, "", "", d, b, c, r, mag, acc, dip,
-		    extend, stretch, DBlock.FLAG_SURVEY, leg, status, shot_type, comment, addr, 0, 0, 0, 0, 0, 0 );
-    doInsert( SHOT_TABLE, cv, "bric insert" );
+		                              extend, stretch, DBlock.FLAG_SURVEY, leg, status, shot_type, comment, addr, 0, 0, 0, 0, 0, 0, idx, time );
+    if ( ! doInsert( SHOT_TABLE, cv, "bric insert" ) ) return -1L;
     return id;
   }
 
@@ -2287,8 +2320,8 @@ public class DataHelper extends DataSetObservable
     }
     if (addr == null) addr = "";
     ContentValues cv = makeShotContentValues( sid, id, millis, color, "", "", d, b, c, r, mag, acc, dip,
-		    extend, stretch, DBlock.FLAG_SURVEY, leg, status, shot_type, comment, addr, rawMx, rawMy, rawMz, rawGx, rawGy, rawGz );
-    doInsert( SHOT_TABLE, cv, "cavway insert" );
+		    extend, stretch, DBlock.FLAG_SURVEY, leg, status, shot_type, comment, addr, rawMx, rawMy, rawMz, rawGx, rawGy, rawGz, 0, 0L );
+    if ( ! doInsert( SHOT_TABLE, cv, "cavway insert" ) ) return -1L;
     return id;
   }
 
@@ -2480,12 +2513,12 @@ public class DataHelper extends DataSetObservable
   private static final String qSensors2     = "select id, shotId, title, date, comment, type, value from sensors where surveyId=? AND shotId=? ";
   private static final String qShotAudio    = "select id, date from audios where surveyId=? AND shotId=? ";
   private static final String qAudiosAll    = "select id, shotId, date from audios where surveyId=? ";
-  private static final String qPhotosAll    = "select id, shotId, status, title, date, comment, camera from photos where surveyId=? ";
+  private static final String qPhotosAll    = "select id, shotId, status, title, date, comment, camera, code from photos where surveyId=? ";
   private static final String qjPhotos      =
-    "select p.id, s.id, p.title, s.fStation, s.tStation, p.date, p.comment, p.camera from photos as p join shots as s on p.shotId=s.id where p.surveyId=? and s.surveyId=? and p.status=? ";
+    "select p.id, COALESCE(s.id, -1), p.title, s.fStation, s.tStation, p.date, p.comment, p.camera, p.code from photos as p left join shots as s on p.shotId=s.id where p.surveyId=? and (s.surveyId=? OR p.shotId=-1) and p.status=? ";
   // private static String qShotPhoto    = "select id, shotId, title, date, comment from photos where surveyId=? AND shotId=? ";
   private static final String qjShotPhoto   =
-    "select p.id, s.id, p.title, s.fStation, s.tStation, p.date, p.comment, p.camera from photos as p join shots as s on p.shotId=s.id where p.surveyId=? AND s.surveyId=? AND p.shotId=? ";
+    "select p.id, s.id, p.title, s.fStation, s.tStation, p.date, p.comment, p.camera, p.code from photos as p join shots as s on p.shotId=s.id where p.surveyId=? AND s.surveyId=? AND p.shotId=? ";
   private static final String cntPhotos      =
     "select count(p.id) from photos as p join shots as s on p.shotId=s.id where p.surveyId=? and s.surveyId=? and p.status=? ";
 
@@ -2500,7 +2533,7 @@ public class DataHelper extends DataSetObservable
   private static final String qHasFixedStation = "select id from fixeds where surveyId=? and station=? and id!=? and status=0 ";
   private static final String qjShots       =
     "select s.flag, s.distance, s.fStation, s.tStation, s.clino, z.clino, s.extend from shots as s join shots as z on z.fStation=s.tStation where s.surveyId=? AND z.surveyId=? AND s.fStation!=\"\" AND s.tStation!=\"\" AND s.status=0 ";
-  private static final String qFixeds = "select A.station, A.latitude, A.longitude, A.altitude, A.altimetric, A.cs_name, A.cs_latitude, A.cs_longitude, A.cs_altitude, A.convergence, A.accuracy, A.accuracy_v, A.m_to_units, A.m_to_vunits from fixeds as A join surveys as B where A.surveyId=B.id and B.name=?";
+  private static final String qFixeds = "select A.station, A.latitude, A.longitude, A.altitude, A.altimetric, A.cs_name, A.cs_latitude, A.cs_longitude, A.cs_altitude, A.convergence, A.accuracy, A.accuracy_v, A.m_to_units, A.m_to_vunits, A.status from fixeds as A join surveys as B where A.surveyId=B.id AND B.name=?";
   // private static final String qLength = "select count(), sum(A.distance) from shots as A, surveys as B where A.surveyId=B.id and B.name=? and A.fStation!=\"\" and A.tStation!=\"\"";
 
   List< SensorInfo > selectAllSensors( long sid, long status )
@@ -2744,7 +2777,8 @@ public class DataHelper extends DataSetObservable
                                  name,              // shot name
                                  cursor.getString(5),
                                  cursor.getString(6),
-                                 (int)(cursor.getLong(7))
+                                 (int)(cursor.getLong(7)), // camera
+                                 cursor.getString(8)       // code
                  ) );
       } while (cursor.moveToNext());
     }
@@ -2785,7 +2819,8 @@ public class DataHelper extends DataSetObservable
                                  name,              // shot name
                                  cursor.getString(5),
                                  cursor.getString(6),
-                                 (int)(cursor.getLong(7))
+                                 (int)(cursor.getLong(7)),
+                                 cursor.getString(8)
                  ) );
       } while (cursor.moveToNext());
     }
@@ -2856,255 +2891,260 @@ public class DataHelper extends DataSetObservable
     return list;
   }
 
-  /**
+  /** @return first fixed data of the survey (station lat-long-h_geo cs and cs lat-long-h_geo)
    * @param name   survey name
-   * @return first fixed data of the survey (station lat-long-h_geo cs and cs lat-long-h_geo)
+   * @param status status of selected fixeds
    * @note h_geo is geoid altitude
    */
-  public FixedInfo selectSurveyFixed( String name )
+  public FixedInfo selectSurveyFixed( String name, int status )
   {
     // ArrayList< FixedInfo > ret = new ArrayList<>();
     FixedInfo info = null;
     Cursor cursor = myDB.rawQuery( qFixeds, new String[]{ name } );
     if (cursor.moveToFirst()) {
-      // do {
-        info = new FixedInfo( -1, cursor.getString(0), // station
-          cursor.getDouble(1), // latitude
-          cursor.getDouble(2),
-          cursor.getDouble(3), // ellipsoid h (altitude)
-          cursor.getDouble(4), // geoid altitude (altimetric)
-          "", -1,              // comment - source
-          cursor.getString(5), // cs_name
-          cursor.getDouble(6), // cs_latitude
-          cursor.getDouble(7),
-          cursor.getDouble(8), // cs_altitude (geoid)
-          0,                   // nr decimals
-          cursor.getDouble(9),  // convergence
-          cursor.getDouble(10), // accuracy
-          cursor.getDouble(11), // accuracy_v
-          cursor.getDouble(12), // meters to units
-          cursor.getDouble(13)  // meters to vert units
-        );
-        // ret.add( info );
-      // } while (cursor.moveToNext());
+      do {
+        if ( cursor.getLong(14) == status ) {
+          info = new FixedInfo( -1, cursor.getString(0), // station
+            cursor.getDouble(1), // latitude
+            cursor.getDouble(2),
+            cursor.getDouble(3), // ellipsoid h (altitude)
+            cursor.getDouble(4), // geoid altitude (altimetric)
+            "", -1,              // comment - source
+            cursor.getString(5), // cs_name
+            cursor.getDouble(6), // cs_latitude
+            cursor.getDouble(7),
+            cursor.getDouble(8), // cs_altitude (geoid)
+            0,                   // nr decimals
+            cursor.getDouble(9),  // convergence
+            cursor.getDouble(10), // accuracy
+            cursor.getDouble(11), // accuracy_v
+            cursor.getDouble(12), // meters to units
+            cursor.getDouble(13)  // meters to vert units
+          );
+          break;
+          // ret.add( info );
+        }
+      } while (cursor.moveToNext());
     }
     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
     return info;
   }
 
+  /** @return the list of fixeds at a given station
+   * @param sid   survey ID
+   * @param name  station name
+   */
+  private List< FixedInfo > selectFixedAtStation( long sid, String name )
+  {
+    List< FixedInfo > list = new ArrayList<>();
+    if ( myDB == null ) return list;
+    Cursor cursor = myDB.query( FIXED_TABLE,
+                                mFixedFields,
+                                "surveyId=? and station=?",  // selection = WHERE clause (without "WHERE")
+                                new String[] { Long.toString(sid), name },     // selectionArgs
+                                null,  // groupBy
+                                null,  // having
+                                null ); // order by
+    if (cursor.moveToFirst()) {
+      do {
+        list.add( new FixedInfo( cursor.getLong(0),
+                                 cursor.getString(1),
+                                 cursor.getDouble(2),
+                                 cursor.getDouble(3),
+                                 cursor.getDouble(4),
+                                 cursor.getDouble(5),
+                                 cursor.getString(6),
+                                 // skip status
+                                 cursor.getLong(8),  // source
+                                 cursor.getString(9),
+                                 cursor.getDouble(10),
+                                 cursor.getDouble(11),
+                                 cursor.getDouble(12),
+       			  cursor.getLong(13),  // cs_decimals
+                                 cursor.getDouble(14),
+                                 cursor.getDouble(15),
+                                 cursor.getDouble(16),
+                                 cursor.getDouble(17), // meters to units
+                                 cursor.getDouble(18)  // meters to vert units
+        ) );
+      } while (cursor.moveToNext());
+    }
+    if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    // TDLog.Log( TDLog.LOG_DB, "select all fixeds " + sid + " size " + list.size() );
+    return list;
+  }
+
+  boolean hasSurveyPlot( long sid, String name )
+  {
+    boolean ret = false;
+    if ( myDB != null ) {
+      // Cursor cursor = myDB.query( PLOT_TABLE, new String[]{ "id", "name" },
+      //     WHERE_SID_NAME, new String[]{ Long.toString( sid ), name },
+      //     null, null, "id" );
+      Cursor cursor = myDB.rawQuery( qHasPlot, new String[]{ Long.toString( sid ), name } );
+      if (cursor.moveToFirst()) ret = true;
+      if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    }
+    return ret;
+  }
+
+  boolean hasSurveyStation( long sid, String start )
+  {
+    boolean ret = false;
+    if ( myDB != null ) {
+      // Cursor cursor = myDB.query( SHOT_TABLE,
+      //     new String[]{ "id", "fStation", "tStation" },
+      //     "surveyId=? and ( fStation=? or tStation=? )",
+      //     new String[]{ Long.toString( sid ), start, start },
+      //     null, null, "id" );
+      Cursor cursor = myDB.rawQuery( qHasStation, new String[]{ Long.toString( sid ), start, start } );
+      if (cursor.moveToFirst()) ret = true;
+      if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    }
+    return ret;
+  }
+
+  String getFirstStation( long sid )
+  {
+    String ret = null;
+    if ( myDB != null ) {
+      // Cursor cursor = myDB.query( SHOT_TABLE,
+      //     new String[]{ "fStation" },
+      //     "surveyId=? and ( fStation!=\"\" and tStation!=\"\" )",
+      //     new String[]{ Long.toString( sid ) },
+      //     null, null, null ); // limit 1
+      Cursor cursor = myDB.rawQuery( qFirstStation, new String[]{ Long.toString( sid ) } );
+      if (cursor.moveToFirst()) ret = cursor.getString( 0 );
+      if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    }
+    return ret;
+  }
 
 
-   private List< FixedInfo > selectFixedAtStation( long sid, String name )
-   {
-     List< FixedInfo > list = new ArrayList<>();
-     if ( myDB == null ) return list;
-     Cursor cursor = myDB.query( FIXED_TABLE,
-                                 mFixedFields,
-                                 "surveyId=? and station=?",  // selection = WHERE clause (without "WHERE")
-                                 new String[] { Long.toString(sid), name },     // selectionArgs
-                                 null,  // groupBy
-                                 null,  // having
-                                 null ); // order by
-     if (cursor.moveToFirst()) {
-       do {
-         list.add( new FixedInfo( cursor.getLong(0),
-                                  cursor.getString(1),
-                                  cursor.getDouble(2),
-                                  cursor.getDouble(3),
-                                  cursor.getDouble(4),
-                                  cursor.getDouble(5),
-                                  cursor.getString(6),
-                                  // skip status
-                                  cursor.getLong(8),  // source
-                                  cursor.getString(9),
-                                  cursor.getDouble(10),
-                                  cursor.getDouble(11),
-                                  cursor.getDouble(12),
-				  cursor.getLong(13),  // cs_decimals
-                                  cursor.getDouble(14),
-                                  cursor.getDouble(15),
-                                  cursor.getDouble(16),
-                                  cursor.getDouble(17), // meters to units
-                                  cursor.getDouble(18)  // meters to vert units
-         ) );
-       } while (cursor.moveToNext());
-     }
-     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     // TDLog.Log( TDLog.LOG_DB, "select all fixeds " + sid + " size " + list.size() );
-     return list;
-   }
+  int maxPlotIndex( long sid )
+  {
+    int ret = 0;
+    if ( myDB == null ) return ret;
+    // Cursor cursor = myDB.query(PLOT_TABLE, new String[] { "id", "name", "type" },
+    //                            WHERE_SID, new String[] { Long.toString(sid) }, 
+    //                            null, null, "id" );
+    Cursor cursor = myDB.rawQuery( qMaxPlotIndex, new String[] { Long.toString(sid), TDString.ONE } ); // type == 1 (PLOT_PLAN)
+    if (cursor.moveToFirst()) {
+      do {
+        // int type = cursor.getInt(2);     
+        // if ( type == PlotType.PLOT_PLAN ) { // FIXME || type == PlotType.PLOT_EXTENDED || type == PlotType.PLOT_PROJECTED
+          int r = 0;
+          byte[] name = cursor.getString(1).getBytes();
+          for ( int k=0; k<name.length; ++k ) {
+            if ( name[k] >= 0x30 && name[k] <= 0x39 ) {
+              r = 10*r + ( name[k] - 0x30 );
+            } else {
+              break;
+            }
+          }
+          if ( r > ret ) ret = r;
+        // }
+      } while (cursor.moveToNext());
+    }
+    if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    return ret;
+  }
 
-   boolean hasSurveyPlot( long sid, String name )
-   {
-     boolean ret = false;
-     if ( myDB != null ) {
-       // Cursor cursor = myDB.query( PLOT_TABLE, new String[]{ "id", "name" },
-       //     WHERE_SID_NAME, new String[]{ Long.toString( sid ), name },
-       //     null, null, "id" );
-       Cursor cursor = myDB.rawQuery( qHasPlot, new String[]{ Long.toString( sid ), name } );
-       if (cursor.moveToFirst()) ret = true;
-       if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     }
-     return ret;
-   }
-
-   boolean hasSurveyStation( long sid, String start )
-   {
-     boolean ret = false;
-     if ( myDB != null ) {
-       // Cursor cursor = myDB.query( SHOT_TABLE,
-       //     new String[]{ "id", "fStation", "tStation" },
-       //     "surveyId=? and ( fStation=? or tStation=? )",
-       //     new String[]{ Long.toString( sid ), start, start },
-       //     null, null, "id" );
-       Cursor cursor = myDB.rawQuery( qHasStation, new String[]{ Long.toString( sid ), start, start } );
-       if (cursor.moveToFirst()) ret = true;
-       if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     }
-     return ret;
-   }
-
-   String getFirstStation( long sid )
-   {
-     String ret = null;
-     if ( myDB != null ) {
-       // Cursor cursor = myDB.query( SHOT_TABLE,
-       //     new String[]{ "fStation" },
-       //     "surveyId=? and ( fStation!=\"\" and tStation!=\"\" )",
-       //     new String[]{ Long.toString( sid ) },
-       //     null, null, null ); // limit 1
-       Cursor cursor = myDB.rawQuery( qFirstStation, new String[]{ Long.toString( sid ) } );
-       if (cursor.moveToFirst()) ret = cursor.getString( 0 );
-       if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     }
-     return ret;
-   }
+  private PlotInfo makePlotInfo( long sid, Cursor cursor )
+  {
+    PlotInfo plot = new  PlotInfo ();
+    plot.surveyId = sid;
+    plot.id      = cursor.getLong(0);
+    plot.name    = cursor.getString(1);
+    plot.type    = cursor.getInt(2);
+    plot.start   = cursor.getString(3);
+    plot.view    = cursor.getString(4);
+    plot.xoffset = (float)(cursor.getDouble(5));
+    plot.yoffset = (float)(cursor.getDouble(6));
+    plot.zoom    = (float)(cursor.getDouble(7));
+    plot.azimuth = (float)(cursor.getDouble(8));
+    plot.clino   = (float)(cursor.getDouble(9));
+    plot.hide    = cursor.getString(10);
+    plot.nick    = cursor.getString(11);
+    plot.orientation = (int)(cursor.getLong(12));
+    plot.maxscrap = (int)(cursor.getLong(13));
+    plot.intercept = (float)(cursor.getDouble(14));
+    plot.center = new Vector3D( (float)(cursor.getDouble(15)), (float)(cursor.getDouble(16)), (float)(cursor.getDouble(17)) );
+    return plot;
+  }
 
 
-   int maxPlotIndex( long sid )
-   {
-     int ret = 0;
-     if ( myDB == null ) return ret;
-     // Cursor cursor = myDB.query(PLOT_TABLE, new String[] { "id", "name", "type" },
-     //                            WHERE_SID, new String[] { Long.toString(sid) }, 
-     //                            null, null, "id" );
-     Cursor cursor = myDB.rawQuery( qMaxPlotIndex, new String[] { Long.toString(sid), TDString.ONE } ); // type == 1 (PLOT_PLAN)
-     if (cursor.moveToFirst()) {
-       do {
-         // int type = cursor.getInt(2);     
-         // if ( type == PlotType.PLOT_PLAN ) { // FIXME || type == PlotType.PLOT_EXTENDED || type == PlotType.PLOT_PROJECTED
-           int r = 0;
-           byte[] name = cursor.getString(1).getBytes();
-           for ( int k=0; k<name.length; ++k ) {
-             if ( name[k] >= 0x30 && name[k] <= 0x39 ) {
-               r = 10*r + ( name[k] - 0x30 );
-             } else {
-               break;
-             }
-           }
-           if ( r > ret ) ret = r;
-         // }
-       } while (cursor.moveToNext());
-     }
-     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     return ret;
-   }
+  private List< PlotInfo > doSelectAllPlots( long sid, String where_str, String[] where )
+  {
+    List< PlotInfo > list = new ArrayList<>();
+    if ( myDB == null ) return list;
+    Cursor cursor = myDB.query( PLOT_TABLE, mPlotFields, where_str, where, null, null, "id" );
+    if (cursor.moveToFirst()) {
+      do {
+        list.add( makePlotInfo( sid, cursor ) );
+      } while (cursor.moveToNext());
+    }
+    // TDLog.Log( TDLog.LOG_DB, "select All Plots list size " + list.size() );
+    if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    return list;
+  }
 
-   private PlotInfo makePlotInfo( long sid, Cursor cursor )
-   {
-     PlotInfo plot = new  PlotInfo ();
-     plot.surveyId = sid;
-     plot.id      = cursor.getLong(0);
-     plot.name    = cursor.getString(1);
-     plot.type    = cursor.getInt(2);
-     plot.start   = cursor.getString(3);
-     plot.view    = cursor.getString(4);
-     plot.xoffset = (float)(cursor.getDouble(5));
-     plot.yoffset = (float)(cursor.getDouble(6));
-     plot.zoom    = (float)(cursor.getDouble(7));
-     plot.azimuth = (float)(cursor.getDouble(8));
-     plot.clino   = (float)(cursor.getDouble(9));
-     plot.hide    = cursor.getString(10);
-     plot.nick    = cursor.getString(11);
-     plot.orientation = (int)(cursor.getLong(12));
-     plot.maxscrap = (int)(cursor.getLong(13));
-     plot.intercept = (float)(cursor.getDouble(14));
-     plot.center = new Vector3D( (float)(cursor.getDouble(15)), (float)(cursor.getDouble(16)), (float)(cursor.getDouble(17)) );
-     return plot;
-   }
+  public List< String > selectAllPlotNames( String survey )
+  {
+    List< String > list = new ArrayList<>();
+    if ( myDB == null ) return list;
 
+    Cursor cursor = myDB.query( SURVEY_TABLE, new String[] { "id" }, "name=?", new String[] { survey }, null, null, "id" );
+    if ( ! cursor.moveToFirst()) return list;
+    String sid = Long.toString( cursor.getLong(0) );
+    if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
 
-   private List< PlotInfo > doSelectAllPlots( long sid, String where_str, String[] where )
-   {
-     List< PlotInfo > list = new ArrayList<>();
-     if ( myDB == null ) return list;
-     Cursor cursor = myDB.query( PLOT_TABLE, mPlotFields, where_str, where, null, null, "id" );
-     if (cursor.moveToFirst()) {
-       do {
-         list.add( makePlotInfo( sid, cursor ) );
-       } while (cursor.moveToNext());
-     }
-     // TDLog.Log( TDLog.LOG_DB, "select All Plots list size " + list.size() );
-     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     return list;
-   }
+    cursor = myDB.query( PLOT_TABLE, new String[] { "name" }, "surveyId=?", new String[] { sid }, null, null, "id" );
+    if (cursor.moveToFirst()) {
+      do {
+        list.add( cursor.getString(0) );
+      } while (cursor.moveToNext());
+    }
+    // TDLog.Log( TDLog.LOG_DB, "select All Plots list size " + list.size() );
+    if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    return list;
+  }
 
-   public List< String > selectAllPlotNames( String survey )
-   {
-     List< String > list = new ArrayList<>();
-     if ( myDB == null ) return list;
+  /** @return the list of plots for a given survey
+   * @param sid    survey ID
+   */
+  List< PlotInfo > selectAllPlots( long sid )
+  {
+    return doSelectAllPlots( sid, 
+                             WHERE_SID,
+                             new String[] { Long.toString(sid) }
+    );
+  }
 
-     Cursor cursor = myDB.query( SURVEY_TABLE, new String[] { "id" }, "name=?", new String[] { survey }, null, null, "id" );
-     if ( ! cursor.moveToFirst()) return list;
-     String sid = Long.toString( cursor.getLong(0) );
-     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+  /** @return the list of plots for a given survey and with given status
+   * @param sid    survey ID
+   * @param status plot status
+   */
+  List< PlotInfo > selectAllPlots( long sid, long status )
+  {
+    return doSelectAllPlots( sid, 
+                             WHERE_SID_STATUS,
+                             new String[] { Long.toString(sid), Long.toString(status) }
+    );
+  }
 
-     cursor = myDB.query( PLOT_TABLE, new String[] { "name" }, "surveyId=?", new String[] { sid }, null, null, "id" );
-     if (cursor.moveToFirst()) {
-       do {
-         list.add( cursor.getString(0) );
-       } while (cursor.moveToNext());
-     }
-     // TDLog.Log( TDLog.LOG_DB, "select All Plots list size " + list.size() );
-     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-     return list;
-   }
-
-   /** @return the list of plots for a given survey
-    * @param sid    survey ID
-    */
-   List< PlotInfo > selectAllPlots( long sid )
-   {
-     return doSelectAllPlots( sid, 
-                              WHERE_SID,
-                              new String[] { Long.toString(sid) }
-     );
-   }
-
-   /** @return the list of plots for a given survey and with given status
-    * @param sid    survey ID
-    * @param status plot status
-    */
-   List< PlotInfo > selectAllPlots( long sid, long status )
-   {
-     return doSelectAllPlots( sid, 
-                              WHERE_SID_STATUS,
-                              new String[] { Long.toString(sid), Long.toString(status) }
-     );
-   }
-
-   /** @return the list of plots for a given survey and with given status, and type
-    * @param sid    survey ID
-    * @param status plot status
-    * @param type   plot type
-    */
-   List< PlotInfo > selectAllPlotsWithType( long sid, long status, long type )
-   {
-     return doSelectAllPlots( sid, 
-                              "surveyId=? and status=? and type=? ",
-                              new String[] { Long.toString(sid), Long.toString(status), Long.toString(type) }
-     );
-   }
+  /** @return the list of plots for a given survey and with given status, and type
+   * @param sid    survey ID
+   * @param status plot status
+   * @param type   plot type
+   */
+  List< PlotInfo > selectAllPlotsWithType( long sid, long status, long type )
+  {
+    return doSelectAllPlots( sid, 
+                             "surveyId=? and status=? and type=? ",
+                             new String[] { Long.toString(sid), Long.toString(status), Long.toString(type) }
+    );
+  }
 
    // NOT USED
    // List< PlotInfo > selectAllPlotsWithTypeOrientation( long sid, long status, long type, boolean landscape )
@@ -3924,8 +3964,35 @@ public class DataHelper extends DataSetObservable
     // TDLog.v( "B3 select shots all");
     List< DBlock > list = new ArrayList<>();
     if ( myDB == null ) return list;
-    Cursor cursor = myDB.query(SHOT_TABLE, mFullShotFields,
+    Cursor cursor = myDB.query(SHOT_TABLE, mShotFullFields,
                     WHERE_SID_STATUS, new String[]{ Long.toString(sid), Long.toString(status) },
+                    null, null, "id" );
+    if (cursor.moveToFirst()) {
+      do {
+        DBlock block = new DBlock();
+        fullFillBlock( sid, block, cursor );
+        list.add( block );
+      } while (cursor.moveToNext());
+    }
+    // TDLog.Log( TDLog.LOG_DB, "select All Shots list size " + list.size() );
+    if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
+    return list;
+  }
+
+  /** get the export shots after a given shot-id
+   * @param sid     surveyId
+   * @param status  shot status
+   * @param first   id of first shot to export
+   * @return list of shots
+   * @note used by TopoRobot export only
+   */
+  List< DBlock > selectExportShots( long sid, long status, long first )
+  {
+    // TDLog.v( "B3 select shots all");
+    List< DBlock > list = new ArrayList<>();
+    if ( myDB == null ) return list;
+    Cursor cursor = myDB.query(SHOT_TABLE, mShotFullFields,
+                    WHERE_SID_STATUS_FROM, new String[]{ Long.toString(sid), Long.toString(status), Long.toString(first) },
                     null, null, "id" );
     if (cursor.moveToFirst()) {
       do {
@@ -4239,7 +4306,7 @@ public class DataHelper extends DataSetObservable
       cv.put( "day",      "" );
       cv.put( "comment",  "" );
       cv.put( "datamode", datamode );
-      doInsert( table, cv, "set name" );
+      if ( ! doInsert( table, cv, "set name" ) ) return -1L;
     }
     return id;
   }
@@ -4444,9 +4511,10 @@ public class DataHelper extends DataSetObservable
    * @param date      date
    * @param comment   comment
    * @param camera    camera type
+   * @param code      geomophology code
    * @return content-value set
    */
-  private ContentValues makePhotoContentValues( long sid, long id, long shotid, long status, String title, String date, String comment, long camera )
+  private ContentValues makePhotoContentValues( long sid, long id, long shotid, long status, String title, String date, String comment, long camera, String code )
   {
     ContentValues cv = new ContentValues();
     cv.put( "surveyId",  sid );
@@ -4457,6 +4525,7 @@ public class DataHelper extends DataSetObservable
     cv.put( "date",      date );
     cv.put( "comment",   (comment == null)? TDString.EMPTY : comment );
     cv.put( "camera",    camera );
+    cv.put( "code",      (code == null)? TDString.EMPTY : code );
     return cv;
   }
 
@@ -4468,15 +4537,16 @@ public class DataHelper extends DataSetObservable
    * @param date      date
    * @param comment   comment
    * @param camera    camera type
+   * @param code      geomophology code
+   * @return id of the record (-1 on error)
    */
-  void insertPhoto( long sid, long id, long shotid, String title, String date, String comment, int camera )
+  long insertPhoto( long sid, long id, long shotid, String title, String date, String comment, int camera, String code )
   {
-    if ( myDB == null ) return; // -1L;
+    if ( myDB == null ) return -1L;
     if ( id == -1L ) id = maxId( PHOTO_TABLE, sid );
-    ContentValues cv = makePhotoContentValues( sid, id, shotid, TDStatus.NORMAL, title, date, comment, camera );
-    doInsert( PHOTO_TABLE, cv, "photo insert" );
-    // if ( ! doInsert( PHOTO_TABLE, cv, "photo insert" ) ) return -1L;
-    // return id;
+    ContentValues cv = makePhotoContentValues( sid, id, shotid, TDStatus.NORMAL, title, date, comment, camera, code );
+    if ( ! doInsert( PHOTO_TABLE, cv, "photo insert" ) ) return -1L;
+    return id;
   }
 
   /** @return the next ID for a photo
@@ -4491,13 +4561,15 @@ public class DataHelper extends DataSetObservable
    * @param sid     survey ID
    * @param id      photo ID
    * @param comment new photo comment
+   * @param code    new photo geocode
    * @return true if successful
    */
-  boolean updatePhoto( long sid, long id, String comment )
+  boolean updatePhoto( long sid, long id, String comment, String code )
   {
     if ( myDB == null ) return false;
     ContentValues cv = new ContentValues();
     cv.put( "comment", comment );
+    cv.put( "code",    code );
     try {
       myDB.beginTransaction();
       myDB.update( PHOTO_TABLE, cv, WHERE_SID_ID, new String[]{ Long.toString(sid), Long.toString(id) } );
@@ -4561,15 +4633,15 @@ public class DataHelper extends DataSetObservable
    * @param comment   comment
    * @param type      sensor type
    * @param value     sensor value
+   * @return id of the record (-1 on error)
    */
-  void insertSensor( long sid, long id, long shotid, String title, String date, String comment, String type, String value )
+  long insertSensor( long sid, long id, long shotid, String title, String date, String comment, String type, String value )
   {
-    if ( myDB == null ) return; // -1L;
+    if ( myDB == null ) return -1L;
     if ( id == -1L ) id = maxId( SENSOR_TABLE, sid );
     ContentValues cv = makeSensorContentValues( sid, id, shotid, TDStatus.NORMAL, title, date, comment, type, value );
-    doInsert( SENSOR_TABLE, cv, "sensor insert" );
-    // if ( ! doInsert( SENSOR_TABLE, cv, "sensor insert" ) ) return -1L;
-    // return id;
+    if ( ! doInsert( SENSOR_TABLE, cv, "sensor insert" ) ) return -1L;
+    return id;
   }
 
   /** @return the next ID for a sensor-data
@@ -4874,6 +4946,14 @@ public class DataHelper extends DataSetObservable
     return id;
   }
 
+  /** @return the max shot id of a survey (max = one past the largest)
+   * @param sid   survey id
+   */
+  long maxShotId( long sid )
+  {
+    return maxId( SHOT_TABLE, sid );
+  }
+
   /** @return the maximum ID in a table for a given survey
    * @param table   table
    * @param sid     survey ID
@@ -4917,15 +4997,21 @@ public class DataHelper extends DataSetObservable
     return id - 1L; // decrement
   }
   
+  /** move all shots records, starting with a given ID, from one survey to another
+   * @param old_sid   survey ID of source survey
+   * @param old_id    ID of starting shot
+   * @param new_sid   survey ID of target survey
+   * @return true if success
+   */
   boolean moveShotsBetweenSurveys( long old_sid, long old_id, long new_sid )
   {
     boolean ret = false;
-    long offset = getLastShotId( new_sid ) + 1 - old_id;
+    long offset = getLastShotId( new_sid ) + 1 - old_id; 
     // update shots set id=id+offset, surveyId=new_sid where surveyId=old_sid && id >= old_id;
     StringWriter sw = new StringWriter();
     PrintWriter  pw = new PrintWriter( sw );
     pw.format( Locale.US, "UPDATE shots SET id=id+%d, surveyId=%d WHERE surveyId=%d AND id>=%d", offset, new_sid, old_sid, old_id );
-    // TDLog.v("DB " + sw.toString() );
+    TDLog.v("DB " + sw.toString() );
     try {
       myDB.beginTransaction();
       myDB.execSQL( sw.toString() );
@@ -5493,9 +5579,12 @@ public class DataHelper extends DataSetObservable
 
    void dumpToFile( String filename, long sid )
    {
-     // TDLog.v( "dump DB to file " + filename );
+     TDLog.v( "dump DB to file " + filename + " survey ID " + sid );
      // String where = "surveyId=" + Long.toString(sid);
-     if ( myDB == null ) return;
+     if ( myDB == null ) {
+       TDLog.Error("dump DB to file: null DB ");
+       return;
+     }
      try {
        TDPath.checkPath( filename );
        FileWriter fw = TDFile.getFileWriter( filename ); // DistoX-SAF
@@ -5505,6 +5594,7 @@ public class DataHelper extends DataSetObservable
                             "id=?", new String[] { Long.toString( sid ) },
                             null, null, null );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump SURVEY");
          do {
            pw.format(Locale.US,
                      "INSERT into %s values( %d, \"%s\", \"%s\", \"%s\", %.4f, \"%s\", \"%s\", %d, %d, %d );\n",
@@ -5530,6 +5620,7 @@ public class DataHelper extends DataSetObservable
        //                      null, null, null );
        cursor = myDB.rawQuery( qAudiosAll, new String[] { Long.toString(sid) } );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump AUDIO");
          do {
            pw.format(Locale.US,
                      "INSERT into %s values( %d, %d, %d, \"%s\" );\n",
@@ -5549,9 +5640,10 @@ public class DataHelper extends DataSetObservable
        //                      null, null, null );
        cursor = myDB.rawQuery( qPhotosAll, new String[] { Long.toString(sid) } );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump PHOTO");
          do {
            pw.format(Locale.US,
-                     "INSERT into %s values( %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", %d );\n",
+                     "INSERT into %s values( %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", %d, \"%s\" );\n",
                      PHOTO_TABLE,
                      sid,
                      cursor.getLong(0),   // id
@@ -5560,7 +5652,8 @@ public class DataHelper extends DataSetObservable
                      TDString.escape( cursor.getString(3) ), // title
                      TDString.escape( cursor.getString(4) ), // date
                      TDString.escape( cursor.getString(5) ), // comment
-                     cursor.getLong(6)
+                     cursor.getLong(6),
+                     TDString.escape( cursor.getString(7) )  // code
            );
          } while (cursor.moveToNext());
        }
@@ -5571,6 +5664,7 @@ public class DataHelper extends DataSetObservable
                             "surveyId=?", new String[] { Long.toString( sid ) },
                             null, null, null );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump PLOT");
          do {
            pw.format(Locale.US,
              "INSERT into %s values( %d, %d, \"%s\", %d, %d, \"%s\", \"%s\", %.2f, %.2f, %.2f, %.2f, %.2f, \"%s\", \"%s\", %d, %d, %.2f, %.2f, %.2f, %.2f );\n",
@@ -5638,15 +5732,18 @@ public class DataHelper extends DataSetObservable
        * END_SKETCH_3D */
 
        cursor = myDB.query( SHOT_TABLE, 
-                            new String[] { "id", "fStation", "tStation", "distance", "bearing", "clino", "roll",
-                                           "acceleration", "magnetic", "dip",
-                                           "extend", "flag", "leg", "status", "comment", "type", "millis", "color", "stretch", "address", "rawMx", "rawMy", "rawMz", "rawGx", "rawGy", "rawGz" },
+                            new String[] { "id", "fStation", "tStation", "distance", "bearing", "clino", "roll", // 0 - 6
+                                           "acceleration", "magnetic", "dip", // 7 - 9
+                                           "extend", "flag", "leg", "status", "comment", "type", "millis", "color", "stretch", "address", // 10 - 19
+                                           "rawMx", "rawMy", "rawMz", "rawGx", "rawGy", "rawGz", "idx", "time" }, // 20 - 27
                             "surveyId=?", new String[] { Long.toString( sid ) },
                             null, null, null );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump SHOT cols " + cursor.getColumnCount() + " rows " + cursor.getCount() );
          do {
            pw.format(Locale.US,
-                     "INSERT into %s values( %d, %d, \"%s\", \"%s\", %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, \"%s\", %d, %d, %d, %.2f, \"%s\", %d, %d, %d, %d, %d, %d );\n",
+            //           TABLE      SID ID  FROM    TO      dist  bear  clino roll  acc   mag   dip   ext flg leg sts comment typ mse col str.  addr    mx          gx          idx time
+            "INSERT into %s values( %d, %d, \"%s\", \"%s\", %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, \"%s\", %d, %d, %d, %.2f, \"%s\", %d, %d, %d, %d, %d, %d, %d, %d );\n",
                      SHOT_TABLE,
                      sid,
                      cursor.getLong(0),
@@ -5655,17 +5752,17 @@ public class DataHelper extends DataSetObservable
                      cursor.getDouble(3),
                      cursor.getDouble(4),
                      cursor.getDouble(5),
-                     cursor.getDouble(6),
+                     cursor.getDouble(6),   // roll
                      cursor.getDouble(7),
                      cursor.getDouble(8),
-                     cursor.getDouble(9),
+                     cursor.getDouble(9),   // dip
                      cursor.getLong(10),    // extend
                      cursor.getLong(11),    // flag
                      cursor.getLong(12),    // leg
                      cursor.getLong(13),    // status
-                     TDString.escape( cursor.getString(14) ),  // comment
+                     TDString.escape( cursor.getString(14) ), // comment
                      cursor.getLong(15),    // type
-                     cursor.getLong(16),    // millis
+                     cursor.getLong(16),    // millis [s]
                      cursor.getLong(17),    // custom color 
 		     cursor.getDouble(18),  // stretch
                      TDString.escape( cursor.getString(19) ),    // address
@@ -5674,20 +5771,26 @@ public class DataHelper extends DataSetObservable
                      cursor.getLong(22),
                      cursor.getLong(23),    // rawGx
                      cursor.getLong(24),
-                     cursor.getLong(25)
+                     cursor.getLong(25),
+                     cursor.getLong(26),    // idx
+                     cursor.getLong(27)     // time [s]
            );
+           pw.flush();
          } while (cursor.moveToNext());
        }
        if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
 
+       // "id", "station", "longitude", "latitude", "altitude", "altimetric", "comment", "status", "source",
+       // "cs_name", "cs_longitude", "cs_latitude", "cs_altitude", "cs_decimals", "convergence", "accuracy", "accuracy_v", "m_to_units", "m_to_vunits"
        cursor = myDB.query( FIXED_TABLE, 
                   mFixedFields,
                   "surveyId=?", new String[] { Long.toString( sid ) },
                   null, null, null );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump FIXED");
          do { // values in the order of the fields of the table
            pw.format(Locale.US,
-             "INSERT into %s values( %d, %d, \"%s\", %.6f, %.6f, %.2f, %.2f \"%s\", %d, %d, \"%s\", %.6f, %.6f, %.1f, %d, %d, %.4f, %.1f, %.1f, %.6f );\n",
+             "INSERT into %s values( %d, %d, \"%s\", %.7f, %.7f, %.2f, %.2f \"%s\", %d, %d, \"%s\", %.7f, %.7f, %.1f, %d, %d, %.4f, %.1f, %.1f, %.6f );\n",
              FIXED_TABLE,
              sid,
              cursor.getLong(0),
@@ -5718,16 +5821,18 @@ public class DataHelper extends DataSetObservable
                             "surveyId=?", new String[] { Long.toString( sid ) },
                             null, null, null );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump STATION");
          do {
            // STATION_TABLE does not have field "id"
            pw.format(Locale.US,
-             "INSERT into %s values( %d, 0, \"%s\", \"%s\", %d, \"%s\" );\n",
+             "INSERT into %s values( %d, 0, \"%s\", \"%s\", %d, \"%s\", \"%s\" );\n",
              STATION_TABLE,
              sid, 
              TDString.escape( cursor.getString(0) ),
              TDString.escape( cursor.getString(1) ),
              cursor.getLong(2),
-             TDString.escape( cursor.getString(3) )
+             TDString.escape( cursor.getString(3) ),
+             TDString.escape( cursor.getString(4) )
            );
          } while (cursor.moveToNext());
        }
@@ -5738,6 +5843,7 @@ public class DataHelper extends DataSetObservable
                             "surveyId=?", new String[] { Long.toString( sid ) },
                             null, null, null );
        if (cursor.moveToFirst()) {
+         TDLog.v("dump SENSOR");
          do {
            pw.format(Locale.US,
                      "INSERT into %s values( %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" );\n",
@@ -5756,11 +5862,15 @@ public class DataHelper extends DataSetObservable
        }
        if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
 
+       TDLog.v("dump file close");
        fw.flush();
        fw.close();
      } catch ( FileNotFoundException e ) {// DistoX-SAF
+       TDLog.Error("dump file not found " + e.getMessage() );
      } catch ( IOException e ) {// FIXME
+       TDLog.Error("dump i/o error " + e.getMessage() );
      }
+     TDLog.v("dump file done");
    }
 
    static boolean mColorReset = false; // whether custom colors have been reset on survey load
@@ -5870,7 +5980,8 @@ public class DataHelper extends DataSetObservable
                  date    = TDString.unescape( scanline1.stringValue( ) );
                  comment = TDString.unescape( scanline1.stringValue( ) );
                  long camera = (db_version > 39)? scanline1.longValue( 0 ) : 0 ;
-                 cv = makePhotoContentValues( sid, id, shotid, TDStatus.NORMAL, title, date, comment, camera );
+                 String code = (db_version > 52)? scanline1.stringValue( ) : "" ;
+                 cv = makePhotoContentValues( sid, id, shotid, TDStatus.NORMAL, title, date, comment, camera, code );
                  myDB.insert( PHOTO_TABLE, null, cv ); 
                  // TDLog.Log( TDLog.LOG_DB, "load from file photo " + sid + " " + id + " " + title + " " + name );
                }
@@ -5949,11 +6060,11 @@ public class DataHelper extends DataSetObservable
                comment     = TDString.unescape( scanline1.stringValue( ) );
                // FIXME N.B. shot_type is not saved before 22
                long type   = 0; if ( db_version > 21 ) type   = scanline1.longValue( 0 ); // 0: DistoX
-	       long millis = 0; if ( db_version > 31 ) millis = scanline1.longValue( 0 );
+	       long millis = 0; if ( db_version > 31 ) millis = scanline1.longValue( 0 ); // seconds
 	       long color  = 0; if ( db_version > 33 ) {
                  color  = scanline1.longValue( 0 );
                  if ( color != 0 ) {
-                   if ( ! TDSetting.mSplayColor ) {
+                   if ( ! TDSetting.mSplayColor ) { // FIXME SPLAY_COLOR
                      color = 0;
                      mColorReset = true;
                    }
@@ -5967,6 +6078,8 @@ public class DataHelper extends DataSetObservable
                int rawGx = 0;
                int rawGy = 0;
                int rawGz = 0;
+               int idx   = 0;
+               int time  = 0; // [s]
                if ( db_version > 49 ) {
                  rawMx = (int)( scanline1.longValue( 0 ) ); 
                  rawMy = (int)( scanline1.longValue( 0 ) );
@@ -5974,7 +6087,14 @@ public class DataHelper extends DataSetObservable
                  rawGx = (int)( scanline1.longValue( 0 ) );
                  rawGy = (int)( scanline1.longValue( 0 ) );
                  rawGz = (int)( scanline1.longValue( 0 ) );
+                 if ( db_version > 50 ) {
+                   idx = (int)( scanline1.longValue( 0 ) );
+                   if ( db_version > 51 ) {
+                     time = (int)( scanline1.longValue( time ) );
+                   }
+                 }
                }
+               
 
                // if ( doInsertShot( sid, id, millis, color, from, to, d, b, c, r, extend, stretch, flag, leg, status, type, comment, addr, false ) >= 0 ) {
                //   success &= updateShotAMDR( id, sid, acc, mag, dip, r, false );
@@ -5982,7 +6102,7 @@ public class DataHelper extends DataSetObservable
 	       //   success = false;
 	       // }
                cv = makeShotContentValues( sid, id, millis, color, from, to, d, b, c, r, acc, mag, dip, extend, stretch, flag, leg, status, type, comment, addr,
-                                           rawMx, rawMy, rawMz, rawGx, rawGy, rawGz );
+                                           rawMx, rawMy, rawMz, rawGx, rawGy, rawGz, idx, time );
                myDB.insert( SHOT_TABLE, null, cv ); 
 
                // TDLog.v( "DB insert shot " + from + "-" + to + ": " + success );
@@ -6041,9 +6161,11 @@ public class DataHelper extends DataSetObservable
                comment = TDString.unescape( scanline1.stringValue( ) );
                long flag = ( db_version > 25 )? scanline1.longValue( 0 ) : 0;
                String presentation = name;
+               String code = "";
                if ( db_version > 45 ) presentation = TDString.unescape( scanline1.stringValue( ) );
+               if ( db_version > 52 ) code = TDString.unescape( scanline1.stringValue( ) );
                // success &= insertStation( sid, name, comment, flag );
-               cv = makeStationContentValues( sid, name, comment, flag, presentation );
+               cv = makeStationContentValues( sid, name, comment, flag, presentation, code );
                myDB.insert( STATION_TABLE, null, cv ); 
              }
            }
@@ -6066,7 +6188,7 @@ public class DataHelper extends DataSetObservable
    }
 
    // ----------------------------------------------------------------------
-  private ContentValues makeStationContentValues( long sid, String name, String comment, long flag, String presentation )
+  private ContentValues makeStationContentValues( long sid, String name, String comment, long flag, String presentation, String code )
   {
     ContentValues cv = new ContentValues();
     cv.put( "surveyId",  sid );
@@ -6074,6 +6196,7 @@ public class DataHelper extends DataSetObservable
     cv.put( "comment",   comment );
     cv.put( "flag",      flag );
     cv.put( "presentation", presentation );
+    cv.put( "code",      (code == null)? "" : code );
     return cv;
   }
 
@@ -6084,10 +6207,10 @@ public class DataHelper extends DataSetObservable
    * @param flag         station flag
    * @param presentation station presentation string
    */
-  public void insertStation( long sid, String name, String comment, long flag, String presentation )
+  public boolean insertStation( long sid, String name, String comment, long flag, String presentation, String code )
   {
-    if ( myDB == null ) return; // false;
-    // boolean ret = false;
+    if ( myDB == null ) return false;
+    boolean ret = false;
     if ( comment == null ) comment = TDString.EMPTY;
     Cursor cursor = myDB.query( STATION_TABLE, mStationFields,
                            "surveyId=? and name=?", new String[] { Long.toString( sid ), name },
@@ -6102,6 +6225,7 @@ public class DataHelper extends DataSetObservable
       cv.put("comment", comment );
       cv.put("flag", flag );
       cv.put("presentation", ( presentation == null )? name : presentation );
+      cv.put("code", (code == null)? "" : code );
       doUpdate( STATION_TABLE, cv, "surveyId=? AND name=?", new String[]{ Long.toString(sid), name }, "station" );
       // try {
       //   myDB.beginTransaction();
@@ -6122,14 +6246,30 @@ public class DataHelper extends DataSetObservable
       // // ret =
       // doStatement( updateStationCommentStmt, "station update" );
     } else {
-      ContentValues cv = makeStationContentValues( sid, name, comment, flag, ((presentation == null)? name : presentation) );
-      // ret =
-      doInsert( STATION_TABLE, cv, "station insert" );
+      ContentValues cv = makeStationContentValues( sid, name, comment, flag, ((presentation == null)? name : presentation), ((code == null)? "" : code) );
+      ret = doInsert( STATION_TABLE, cv, "station insert" );
     }
     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
-    // return ret;
+    return ret;
   }
 
+  /** update the station geocode
+   * @param sid      survey ID
+   * @param name     station name (ID)
+   * @param geocode  new station geocode
+   */
+  void updateStationGeocode( long sid, String name, String geocode )
+  {
+    if ( TDString.isNullOrEmpty( name ) ) return;
+    if ( myDB == null ) return;
+    ContentValues cv = new ContentValues();
+    // cv.put("comment", comment );
+    // cv.put("flag", flag );
+    // cv.put("presentation", ( presentation == null )? name : presentation );
+    cv.put("code", (geocode == null)? "" : geocode );
+    doUpdate( STATION_TABLE, cv, "surveyId=? AND name=?", new String[]{ Long.toString(sid), name }, "station geocode" );
+  }
+   
   /** @return a station
    * @param sid          survey ID
    * @param name         station name (ID)
@@ -6144,14 +6284,14 @@ public class DataHelper extends DataSetObservable
           "surveyId=? and name=?", new String[]{ Long.toString( sid ), name },
           null, null, null );
       if (cursor.moveToFirst()) {
-        cs = new StationInfo( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getLong( 2 ), cursor.getString(3) );
+        cs = new StationInfo( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getLong( 2 ), cursor.getString(3), cursor.getString(4) );
       }
       if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
     }
     if ( cs == null && presentation != null ) {
-      ContentValues cv = makeStationContentValues( sid, name, TDString.EMPTY, 0, presentation );
+      ContentValues cv = makeStationContentValues( sid, name, TDString.EMPTY, 0, presentation, "" );
       if ( doInsert( STATION_TABLE, cv, "station insert" ) ) {
-        cs = new StationInfo( name, TDString.EMPTY, 0, presentation );
+        cs = new StationInfo( name, TDString.EMPTY, 0, presentation, "" );
       }
     }
     return cs;
@@ -6170,7 +6310,7 @@ public class DataHelper extends DataSetObservable
                            null, null, null );
     if (cursor.moveToFirst()) {
       do {
-        ret.add( new StationInfo( cursor.getString(0), cursor.getString(1), cursor.getLong(2), cursor.getString(3) ) );
+        ret.add( new StationInfo( cursor.getString(0), cursor.getString(1), cursor.getLong(2), cursor.getString(3), cursor.getString(4) ) );
       } while (cursor.moveToNext());
     }
     if ( /* cursor != null && */ !cursor.isClosed()) cursor.close();
@@ -6205,7 +6345,7 @@ public class DataHelper extends DataSetObservable
 
   static private String[] mReducedShotFields =
     { "id", "fStation", "tStation", "distance", "bearing", "clino", "extend", "leg" };
-  // static private String[] mFullShotFields =
+  // static private String[] mShotFullFields =
   //   { "id", "fStation", "tStation", "distance", "bearing", "clino", "acceleration", "magnetic", "dip", // 0 ..  8
   //     "extend", "flag", "leg", "comment", "type", "millis", "color", "stretch", "address"              // 9 .. 17
   //   };
@@ -6435,7 +6575,7 @@ public class DataHelper extends DataSetObservable
             +   " status INTEGER, " // NORMAL DELETED OVERSHOOT
             +   " comment TEXT, "
             +   " type INTEGER, "     // DISTOX MANUAL
-            +   " millis INTEGER, "   // timestamp
+            +   " millis INTEGER, "   // timestamp [s]
             +   " color INTEGER, "     // custom color
             +   " stretch REAL default 0, " // extend stretch, default ExtendType.STRETCH_NONE
             +   " address TEXT default \"\", " // distox address
@@ -6444,7 +6584,9 @@ public class DataHelper extends DataSetObservable
             +   " rawMz INTEGER default 0, "
             +   " rawGx INTEGER default 0, "
             +   " rawGy INTEGER default 0, "
-            +   " rawGz INTEGER default 0 "
+            +   " rawGz INTEGER default 0, "
+            +   " idx INTEGER default 0, "
+            +   " time INTEGER default 0 " // device time [s]
             // +   " surveyId REFERENCES " + SURVEY_TABLE + "(id)"
             // +   " ON DELETE CASCADE "
             +   ")"
@@ -6483,7 +6625,8 @@ public class DataHelper extends DataSetObservable
             +   " name TEXT, "          // PRIMARY KEY
             +   " comment TEXT, "
             +   " flag INTEGER default 0, "
-            +   " presentation TEXT default NIL "
+            +   " presentation TEXT default NIL, "
+            +   " code TEXT default NIL "      // geo-morphology code(s)
             +   ")"
           );
            
@@ -6552,7 +6695,8 @@ public class DataHelper extends DataSetObservable
             +   " title TEXT, "
             +   " date TEXT, "
             +   " comment TEXT, "
-            +   " camera INTEGER "  // source type
+            +   " camera INTEGER default 0, "  // source type
+            +   " code TEXT default NIL "      // geo-morphology code(s)
             // +   " surveyId REFERENCES " + SURVEY_TABLE + "(id)"
             // +   " ON DELETE CASCADE "
             +   ")"
@@ -6715,6 +6859,13 @@ public class DataHelper extends DataSetObservable
              db.execSQL( "ALTER TABLE shots ADD COLUMN rawGy INTEGER default 0 " );
              db.execSQL( "ALTER TABLE shots ADD COLUMN rawGz INTEGER default 0 " );
            case 50:
+             db.execSQL( "ALTER TABLE shots ADD COLUMN idx INTEGER default 0 " );
+           case 51:
+             db.execSQL( "ALTER TABLE shots ADD COLUMN time INTEGER default 0 " );
+           case 52:
+             db.execSQL( "ALTER TABLE photos ADD COLUMN code TEXT default NIL" );
+             db.execSQL( "ALTER TABLE stations ADD COLUMN code TEXT default NIL" );
+           case 53:
              // TDLog.v( "current version " + oldVersion );
            default:
              break;
